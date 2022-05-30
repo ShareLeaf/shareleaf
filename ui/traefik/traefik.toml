@@ -1,0 +1,31 @@
+defaultEntryPoints = ["http", "https"]
+
+[entryPoints]
+    [entryPoints.dashboard]
+        address = ":8080"
+        [entryPoints.dashboard.auth]
+            [entryPoints.dashboard.auth.basic]
+                users = ["resumerepo:$$apr1$$pLJ7rAYF$$745Tfqt5hByPZIGP44.PF/"]
+    [entryPoints.http]
+        address = ":80"
+            [entryPoints.http.redirect]
+                entryPoint = "https"
+    [entryPoints.https]
+        address = ":443"
+            [entryPoints.https.tls]
+
+[api]
+entrypoint="dashboard"
+
+[acme]
+email = "bizmelesse@gmail.com"
+storage = "acme.json"
+entryPoint = "https"
+onHostRule = true
+    [acme.httpChallenge]
+    entryPoint = "http"
+
+[docker]
+domain = "resumerepo.com"
+watch = true
+network = "web"

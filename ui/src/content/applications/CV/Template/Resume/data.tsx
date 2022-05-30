@@ -1,0 +1,232 @@
+export const resumeData = {
+    "about-me": {
+        "first-name": "John H.",
+        "last-name": "Gibson",
+        "location": "1036 Hemlock Lane, Enola, Pennsylvania 17025",
+        "mobile": "17178776438",
+        "mobile-display": "(717) 877-6438",
+        "email": "career@johngibson.me",
+        "website": "johngibson.me",
+        "github": "jgibson02",
+        "linkedin": "jgibson02",
+        "medium": "jgibson02",
+        "codepen": "jgibson02",
+        "position": "Computer Science Student",
+        "description": "Currently a student mentor and tutor for the Computer Science Living and Learning Community at Bloomsburg University, and a software engineering intern working with the Systems Engineering and Engineering Methods branch at NASA Langley Research Center. Enjoys working primarily with OOP technologies and web development, with a particular interest in user experience design."
+    },
+
+    "committees": [
+
+    ],
+
+    "education": [
+        {
+            "study": "B.S. in Computer Science",
+            "gpa": 3.65,
+            "institution": "Bloomsburg University of Pennsylvania",
+            "location": "Bloomsburg, Pennsylvania",
+            "date-range": "Aug. 2015 - Exp. May 2019",
+            "active": true,
+            "list-items": [
+                "Dean's List: Spring 2016 - Present.",
+                "Received the Henry Carver Math, Science, and Technology Scholarship awarded to promising students in the College of Science and Technology."
+            ]
+        },
+        {
+            "study": "Polish Language and Culture",
+            "institution": "Jagiellonian University",
+            "location": "Kraków, Poland",
+            "date-range": "Winter Semester 2017-18, 2018-19",
+            "gpa": "4.0",
+            "active": false,
+            "list-items": [
+                "Coursework in International Relations, Central and Eastern European Film & Literature, European Jewish Experiences, & Post-Communist Transformations.",
+                "Served as a mentor for other students within the study abroad program & guided them through various cities."
+            ]
+        }
+    ],
+
+    "experience": [
+        {
+            "title": "GIS Intern",
+            "institution": "Columbia County GIS",
+            "location": "Bloomsburg, Pennsylvania",
+            "date-range": "Jan. 2019 - Present",
+            "span": "1 month",
+            "active": true,
+            "list-items": [
+                "Completion of comprehensive GIS curriculum consisting of necessary geospatial skills.",
+                "Assisting the director of the county GIS office with current data maintenance workflows.",
+                "Examining workflows where automation can assist in improving productivity and reducing error."
+            ],
+            "website": "http://gis.columbiapa.org/"
+        },
+        {
+            "active": false,
+            "date-range": "Jun. 2018 - Aug. 2018",
+            "institution": "Qurate Retail Group",
+            "list-items": [
+                "Assisted porting transaction services from IBM mainframes to Java Spring Boot micro-services.",
+                "Implemented circuit-breaker pattern into those services using Netflix's Hystrix framework.",
+                "Built a Master Data Management system to relate and organize the voluminous IT portfolio across Qurate's 8 companies.",
+                "Built the MDM web application, first in React, then ported to Angular 6.",
+                "Worked on CI/CD pipeline for MDM application which involved Jenkins and SSH deployments."
+            ],
+            "location": "West Chester, Pennsylvania",
+            "span": "3 months",
+            "title": "Applications Development Intern",
+            "website": "https://www.qurateretailgroup.com/"
+        },
+        {
+            "active": false,
+            "date-range": "Jun. 2017 - Aug. 2017",
+            "institution": "NASA Langley Research Center",
+            "list-items": [
+                "Developed a Java plugin for MagicDraw to enable system engineers to track changes to UML projects, synchronize these changes with their team's SharePoint sites, and notify team members of changes.",
+                "Designed and built a React.js webapp to view, comment, and track the diagrams of a project in its present state.",
+                "Created tools to generate project changelogs, structure project data as JSON, and store user configurations in XML",
+                "Led major project design overhauls to accurately meet the user interface needs of the systems engineering department."
+            ],
+            "location": "Hampton, Virginia",
+            "span": "3 months",
+            "title": "Software Engineering Intern",
+            "website": "https://www.nasa.gov/centers/langley/home/index.html"
+        },
+        {
+            "active": true,
+            "date-range": "Aug. 2016 - Present",
+            "institution": "Bloomsburg University of Pennsylvania",
+            "list-items": [
+                "Supporting the academic success and wellness of freshmen in the Computer Science program.",
+                "Tutoring mentees in Computer Science and Mathematics courses.",
+                "Planning and organizing events for members of the Living and Learning Community.",
+                "Establishing server infrastructure and applications for use by LLC members.",
+                "Building and programming GoPiGo robots in Python with LLC members and faculty directors."
+            ],
+            "location": "Bloomsburg, Pennsylvania",
+            "span": "3 years",
+            "title": "Student Living and Learning Community Mentor",
+            "website": "http://lc.bloomu.edu/"
+        }
+    ],
+
+    "extracurricular": [
+        {
+            "organization": "Assocation of Computing Machinery",
+            "role": "ACM Member/Officer",
+            "location": "Bloomsburg, Pennsylvania",
+            "date-range": "Aug. 2015 - Present",
+            "active": true,
+            "list-items": [
+                "Vice-President, Fall/Spring 2017-2018.",
+                "Set up an OpenStack private cloud environment on donated networking hardware for student projects.",
+                "Competitor for BU's ACM student chapter programming competition team.",
+                "Providing tutorial services for 3-4 hours a week in Computer Science and Mathematics courses."
+            ]
+        },
+        {
+            "organization": "PA Makerspace",
+            "role": "Volunteer/Member",
+            "location": "Phoenixville, Pennsylvania",
+            "date-range": "Jun. 2018 - Aug. 2018",
+            "active": false,
+            "list-items": [
+                "Partcipated in classes in woodworking, leatherworking, vinyl cutting, & metal casting.",
+                "Taught a course series titled 'Getting Started With Web Development'",
+                "Worked with Makerspace members to get DIY 3D printers running."
+            ]
+        }
+    ],
+
+    "honors": [
+
+    ],
+
+    "presentations": [
+
+    ],
+
+    "projects": [
+        {
+            "title": "BloomBus",
+            "description": "A cross-platform real-time tracking system for Bloomsburg University campus shuttle buses.",
+            "url": "bloombus.herokuapp.com",
+            "date-range": "2016-2019",
+            "list-items": [
+                "Designed and tested various hardware and software approaches to support real-time tracking.",
+                "Created mesh networks between GPS receivers using XBee radio transmitters.",
+                "Wrote a React PWA front-end for viewing bus routes, bus stops, current bus positions & ETAs.",
+                "Wrote an Android app for buses to track its current location & upload to Firebase.",
+                "Wrote serverless functions in TypeScript for watching bus proximity to bus stops & cleaning up DB.",
+                "Coordinated with heads of facilities, transportation, and community governance management to adopt this system."
+            ]
+        },
+        {
+            "title": "TapCache",
+            "description": "An Android app for geocache style communication using NFC tags.",
+            "url": "tapcache.johngibson.me",
+            "date-range": "2018",
+            "list-items": [
+
+            ]
+        }
+    ],
+
+    "skills": [
+        {
+            "heading": "Interpreted Languages",
+            "list-items": [
+                "JavaScript (ES6+)",
+                "TypeScript",
+                "Python"
+            ]
+        },
+        {
+            "heading": "Compiled Languages",
+            "list-items": [
+                "Java (Networking, Databases, JSP/Servlets)",
+                "C",
+                "C++"
+            ]
+        },
+        {
+            "heading": "Platforms",
+            "list-items": [
+                "React",
+                "Angular6",
+                "Node.js",
+                "jQuery",
+                "Express.js",
+                "Bootstrap",
+                "Webpack/Gulp+Browserify"
+            ]
+        },
+        {
+            "heading": "Cloud & Data",
+            "list-items": [
+                "Firebase",
+                "Google Cloud Platform (GCN)",
+                "Amazon Web Services (AWS)",
+                "MongoDB",
+                "SQL",
+                "JSON",
+                "XML"
+            ]
+        },
+        {
+            "heading": "Other",
+            "list-items": [
+                "Git",
+                "Progressive Web Apps (PWAs)",
+                "HTML5&CSS3",
+                "ArcGIS (ArcMap 10.6 & Pro)",
+                "Android Development",
+                "LaTeX"
+            ]
+        }
+    ],
+
+    "writing": [
+
+    ]
+}

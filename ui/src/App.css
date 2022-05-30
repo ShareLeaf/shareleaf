@@ -1,0 +1,68 @@
+.form-dialog-btn {
+    background-color: #5569ff !important;
+}
+.WAMuiChipInput-chip-16 {
+    height: 100% !important;
+}
+.MuiChip-label {
+    white-space: break-spaces !important;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+.rr-section-control-btn{
+    margin-top: 20px !important;
+    border-radius: 4px !important;
+}
+.rr-section-divider {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-color: inherit;
+    background-color: transparent !important;
+}
+
+.rr-card-margin {
+    margin-bottom: 1.5rem;
+    width: 100%
+}
+.rr-section-placeholder {
+    width: 992px;
+}
+.rr-section-header {
+    /*padding-left: 20px;*/
+}
+.rr-section-list-items ul{
+    list-style: none;
+}
+.rr-section-list-items ul li {
+    border-radius: 20px;
+    background-color: #f3f3f3;
+    font-size: 0.85rem;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: fit-content;
+}
+
+.rr-svg-delete-icon {
+    margin-bottom: -6px;
+    margin-left: 4px;
+    padding: 3px;
+}
+.rr-svg-delete-icon.MuiSvgIcon-colorError:hover {
+    color: #c30f01;
+    cursor: pointer;
+}
+
+.css-qukajt {
+    /*DocumentListTable tag wrapping*/
+    max-height: none !important;
+}
+
+#document {
+    /*display: none;*/
+}
+
+@media print {
+    .rr-cv-editor {
+        display: none
+    }
+}

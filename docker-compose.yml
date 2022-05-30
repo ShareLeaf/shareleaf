@@ -1,0 +1,19 @@
+version: "3.3"
+services:
+  resume_repo_ui:
+    image: 537408061242.dkr.ecr.us-east-2.amazonaws.com/resume-repo:resume-repo-prod-ui-latest
+    container_name: resume-repo-ui
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:resumerepo.com"
+      - "traefik.port=80"
+      - "traefik.backend=resume_repo_ui"
+      - "traefik.docker.network=traefik_network"
+      - "traefik.frontend.entryPoints=http,https"
+    networks:
+      - traefik_network
+
+networks:
+  traefik_network:
+    external: true
