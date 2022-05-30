@@ -8,16 +8,18 @@ CORS(app)
 @app.route("/generate-link", methods = ['POST'])
 def generate_link():
     data = request.get_json()
-    print("Data received: ", data)
+    print("Data received: ", data.get("raw_url"))
+    uid = cs.generate_uid()
     return jsonify(
-        url="http://localhost:5000/{}".format(cs.generate_uid()),
+        url="http://localhost:5000/{}".format(uid),
         status=200
     )
 
-@app.route("/", methods = ['POST'])
-def home():
+@app.route('/', defaults={'u_path': ''})
+@app.route('/<path:u_path>')
+def get_content(u_path):
     return jsonify(
-        message="success",
+        message=u_path,
         status=200
     )
 
