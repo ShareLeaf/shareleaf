@@ -30,3 +30,4 @@ node_modules
 # Generated files
 */generated
 */openapi-ts
+**/ui/.next

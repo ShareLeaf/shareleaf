@@ -3,11 +3,13 @@ import type { ReactElement } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
 
 import Head from 'next/head';
-import Hero from 'src/content/Overview/Hero';
+import Hero from 'src/content/Overview/MediaView';
 import Highlights from 'src/content/Overview/Highlights';
 import Footer from 'src/components/Footer';
 import FullLogo from "@/components/Logo/FullLogo";
-import Link from 'src/components/Link';
+import React from 'react';
+import LinkGenerator from "@/content/LinkGenerator";
+// import Media from "@/content/Media";
 
 const OverviewWrapper = styled(Box)(
     ({ theme }) => `
@@ -42,7 +44,7 @@ function Overview() {
                 </Box>
             </Container>
             {/*</HeaderWrapper>*/}
-            <Hero />
+            <LinkGenerator />
             <Highlights />
             <Footer />
         </OverviewWrapper>

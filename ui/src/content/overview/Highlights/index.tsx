@@ -23,7 +23,7 @@ const AvatarSuccess = styled(Avatar)(
 
 const TypographyH1Primary = styled(Typography)(
   ({ theme }) => `
-    font-size: ${theme.typography.pxToRem(36)};
+    font-size: ${theme.typography.pxToRem(28)};
 `
 );
 
@@ -102,7 +102,7 @@ function Highlights() {
                 <CheckTwoToneIcon />
               </AvatarSuccess>
               <Box
-                px={4}
+                px={1}
                 pb={4}
                 display={{ xs: 'block', md: 'flex' }}
                 alignItems="flex-start"
@@ -151,7 +151,7 @@ function Highlights() {
                 <CheckTwoToneIcon />
               </AvatarSuccess>
               <Box
-                px={4}
+                px={1}
                 pb={4}
                 display={{ xs: 'block', md: 'flex' }}
                 alignItems="flex-start"
@@ -173,8 +173,8 @@ function Highlights() {
                     }}
                     variant="subtitle2"
                   >
-                      Like really fast! Your don't need a fast Internet to view content on ShareLeaf because we distribute
-                      everything around the world.
+                      Like really fast! Your don't need a fast Internet to view content on ShareLeaf. We distribute
+                      everything to your nearest location.
                   </Typography>
                 </Box>
               </Box>

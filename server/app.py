@@ -8,7 +8,8 @@ CORS(app)
 @app.route("/generate-link", methods = ['POST'])
 def generate_link():
     data = request.get_json()
-    print("Data received: ", data.get("raw_url"))
+    if data and data.get("raw_url"):
+        print("Map this to the database: ", data.get("raw_url"))
     uid = cs.generate_uid()
     return jsonify(
         url="http://localhost:5000/{}".format(uid),
