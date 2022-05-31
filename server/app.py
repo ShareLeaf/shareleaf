@@ -1,5 +1,9 @@
+import sys
+from os.path import dirname
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+sys.path.append(dirname(__file__).split("/python")[0])
+
 from service import content_service as cs
 
 app = Flask(__name__)
@@ -9,7 +13,9 @@ CORS(app)
 def generate_link():
     data = request.get_json()
     if data and data.get("raw_url"):
-        print("Map this to the database: ", data.get("raw_url"))
+        raw_url = data.get("raw_url")
+        print("Map this to the database: ", raw_url)
+        cs.download_media(raw_url)
     uid = cs.generate_uid()
     return jsonify(
         url="http://localhost:3000/{}".format(uid),
