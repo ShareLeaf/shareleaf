@@ -12,9 +12,26 @@ def generate_link():
         print("Map this to the database: ", data.get("raw_url"))
     uid = cs.generate_uid()
     return jsonify(
-        url="http://localhost:5000/{}".format(uid),
+        url="http://localhost:3000/{}".format(uid),
         status=200
     )
+
+@app.route("/metadata", methods = ['GET'])
+def get_metadata():
+    key = request.args.get("key")
+    if key:
+        return jsonify(
+            encoding="video/webm",
+            cdn="http://media.w3.org",
+            caption="Hello, World! Complete with reusable components, all pages and sections are available in the Figma ecosystem.",
+            type="video",
+            status=200
+        )
+    return jsonify(
+        error="Key not found",
+        status=200
+    )
+
 
 @app.route('/', defaults={'u_path': ''})
 @app.route('/<path:u_path>')

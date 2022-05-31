@@ -1,15 +1,9 @@
-import { Box, Container, styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import type { ReactElement } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
-
-import Head from 'next/head';
-import Hero from 'src/content/Overview/MediaView';
-import Highlights from 'src/content/Overview/Highlights';
-import Footer from 'src/components/Footer';
-import FullLogo from "@/components/Logo/FullLogo";
 import React from 'react';
 import LinkGenerator from "@/content/LinkGenerator";
-// import Media from "@/content/Media";
+import Common from "@/content/Common";
 
 const OverviewWrapper = styled(Box)(
     ({ theme }) => `
@@ -23,30 +17,9 @@ const OverviewWrapper = styled(Box)(
 function Overview() {
     return (
         <OverviewWrapper>
-            <Head>
-                <title>ShareLeaf | Share Anything, with Anyone</title>
-            </Head>
-            {/*<HeaderWrapper>*/}
-            <Container maxWidth="lg">
-                <Box display="flex" alignItems="center" sx={{marginTop: '10px'}}>
-                    {/*<Link href="/">*/}
-                        <FullLogo />
-                    {/*</Link>*/}
-
-                    <Box
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="space-between"
-                        flex={1}
-                    >
-                        <Box />
-                    </Box>
-                </Box>
-            </Container>
-            {/*</HeaderWrapper>*/}
-            <LinkGenerator />
-            <Highlights />
-            <Footer />
+            <Common
+                title={"ShareLeaf | Share Anything, with Anyone"}
+                children={<LinkGenerator />}/>
         </OverviewWrapper>
     );
 }

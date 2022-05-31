@@ -43,7 +43,6 @@ const BoxHighlights = styled(Box)(
 function Highlights() {
   return (
     <BoxHighlights>
-
       <Container
         sx={{
           pt: { xs: 6, md: 12 },

@@ -5,7 +5,7 @@ import axios from "axios";
 
 const SearchInputWrapper = styled(InputBase)(
     ({ theme }) => `
-    font-size: ${theme.typography.pxToRem(28)};
+    font-size: ${theme.typography.pxToRem(18)};
     padding: ${theme.spacing(2)};
     width: 100%;
 `
@@ -13,8 +13,10 @@ const SearchInputWrapper = styled(InputBase)(
 
 const SearchBoxWrapper = styled(Box)(
     () => `
-   margin-top: 4rem;
-   width: 100%;
+     border: 1px solid #ededed;
+     border-radius: 1rem;
+     margin-top: 4rem;
+     width: 100%;
 `
 );
 
