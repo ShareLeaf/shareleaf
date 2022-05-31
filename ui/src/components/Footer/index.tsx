@@ -1,35 +1,46 @@
-import { Box, Container, Link, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import {Box, Card, Typography, styled, IconButton} from '@mui/material';
+import Link from 'src/components/Link';
+import TwitterIcon from '@mui/icons-material/Twitter';
 
-const FooterWrapper = styled(Box)(
+const FooterWrapper = styled(Card)(
   ({ theme }) => `
         border-radius: 0;
-        margin: ${theme.spacing(3)} 0;
+        margin-top: ${theme.spacing(4)};
 `
 );
 
 function Footer() {
   return (
-    <FooterWrapper>
-      {/*<Container maxWidth="lg">*/}
-      {/*  <Box*/}
-      {/*    py={3}*/}
-      {/*    display={{ xs: 'block', md: 'flex' }}*/}
-      {/*    alignItems="center"*/}
-      {/*    textAlign={{ xs: 'center', md: 'left' }}*/}
-      {/*    justifyContent="space-between"*/}
-      {/*  >*/}
-      {/*    <Box>*/}
-      {/*      <Typography variant="subtitle1">*/}
-      {/*        &copy; 2022 - ResumeRepo CV Versioning and Tracking*/}
-      {/*      </Typography>*/}
-      {/*    </Box>*/}
-      {/*    <Typography sx={{ pt: { xs: 2, md: 0 } }} variant="subtitle1">*/}
-      {/*      Made in Los Angeles with &#x2764;*/}
-      {/*      /!*Crafted by <Link href="https://bloomui.com" target="_blank" rel="noopener noreferrer">BloomUI.com</Link>*!/*/}
-      {/*    </Typography>*/}
-      {/*  </Box>*/}
-      {/*</Container>*/}
+    <FooterWrapper className="footer-wrapper">
+      <Box
+        p={4}
+        display={{ xs: 'block', md: 'flex' }}
+        alignItems="center"
+        textAlign={{ xs: 'center', md: 'left' }}
+        justifyContent="space-between"
+      >
+        <Box>
+          <Typography variant="subtitle1">
+            &copy; 2022 - ShareLeaf
+          </Typography>
+        </Box>
+        <Typography
+          sx={{
+            pt: { xs: 2, md: 0 }
+          }}
+          variant="subtitle1"
+        >
+          <Link
+            href="https://twitter.com/shareleaf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <IconButton sx={{ mx: 1 }} color="info" component="span">
+              <TwitterIcon fontSize="small" />
+            </IconButton>
+          </Link>
+        </Typography>
+      </Box>
     </FooterWrapper>
   );
 }
