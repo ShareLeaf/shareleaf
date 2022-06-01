@@ -38,9 +38,9 @@ const LinkGenerator: FC<any> = () => {
     const [generatedUrl, setGeneratedUrl] = useState<string>('')
 
     const generateUid = (): string => {
-        const uidLength = 6;
-        let result           = '';
-        const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const uidLength = 7;
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         const charactersLength = characters.length;
         for (let i = 0; i < uidLength; i++ ) {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
