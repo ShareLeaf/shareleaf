@@ -9,11 +9,11 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleW
 
 class Reddit(S3):
     """Parses Reddit content"""
-    def __init__(self, soup, url):
+    def __init__(self, soup, url, uid):
         super(Reddit, self).__init__()
         self.soup = soup
         self.url = url
-        self._merge_audio_video()
+        self.uid = uid
 
     def _parse_video_audio_urls(self):
         try:
@@ -44,7 +44,8 @@ class Reddit(S3):
         else:
             print("Failed to download content")
 
-    def _merge_audio_video(self):
+    def process_soup(self):
+        print("Processing Reddit soup")
         metadata = self._parse_video_audio_urls()
         filename = str(uuid.uuid4())
         merged_filename = str(uuid.uuid4()) + ".mp4"
@@ -54,10 +55,15 @@ class Reddit(S3):
         self._download_media(metadata.get("audio_url"), a_filename)
 
         # merge the audio and video streams into one
-        subprocess.call(['ffmpeg','-i',v_filename,'-i',a_filename,'-map','0:v','-map','1:a','-c:v','copy',merged_filename])
+        subprocess.call(['ffmpeg','-i',v_filename,'-i',a_filename,'-map','0:v','-map','1:a','-c:v','copy', merged_filename])
 
         # delete the files
         subprocess.call(['rm',v_filename,a_filename])
+        # self.upload_file(merged_filename)
+        # subprocess.call(['rm', merged_filename])
+        print("Done with processing Reddit soup", metadata)
+
+
 
 
 

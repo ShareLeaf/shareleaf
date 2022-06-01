@@ -2,6 +2,7 @@ import sys
 from os.path import dirname
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import validators
 sys.path.append(dirname(__file__).split("/python")[0])
 
 from service import content_service as cs
@@ -9,18 +10,22 @@ from service import content_service as cs
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/generate-link", methods = ['POST'])
+# THREAD_COUNT = 10
+
+
+@app.route("/process-url", methods = ['POST'])
 def generate_link():
+    # uid = cs.generate_uid()
     data = request.get_json()
-    if data and data.get("raw_url"):
-        raw_url = data.get("raw_url")
-        print("Map this to the database: ", raw_url)
-        cs.download_media(raw_url)
-    uid = cs.generate_uid()
-    return jsonify(
-        url="http://localhost:3000/{}".format(uid),
-        status=200
-    )
+    src = data.get("src")
+    uid = data.get("uid")
+    if src and uid and validators.url(src):
+        src = data.get("src")
+        uid = data.get("uid")
+        print("Map this to the database: ", src)
+        print("Attempting to process ", src)
+        cs.download_media(src, uid)
+    return jsonify(status=200)
 
 @app.route("/metadata", methods = ['GET'])
 def get_metadata():
