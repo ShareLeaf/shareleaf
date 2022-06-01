@@ -23,8 +23,10 @@ def generate_link():
         src = data.get("src")
         uid = data.get("uid")
         print("Map this to the database: ", src)
-        print("Attempting to process ", src)
+        print("Attempting to process ", src, uid)
         cs.download_media(src, uid)
+    else:
+        print("Unable to process url ", src)
     return jsonify(status=200)
 
 @app.route("/metadata", methods = ['GET'])

@@ -6,9 +6,14 @@ class S3:
     """Uploads media content to S3"""
 
     def __init__(self):
-        self.s3_bucket = os.getenv('S3_BUCKET_ARTIFACTS')
+        self.session = boto3.Session(
+            aws_access_key_id='AKIAX2IAEH45BPGE7RU6',
+            aws_secret_access_key='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'
+        )
+        self.s3 = self.session.resource('s3')
         # self.key
 
-    def upload_file(self, filename):
-        s3 = boto3.resource('s3')
-        s3.meta.client.upload_file('/tmp/hello.txt', 'mybucket', 'hello.txt')
+    def upload_file(self, filename, uid):
+        object = self.s3.Object("shareleaf", uid)
+        with open(filename, "rb") as f:
+            object.put(Body=f.read())

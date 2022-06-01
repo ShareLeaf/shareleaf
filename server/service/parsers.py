@@ -59,7 +59,7 @@ class Reddit(S3):
 
         # delete the files
         subprocess.call(['rm',v_filename,a_filename])
-        # self.upload_file(merged_filename)
+        self.upload_file(merged_filename, self.uid + ".mp4")
         # subprocess.call(['rm', merged_filename])
         print("Done with processing Reddit soup", metadata)
 

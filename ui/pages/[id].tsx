@@ -73,7 +73,8 @@ const Media: FC<any> = () => {
                                     {metadata.type === "video" &&
                                         <VideoElement
                                             encoding={metadata.encoding}
-                                            src={metadata.cdn + tempVidId}
+                                            src={"https://shareleaf.s3.amazonaws.com/X8MQK3.mp4"}
+                                            // src={metadata.cdn + tempVidId}
                                             caption={metadata.caption}
                                         />
                                     }

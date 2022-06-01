@@ -45,14 +45,14 @@ const LinkGenerator: FC<any> = () => {
         for (let i = 0; i < uidLength; i++ ) {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
-        return "http://localhost:3000/" + result;
+        return result;
     }
 
     const submitSearch = async (event): Promise<void> => {
         event.preventDefault();
         if (searchValue) {
             const uid = generateUid();
-            setGeneratedUrl(uid);
+            setGeneratedUrl("http://localhost:3000/" + uid);
             const data = { src: searchValue, uid: uid };
             axios.post('http://127.0.0.1:5000/process-url', data)
                 .then(() => {})
