@@ -5,7 +5,7 @@ defaultEntryPoints = ["http", "https"]
         address = ":8080"
         [entryPoints.dashboard.auth]
             [entryPoints.dashboard.auth.basic]
-                users = ["resumerepo:$$apr1$$pLJ7rAYF$$745Tfqt5hByPZIGP44.PF/"]
+                users = ["shareleaf:$$apr1$$pLJ7rAYF$$745Tfqt5hByPZIGP44.PF/"]
     [entryPoints.http]
         address = ":80"
             [entryPoints.http.redirect]
@@ -26,6 +26,6 @@ onHostRule = true
     entryPoint = "http"
 
 [docker]
-domain = "resumerepo.com"
+domain = "shareleaf.co"
 watch = true
 network = "web"

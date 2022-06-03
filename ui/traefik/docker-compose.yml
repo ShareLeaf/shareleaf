@@ -1,13 +1,13 @@
 version: '3'
 services:
   traefik:
-    container_name: resume_repo_traefik
+    container_name: shareleaf_traefik
     restart: always
     image: traefik:v1.7
     command:
       --configFile=/var/traefik/traefik.toml
     labels:
-      - traefik.frontend.rule=Host:monitor.resumerepo.com
+      - traefik.frontend.rule=Host:monitor.shareleaf.co
       - traefik.docker.network=traefik_network
       - traefik.port=8080
     ports:

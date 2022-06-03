@@ -1,14 +1,14 @@
 version: "3.3"
 services:
-  resume_repo_ui:
-    image: 537408061242.dkr.ecr.us-east-2.amazonaws.com/resume-repo:resume-repo-prod-ui-latest
-    container_name: resume-repo-ui
+  shareleaf_ui:
+    image: 537408061242.dkr.ecr.us-east-2.amazonaws.com/shareleaf:shareleaf-prod-ui-latest
+    container_name: shareleaf-ui
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:resumerepo.com"
+      - "traefik.frontend.rule=Host:shareleaf.co"
       - "traefik.port=80"
-      - "traefik.backend=resume_repo_ui"
+      - "traefik.backend=shareleaf_ui"
       - "traefik.docker.network=traefik_network"
       - "traefik.frontend.entryPoints=http,https"
     networks:
