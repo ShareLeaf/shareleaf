@@ -3,7 +3,7 @@ USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36
 def save(db):
     try:
         db.session.commit()
-    except IntegrityError as e:
+    except Exception as e:
         db.session.rollback()
     finally:
         db.session.close()

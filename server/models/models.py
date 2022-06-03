@@ -15,6 +15,9 @@ class Metadata(db.Model):
     __bind_key__ = 'primary'
 
     id = db.Column(db.String, primary_key=True)
+    processed = db.Column(db.Boolean)
+    encoding = db.Column(db.String)
+    media_type = db.Column(db.String)
     title = db.Column(db.String)
     description = db.Column(db.String)
     category = db.Column(db.String)

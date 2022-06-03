@@ -45,23 +45,25 @@ migrate(app, configurations.get("datasource"))
 def generate_content_id():
     data = request.get_json()
     src = data.get("src")
-    return jsonify({
-        "uid": cs.generate_content_id(src, app, db)
-    }), 200
+    response = {
+        "uid": ""
+    }
+    if src and validators.url(src):
+        response = {
+            "uid": cs.generate_content_id(src, app, db)
+        }
+    return jsonify(response), 200
 
 
 @app.route("/process-url", methods=['POST'])
-def generate_link():
-    # uid = cs.generate_uid()
+def process_url():
     data = request.get_json()
     src = data.get("src")
     uid = data.get("uid")
     if src and uid and validators.url(src):
         src = data.get("src")
         uid = data.get("uid")
-        print("Map this to the database: ", src)
-        print("Attempting to process ", src, uid)
-        cs.download_media(src, uid)
+        cs.download_media(src, uid, app, db)
     else:
         print("Unable to process url ", src)
     return jsonify(status=200)
@@ -71,27 +73,8 @@ def generate_link():
 def get_metadata():
     key = request.args.get("key")
     if key:
-        return jsonify(
-            encoding="video/webm",
-            cdn="http://media.w3.org",
-            caption="Hello, World! Complete with reusable components, all pages and sections are available in the Figma ecosystem.",
-            type="video",
-            status=200
-        )
-    return jsonify(
-        error="Key not found",
-        status=200
-    )
-
-
-@app.route('/', defaults={'u_path': ''})
-@app.route('/<path:u_path>')
-def get_content(u_path):
-    return jsonify(
-        message=u_path,
-        status=200
-    )
-
+        return jsonify(cs.get_metadata(key, app, db)), 200
+    return jsonify(error="Key not found"), 200
 
 @app.route('/health', methods=["GET"])
 def health():

@@ -4,23 +4,27 @@ import requests
 import subprocess
 import sys
 from os.path import dirname
+import datetime
 
 sys.path.append(dirname(__file__).split("/server")[0])
 
 from server.service.aws import S3
-from server.utils.utils import USER_AGENT
+from server.models.models import Metadata
+from server.utils import utils
 
-headers = {'User-Agent': USER_AGENT}
+headers = {'User-Agent': utils.USER_AGENT}
 
 
 class Reddit(S3):
     """Parses Reddit content"""
 
-    def __init__(self, soup, url, uid):
+    def __init__(self, soup, url, uid, db, app):
         super(Reddit, self).__init__()
         self.soup = soup
         self.url = url
         self.uid = uid
+        self.db = db
+        self.app = app
 
     def _parse_video_audio_urls(self):
         try:
@@ -34,10 +38,22 @@ class Reddit(S3):
             dash_url = dash_url[:int(dash_url.find('DASH')) + 4]
             video_url = f'{dash_url}_{height}.mp4'
             audio_url = f'{dash_url}_audio.mp4'
+            with self.app.app_context():
+                records_to_update = []
+                records_to_update.append({
+                    "id": self.uid,
+                    'title': title,
+                    'encoding': 'video/webm',
+                    'media_type': 'video',
+                    'processed': True,
+                    'updated_at': datetime.datetime.now()
+                })
+                self.db.session.bulk_update_mappings(Metadata, records_to_update)
+                utils.save(self.db)
             return {
                 "title": title,
-                "video_url": f'{dash_url}_{height}.mp4',
-                "audio_url": f'{dash_url}_audio.mp4'
+                "video_url": video_url,
+                "audio_url": audio_url
             }
         except Exception as e:
             print(e)
@@ -45,7 +61,7 @@ class Reddit(S3):
     def _download_media(self, url, file_name):
         print("Downloading Reddit media content at ", url)
         response = requests.get(url, headers=headers)
-        if (response.status_code == 200):
+        if response.status_code == 200:
             with open(file_name, 'wb') as file:
                 file.write(response.content)
         else:
@@ -68,5 +84,5 @@ class Reddit(S3):
         # delete the files
         subprocess.call(['rm', v_filename, a_filename])
         self.upload_file(merged_filename, self.uid + ".mp4")
-        # subprocess.call(['rm', merged_filename])
+        subprocess.call(['rm', merged_filename])
         print("Done with processing Reddit soup", metadata)
