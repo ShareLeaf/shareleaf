@@ -6,7 +6,7 @@ import {Box, Typography} from "@mui/material";
 interface VideoElementProps {
     encoding: string
     src: string,
-    caption?: string
+    title?: string
 }
 const VideoElement: FC<VideoElementProps> = (props) => {
     return (
@@ -27,7 +27,7 @@ const VideoElement: FC<VideoElementProps> = (props) => {
                 }}
                 variant="h4"
             >
-                {props.caption}
+                {props.title}
             </Typography>
             </Box>
         </Box>

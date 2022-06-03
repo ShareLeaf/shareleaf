@@ -21,33 +21,43 @@ const OverviewWrapper = styled(Box)(
 );
 
 interface MediaMetadata {
-    encoding?: string
-    caption?: string,
+    encoding?: string,
+    description?: string,
+    title?: string,
     type?: string
-    cdn?: string,
+    url?: string,
     error?: string
 }
 
 const Media: FC<any> = () => {
     const [metadata, setMetadata] = useState<MediaMetadata | undefined>(undefined);
     const [showError, setShowError] = useState<boolean>(false);
+    const [showInProgress, setShowInProgress] = useState<boolean>(false);
     const pathTokens = window.location.pathname.split("/");
     useEffect(() => {
         if (pathTokens.length > 1) {
             const id = pathTokens[pathTokens.length-1]
             if (id) {
+                setShowInProgress(false);
+                setShowError(false);
                 axios.get('http://127.0.0.1:5000/metadata?key=' + id)
                     .then(response => {
-                        if (response.data.error) {
+                        if (response.data.error || response.data.invalid_url) {
                             setShowError(true);
                         } else {
-                            const parsed = {
-                                encoding: response.data.encoding,
-                                caption: response.data.caption,
-                                type: response.data.type,
-                                cdn: response.data.cdn
-                            };
-                            setMetadata(parsed);
+                            if (response.data.processed) {
+                                const parsed = {
+                                    encoding: response.data.encoding,
+                                    title: response.data.title,
+                                    description: response.data.description,
+                                    type: response.data.media_type,
+                                    url: response.data.url
+                                };
+                                setMetadata(parsed);
+                            } else {
+                                setShowInProgress(true);
+                            }
+
                         }
                     });
             }
@@ -56,12 +66,10 @@ const Media: FC<any> = () => {
     }, [])
 
     if (metadata) {
-        const tempVidId = "/2010/05/sintel/trailer.mp4";
-        const tempImageId = "https://picsum.photos/1000/600";
         return (
             <OverviewWrapper>
                 <Common
-                    title={metadata.caption}
+                    title={metadata.title}
                     children={
                         <Container maxWidth="lg">
                             <Grid
@@ -73,15 +81,14 @@ const Media: FC<any> = () => {
                                     {metadata.type === "video" &&
                                         <VideoElement
                                             encoding={metadata.encoding}
-                                            src={"https://d1x2gijf3bj73j.cloudfront.net/X8MQK3.mp4"}
-                                            // src={metadata.cdn + tempVidId}
-                                            caption={metadata.caption}
+                                            src={metadata.url}
+                                            title={metadata.title}
                                         />
                                     }
                                     {metadata.type === "image" &&
                                         <ImageElement
-                                            src={tempImageId}
-                                            caption={metadata.caption}
+                                            src={metadata.url}
+                                            title={metadata.title}
                                         />
                                     }
                                 </Grid>
@@ -92,7 +99,12 @@ const Media: FC<any> = () => {
         );
     }
     else {
-        if (showError) {
+        if (showInProgress) {
+            return <Alert severity="info">
+                We are currently processing this url. Please check back in a few minutes.
+            </Alert>
+        }
+        else if (showError) {
             return <Alert severity="error">
                 Sorry, could not find the page you're looking for :(
             </Alert>

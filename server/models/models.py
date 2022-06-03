@@ -1,11 +1,9 @@
 from sqlalchemy.sql import func
 import sys
 from os.path import dirname
+from flask_sqlalchemy import SQLAlchemy
 
 sys.path.append(dirname(__file__).split("/server")[0])
-
-# from python.kippo.webapp.app import db
-from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
@@ -15,6 +13,7 @@ class Metadata(db.Model):
     __bind_key__ = 'primary'
 
     id = db.Column(db.String, primary_key=True)
+    invalid_url = db.Column(db.Boolean)
     processed = db.Column(db.Boolean)
     encoding = db.Column(db.String)
     media_type = db.Column(db.String)

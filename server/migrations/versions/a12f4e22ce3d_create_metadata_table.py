@@ -20,6 +20,7 @@ def upgrade():
     op.create_table(
         'metadata',
         sa.Column('id', sa.String, primary_key=True, index=True),
+        sa.Column('invalid_url', sa.Boolean()),
         sa.Column('processed', sa.Boolean()),
         sa.Column('encoding', sa.String()),
         sa.Column('media_type', sa.String()),

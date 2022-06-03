@@ -4,7 +4,7 @@ import {Box, Typography} from "@mui/material";
 
 interface ImageElementProps {
     src: string,
-    caption?: string
+    title?: string
 }
 const ImageElement: FC<ImageElementProps> = (props) => {
     return (
@@ -12,16 +12,14 @@ const ImageElement: FC<ImageElementProps> = (props) => {
             <Box sx={{marginTop: '2rem', textAlign: 'center'}}>
         <img
             width="100%"
-            alt={props.caption}
+            alt={props.title}
             src={props.src} />
     </Box>
             <Box sx={{marginTop: '0.5rem'}}>
                         <Typography
-
                             variant="h4"
                         >
-                            {props.caption}
-
+                            {props.title}
                         </Typography>
                     </Box>
         </>

@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, request
 import validators
-import requests
 from flask_cors import CORS
 import datetime
 import sys
@@ -11,14 +10,12 @@ sys.path.append(dirname(__file__).split("/server")[0])
 from server.service import content_service as cs
 from server.models.models import db
 from server.migrations import migrate
-from server.props.aws import AWSProps
 from server.props.datasource import DatasourceProps
 
 
 def configs() -> {}:
     parsed_configs = {
-        "datasource": DatasourceProps(),
-        "aws": AWSProps()
+        "datasource": DatasourceProps()
     }
     return parsed_configs
 
@@ -75,6 +72,7 @@ def get_metadata():
     if key:
         return jsonify(cs.get_metadata(key, app, db)), 200
     return jsonify(error="Key not found"), 200
+
 
 @app.route('/health', methods=["GET"])
 def health():

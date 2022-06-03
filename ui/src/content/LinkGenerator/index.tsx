@@ -37,25 +37,20 @@ const LinkGenerator: FC<any> = () => {
     const [searchValue, setSearchValue] = useState<string>('');
     const [generatedUrl, setGeneratedUrl] = useState<string>('')
 
-    const generateUid = (): string => {
-        const uidLength = 7;
-        let result = '';
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        const charactersLength = characters.length;
-        for (let i = 0; i < uidLength; i++ ) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        return result;
-    }
-
     const submitSearch = async (event): Promise<void> => {
         event.preventDefault();
         if (searchValue) {
-            const uid = generateUid();
-            setGeneratedUrl("http://localhost:3000/" + uid);
-            const data = { src: searchValue, uid: uid };
-            axios.post('http://127.0.0.1:5000/process-url', data)
-                .then(() => {})
+            const data = { src: searchValue};
+            axios.post('http://127.0.0.1:5000/generate-content-id', data)
+                .then((result) => {
+                    const uid = result.data.uid;
+                    if (uid && uid.length > 0) {
+                        setGeneratedUrl("http://localhost:3000/" + uid);
+                        axios.post('http://127.0.0.1:5000/process-url', {...data, uid})
+                            .then(() => {})
+                            .catch(e => console.log(e));
+                    }
+                })
                 .catch(e => console.log(e));
         }
     };
