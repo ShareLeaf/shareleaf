@@ -1,0 +1,29 @@
+from sqlalchemy.sql import func
+import sys
+from os.path import dirname
+
+sys.path.append(dirname(__file__).split("/server")[0])
+
+# from python.kippo.webapp.app import db
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+
+
+class Metadata(db.Model):
+    __tablename__ = 'metadata'
+    __bind_key__ = 'primary'
+
+    id = db.Column(db.String, primary_key=True)
+    title = db.Column(db.String)
+    description = db.Column(db.String)
+    category = db.Column(db.String)
+    canonical_url = db.Column(db.String, unique=True)
+    view_count = db.Column(db.BigInteger)
+    like_count = db.Column(db.BigInteger)
+    dislike_count = db.Column(db.BigInteger)
+    created_dt = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now())
+
+    def __repr__(self):
+        return '<Metadata %r>' % self.id
