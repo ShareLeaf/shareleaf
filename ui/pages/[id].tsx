@@ -40,7 +40,7 @@ const Media: FC<any> = () => {
             if (id) {
                 setShowInProgress(false);
                 setShowError(false);
-                axios.get('http://127.0.0.1:5000/metadata?key=' + id)
+                axios.get(`${process.env.REACT_APP_SERVER_BASE_URL}/metadata?key=` + id)
                     .then(response => {
                         if (response.data.error || response.data.invalid_url) {
                             setShowError(true);

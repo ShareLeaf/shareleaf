@@ -41,12 +41,14 @@ const LinkGenerator: FC<any> = () => {
         event.preventDefault();
         if (searchValue) {
             const data = { src: searchValue};
-            axios.post('http://127.0.0.1:5000/generate-content-id', data)
+
+            console.log("process.env.REACT_APP_SERVER_BASE_URL: ", process.env.REACT_APP_SERVER_BASE_URL)
+            axios.post(`${process.env.REACT_APP_SERVER_BASE_URL}/generate-content-id`, data)
                 .then((result) => {
                     const uid = result.data.uid;
                     if (uid && uid.length > 0) {
-                        setGeneratedUrl("http://localhost:3000/" + uid);
-                        axios.post('http://127.0.0.1:5000/process-url', {...data, uid})
+                        setGeneratedUrl(`${process.env.REACT_APP_CLIENT_BASE_URL}/${uid}`);
+                        axios.post(`${process.env.REACT_APP_SERVER_BASE_URL}/process-url`, {...data, uid})
                             .then(() => {})
                             .catch(e => console.log(e));
                     }
