@@ -11,11 +11,9 @@ sys.path.append(dirname(__file__).split("/server")[0])
 
 from server.service.parsers import Reddit
 from server.models.models import  Metadata
-from server.utils.utils import USER_AGENT
+from server.utils import utils
 
-headers = {'User-Agent': USER_AGENT}
-
-headers = {'User-Agent': USER_AGENT}
+headers = {'User-Agent': utils.USER_AGENT}
 
 def get_random_character() -> str:
     alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnoqprstuvwxyz0123456789"
@@ -32,8 +30,8 @@ def generate_uid() -> str:
 
 def generate_content_id(src: str, app: Flask, db: SQLAlchemy) -> str:
     """Return content id if one exists or generate a unique one otherwise"""
-    with app[0].app_context():
-        query = db.session.query(Metadata).filter(Metadata.canonical_url.in_([src]))
+    with app.app_context():
+        query = db.session.query(Metadata).filter(Metadata.canonical_url.in_(tuple([src])))
         records = query.all()
         if records:
             print("returning from the database")
@@ -49,6 +47,8 @@ def generate_content_id(src: str, app: Flask, db: SQLAlchemy) -> str:
             created_dt=func.now(),
             updated_at=func.now())
         db.session.add(record)
+        utils.save(db)
+        return _generated_id
 
 
 def download_media(src, uid):

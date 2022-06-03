@@ -10,7 +10,7 @@ sys.path.append(dirname(__file__).split("/server")[0])
 
 from server.service import content_service as cs
 from server.models.models import db
-from server.alembic import migrate
+from server.migrations import migrate
 from server.props.aws import AWSProps
 from server.props.datasource import DatasourceProps
 
@@ -29,11 +29,11 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": [
     "*"
 ]}})
-# app.config['SQLALCHEMY_DATABASES_URI'] = configurations.get("datasource").full_url
-# app.config['SQLALCHEMY_BINDS'] = {
-#     configurations.get("datasource").bind_key: configurations.get("datasource").full_url
-# }
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['SQLALCHEMY_DATABASES_URI'] = configurations.get("datasource").get_full_url()
+app.config['SQLALCHEMY_BINDS'] = {
+    configurations.get("datasource").bind_key: configurations.get("datasource").get_full_url()
+}
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 

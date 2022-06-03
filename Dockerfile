@@ -11,7 +11,7 @@ ENV PATH="./node_modules/.bin:$PATH"
 EXPOSE 80
 
 COPY . ./
-RUN echo "NODE_ENV=production" > .env
+RUN echo "NODE_ENV=production" > exports
 
 RUN npm run build
 

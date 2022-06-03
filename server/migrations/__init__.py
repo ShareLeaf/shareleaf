@@ -13,7 +13,7 @@ def migrate(app, datasource: DatasourceProps):
         exit(1)
     with app.app_context():
         ini_file = dirname(__file__).split("/server")[0] + "/server/alembic.ini"
-        script_loc = dirname(__file__).split("/server")[0] + "/server/alembic"
+        script_loc = dirname(__file__).split("/server")[0] + "/server/migrations"
         alembic_cfg = Config(ini_file)
 
         alembic_cfg.set_main_option("script_location", script_loc)

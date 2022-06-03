@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  postgres_shareleaf:
+    image: postgres
+    command: postgres -c 'max_connections=2000'
+    container_name: postgres_shareleaf
+    restart: always
+    environment:
+      - DATABASE_HOST=127.0.0.1
+      - POSTGRES_USER=shareleaf
+      - POSTGRES_PASSWORD=shareleaf
+      - POSTGRES_DB=content
+    ports:
+      - "7432:5432"
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/
