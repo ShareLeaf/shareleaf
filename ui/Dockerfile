@@ -33,14 +33,21 @@ FROM node:alpine
 #WORKDIR /usr/app
 
 # Install PM2 globally
-RUN npm install --global pm2
+#RUN npm install --global pm2
 
 
 COPY package*.json ./
 
-RUN npm install
+#RUN npm install
+
+RUN echo ***********before copy*******
+RUN ls
 
 COPY ./ ./
+
+RUN echo ***********after copy*******
+
+RUN ls
 
 RUN npm run build
 
