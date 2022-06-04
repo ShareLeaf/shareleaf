@@ -17,7 +17,7 @@ env:
 #  SHARELEAF_DATASOURCE_URL: ${{ secrets.SHARELEAF_DATASOURCE_URL }}
   SHARELEAF_DATASOURCE_USERNAME: shareleaf
   SHARELEAF_DATASOURCE_PASSWORD: shareleaf
-  SHARELEAF_DATASOURCE_URL: '127.0.0.1:7432/content'
+  SHARELEAF_DATASOURCE_URL: '18.222.71.85:7432/content'
   SHARELEAF_AWS_BUCKET_NAME: shareleaf
   SHARELEAF_AWS_CDN: 'https://d1x2gijf3bj73j.cloudfront.net'
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -56,6 +56,7 @@ jobs:
           touch Dockerfile
 
           echo FROM python:3.7 >> Dockerfile
+          echo WORKDIR /usr/app/server >> Dockerfile
           echo ENV FLASK_APP=${{ env.FLASK_APP }} >> Dockerfile
           echo ENV FLASK_RUN_HOST=${{ env.FLASK_RUN_HOST }} >> Dockerfile
           echo ENV SHARELEAF_AWS_BUCKET_NAME=${{ env.SHARELEAF_AWS_BUCKET_NAME }} >> Dockerfile
@@ -65,14 +66,11 @@ jobs:
           echo ENV SHARELEAF_DATASOURCE_USERNAME=${{ env.SHARELEAF_DATASOURCE_USERNAME }} >> Dockerfile
           echo ENV SHARELEAF_DATASOURCE_PASSWORD=${{ env.SHARELEAF_DATASOURCE_PASSWORD }} >> Dockerfile
           echo ENV SHARELEAF_DATASOURCE_URL=${{ env.SHARELEAF_DATASOURCE_URL }} >> Dockerfile
-          echo WORKDIR /usr/app/server >> Dockerfile
           echo COPY ./ ./ >> Dockerfile
-          echo RUN pwd >> Dockerfile
-          echo RUN ls >> Dockerfile
           echo RUN pip install --upgrade pip >> Dockerfile
           echo RUN pip install -r requirements.txt >> Dockerfile
           echo EXPOSE 5000 >> Dockerfile
-          echo CMD ["\"gunicorn\"", "\"--bind\"", "\"0.0.0.0:5000\"", "\"-w\"", "\"4\"", "\"app:app\""] >> Dockerfile
+          echo CMD ["\"gunicorn\"", "\"--preload\"", "\"--bind\"", "\"0.0.0.0:5000\"", "\"-w\"", "\"3\"", "\"app:app\""] >> Dockerfile
 
       - name: Build and push image to Amazon ECR
         id: build-image
