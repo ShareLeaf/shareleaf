@@ -1,0 +1,8 @@
+version: "3.3"
+services:
+  shareleaf_server:
+    image: 537408061242.dkr.ecr.us-east-2.amazonaws.com/shareleaf:shareleaf-prod-server-latest
+    container_name: shareleaf-server
+    restart: always
+    ports:
+      - "5000:5000"

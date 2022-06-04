@@ -12,9 +12,12 @@ on:
     paths:
       - "server/**"
 env:
-  SHARELEAF_DATASOURCE_USERNAME: ${{ secrets.SHARELEAF_DATASOURCE_USERNAME }}
-  SHARELEAF_DATASOURCE_PASSWORD: ${{ secrets.SHARELEAF_DATASOURCE_PASSWORD }}
-  SHARELEAF_DATASOURCE_URL: ${{ secrets.SHARELEAF_DATASOURCE_URL }}
+#  SHARELEAF_DATASOURCE_USERNAME: ${{ secrets.SHARELEAF_DATASOURCE_USERNAME }}
+#  SHARELEAF_DATASOURCE_PASSWORD: ${{ secrets.SHARELEAF_DATASOURCE_PASSWORD }}
+#  SHARELEAF_DATASOURCE_URL: ${{ secrets.SHARELEAF_DATASOURCE_URL }}
+  SHARELEAF_DATASOURCE_USERNAME: shareleaf
+  SHARELEAF_DATASOURCE_PASSWORD: shareleaf
+  SHARELEAF_DATASOURCE_URL: '127.0.0.1:7432/content'
   SHARELEAF_AWS_BUCKET_NAME: shareleaf
   SHARELEAF_AWS_CDN: 'https://d1x2gijf3bj73j.cloudfront.net'
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -67,7 +70,7 @@ jobs:
           echo RUN pip install --upgrade pip >> Dockerfile
           echo RUN pip install -r requirements.txt >> Dockerfile
           echo EXPOSE 5000 >> Dockerfile
-          echo CMD ["\"gunicorn\"", "\"--bind\"", "\"0.0.0.0:5000\"", "\"-w\"", "\"6\"", "\"app:app\""] >> Dockerfile
+          echo CMD ["\"gunicorn\"", "\"--bind\"", "\"0.0.0.0:5000\"", "\"-w\"", "\"4\"", "\"app:app\""] >> Dockerfile
 
       - name: Build and push image to Amazon ECR
         id: build-image
