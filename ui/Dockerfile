@@ -15,8 +15,8 @@ COPY . .
 RUN ls src
 RUN ls src/content
 RUN ls src/content/Media
-RUN ls src/content/overview
-RUN ls src/content/overview/Highlights
+RUN ls src/content/Overview
+RUN ls src/content/Overview/Highlights
 
 RUN npm run build
 EXPOSE 3000
