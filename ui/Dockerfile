@@ -35,7 +35,7 @@ WORKDIR /usr/app
 # Install PM2 globally
 RUN npm install --global pm2
 
-COPY package*.json .
+COPY package*.json ./
 
 RUN npm install --production --silent
 
