@@ -10,10 +10,6 @@ RUN #npm install --global pm2
 
 RUN #npm install
 
-RUN ls
-RUN pwd
-RUN tree
-
 COPY ./ ./
 RUN ls src
 RUN ls src/content
