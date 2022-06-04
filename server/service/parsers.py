@@ -70,9 +70,11 @@ class Reddit(S3):
         if response.status_code == 200:
             with open(file_name, 'wb') as file:
                 file.write(response.content)
+                return True
         else:
             print("Failed to download content")
             self._invalid_url()
+            return False
 
     def process_soup(self):
         print("Processing Reddit soup")
@@ -82,19 +84,21 @@ class Reddit(S3):
             merged_filename = str(uuid.uuid4()) + ".mp4"
             v_filename = filename + ".mp4"
             a_filename = filename + ".mp3"
-            self._download_media(metadata.get("video_url"), v_filename)
-            self._download_media(metadata.get("audio_url"), a_filename)
+            v_downloaded = self._download_media(metadata.get("video_url"), v_filename)
+            a_downloaded = self._download_media(metadata.get("audio_url"), a_filename)
+            if v_downloaded and a_downloaded:
+                # merge the audio and video streams into one
+                subprocess.call(['ffmpeg', '-i', v_filename, '-i', a_filename, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
+                                 merged_filename])
 
-            # merge the audio and video streams into one
-            subprocess.call(['ffmpeg', '-i', v_filename, '-i', a_filename, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
-                             merged_filename])
+                # Upload to S3 for CDN distribution
+                self.upload_file(merged_filename, self.uid + ".mp4")
 
-            # Upload to S3 for CDN distribution
-            self.upload_file(merged_filename, self.uid + ".mp4")
-
-            # Delete the files
-            subprocess.call(['rm', v_filename, a_filename, merged_filename])
-            print("Done with processing Reddit soup", metadata)
+                # Delete the files
+                subprocess.call(['rm', v_filename, a_filename, merged_filename])
+                print("Done with processing Reddit soup", metadata)
+            else:
+                print("Failed to download either video or audio component")
         except Exception as e:
             self._invalid_url()
             print(e)
