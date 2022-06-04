@@ -7,6 +7,7 @@ FROM node:alpine
 RUN #npm install --global pm2
 
 
+
 #COPY ./package*.json ./
 
 RUN #npm install
