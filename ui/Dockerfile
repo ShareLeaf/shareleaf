@@ -35,6 +35,11 @@ FROM node:alpine
 # Install PM2 globally
 RUN npm install --global pm2
 
+
+RUN touch .env
+
+RUN echo "NODE_ENV=production" > .env
+
 COPY package*.json ./
 
 RUN npm install
