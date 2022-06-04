@@ -41,8 +41,6 @@ const LinkGenerator: FC<any> = () => {
         event.preventDefault();
         if (searchValue) {
             const data = { src: searchValue};
-
-            console.log("process.env.REACT_APP_SERVER_BASE_URL: ", process.env.REACT_APP_SERVER_BASE_URL)
             axios.post(`${process.env.REACT_APP_SERVER_BASE_URL}/generate-content-id`, data)
                 .then((result) => {
                     const uid = result.data.uid;
