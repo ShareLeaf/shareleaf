@@ -68,10 +68,12 @@ jobs:
           echo WORKDIR /server >> Dockerfile
           echo COPY ./ ./ >> Dockerfile
           echo RUN pwd >> Dockerfile
+          echo RUN ls >> Dockerfile
+          echo RUN ls server >> Dockerfile
           echo RUN pip install --upgrade pip >> Dockerfile
           echo RUN pip install -r requirements.txt >> Dockerfile
           echo EXPOSE 5000 >> Dockerfile
-          echo CMD ["\"gunicorn\"", "\"--bind\"", "\"0.0.0.0:5000\"", "\"-w\"", "\"4\"", "\"server.app:app\""] >> Dockerfile
+          echo CMD ["\"gunicorn\"", "\"--bind\"", "\"0.0.0.0:5000\"", "\"-w\"", "\"4\"", "\"app:app\""] >> Dockerfile
 
       - name: Build and push image to Amazon ECR
         id: build-image
