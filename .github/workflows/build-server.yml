@@ -65,9 +65,9 @@ jobs:
           echo ENV SHARELEAF_DATASOURCE_USERNAME=${{ env.SHARELEAF_DATASOURCE_USERNAME }} >> Dockerfile
           echo ENV SHARELEAF_DATASOURCE_PASSWORD=${{ env.SHARELEAF_DATASOURCE_PASSWORD }} >> Dockerfile
           echo ENV SHARELEAF_DATASOURCE_URL=${{ env.SHARELEAF_DATASOURCE_URL }} >> Dockerfile
-          echo RUN mkdir server
+          echo RUN mkdir server >> Dockerfile
           echo COPY ./ ./server >> Dockerfile
-          echo RUN cd server
+          echo RUN cd server >> Dockerfile
           echo RUN pip install --upgrade pip >> Dockerfile
           echo RUN pip install -r requirements.txt >> Dockerfile
           echo EXPOSE 5000 >> Dockerfile
