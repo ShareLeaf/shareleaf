@@ -74,7 +74,7 @@ def get_metadata():
     return jsonify(error="Key not found"), 200
 
 
-@app.route('/health', methods=["GET"])
+@app.route('/', methods=["GET"])
 def health():
     now = datetime.datetime.now()
     response = {
