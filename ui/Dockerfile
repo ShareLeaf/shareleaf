@@ -3,7 +3,7 @@ FROM node:alpine
 WORKDIR /opt/web
 COPY package.json ./
 
-RUN npm install --production --silent
+RUN npm install
 #RUN npm audit fix
 #
 ENV PATH="./node_modules/.bin:$PATH"
