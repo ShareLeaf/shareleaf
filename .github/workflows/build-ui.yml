@@ -3,9 +3,11 @@
 #**********************************************************************
 name: ShareLeaf UI | Prod
 on:
-  pull_request:
-    branches: [ main ]
-    types: [opened, closed]
+  push:
+    branches: [bm/SL-1_dev_ops]
+      #  pull_request:
+#    branches: [ main ]
+#    types: [opened, closed]
     paths:
       - "ui/**"
 env:

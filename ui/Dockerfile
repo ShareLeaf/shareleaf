@@ -1,19 +1,19 @@
-#FROM node:14-alpine AS builder
-#
-#WORKDIR /opt/web
-#COPY package.json ./
-#
-#RUN npm install
+FROM node:alpine
+
+WORKDIR /opt/web
+COPY package.json ./
+
+RUN npm install --production --silent
 #RUN npm audit fix
 #
-#ENV PATH="./node_modules/.bin:$PATH"
+ENV PATH="./node_modules/.bin:$PATH"
 #
 #EXPOSE 80
 #
-#COPY . ./
+COPY . ./
 #RUN echo "NODE_ENV=production" > .env
 #
-#RUN npm run build
+RUN npm run build
 #
 #FROM nginx:1.17-alpine
 #RUN apk --no-cache add curl
@@ -27,23 +27,23 @@
 
 
 
-FROM node:alpine
-
-# Set working directory
-WORKDIR /usr/app
-
-# Install PM2 globally
-RUN npm install --global pm2
-
-COPY package*.json ./
-
-RUN npm install --production --silent
-
-COPY . ./
-
-RUN npm run build
-
-EXPOSE 3000
-
-USER node
-CMD [ "pm2-runtime", "start", "npm", "--", "start" ]
+#FROM node:alpine
+#
+## Set working directory
+#WORKDIR /usr/app
+#
+## Install PM2 globally
+#RUN npm install --global pm2
+#
+#COPY package*.json ./
+#
+#RUN npm install --production --silent
+#
+#COPY . ./
+#
+#RUN npm run build
+#
+#EXPOSE 3000
+#
+#USER node
+#CMD [ "pm2-runtime", "start", "npm", "--", "start" ]
