@@ -35,14 +35,15 @@ WORKDIR /usr/app
 # Install PM2 globally
 RUN npm install --global pm2
 
-COPY ./package*.json ./
+COPY package*.json .
 
-RUN #echo "NODE_ENV=production" > .env
+RUN npm install --production --silent
 
-RUN npm install
+COPY . .
 
-COPY ./ ./
 RUN npm run build
+
 EXPOSE 3000
+
 USER node
 CMD [ "pm2-runtime", "start", "npm", "--", "start" ]
