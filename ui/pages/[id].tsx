@@ -6,10 +6,10 @@ import {
 } from '@mui/material';
 import React, {FC, useEffect, useState} from "react";
 import axios from "axios";
-import VideoElement from "@/content/Media/VideoElement";
+import VideoElement from "src/content/Media/VideoElement";
 import Loader from 'src/components/Loader';
 import Common from "@/content/Common";
-import ImageElement from "@/content/Media/ImageElement";
+import ImageElement from "src/content/Media/ImageElement";
 
 const OverviewWrapper = styled(Box)(
     ({ theme }) => `
@@ -33,7 +33,10 @@ const Media: FC<any> = () => {
     const [metadata, setMetadata] = useState<MediaMetadata | undefined>(undefined);
     const [showError, setShowError] = useState<boolean>(false);
     const [showInProgress, setShowInProgress] = useState<boolean>(false);
-    const pathTokens = window.location.pathname.split("/");
+    let pathTokens = []
+    if (typeof window !== 'undefined') {
+        pathTokens = window.location.pathname.split("/");
+    }
     useEffect(() => {
         if (pathTokens.length > 1) {
             const id = pathTokens[pathTokens.length-1]

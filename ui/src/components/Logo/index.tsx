@@ -1,6 +1,5 @@
 import { Box, styled, Tooltip } from '@mui/material';
 import Link from 'src/components/Link';
-import { useTranslation } from 'react-i18next';
 
 const LogoWrapper = styled(Link)(
   ({ theme }) => `
@@ -102,7 +101,6 @@ const LogoText = styled(Box)(
 );
 
 function Logo() {
-  const { t }: { t: any } = useTranslation();
 
   return (
     <LogoWrapper href="/">
@@ -118,7 +116,7 @@ function Logo() {
         }}
       >
         <LogoTextWrapper>
-          <Tooltip title={t('Version') + ' 3.0'} arrow placement="right">
+          <Tooltip title={('Version') + ' 3.0'} arrow placement="right">
             <VersionBadge>3.0</VersionBadge>
           </Tooltip>
           <LogoText>Tokyo</LogoText>
