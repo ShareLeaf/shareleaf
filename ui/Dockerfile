@@ -14,7 +14,7 @@ RUN ls
 RUN pwd
 RUN tree
 
-COPY . ./
+COPY ./ ./
 RUN ls src
 RUN ls src/content
 RUN ls src/content/Overview/Highlights
