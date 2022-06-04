@@ -10,7 +10,7 @@ RUN #npm install --global pm2
 
 RUN #npm install
 
-COPY ./ ./
+COPY . .
 RUN ls src
 RUN ls src/content
 RUN ls src/content/Overview
