@@ -18,10 +18,5 @@ module.exports = withImages(
           REACT_APP_SERVER_BASE_URL: process.env.REACT_APP_SERVER_BASE_URL,
           REACT_APP_CLIENT_BASE_URL: process.env.REACT_APP_CLIENT_BASE_URL
       }
-      // eslint: {
-      //     // Warning: This allows production builds to successfully complete even if
-      //     // your project has ESLint errors.
-      //     ignoreDuringBuilds: true,
-      // }
   })
 );
