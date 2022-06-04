@@ -2,7 +2,7 @@ import React, {FC, ReactNode} from "react";
 import {Box, Container} from "@mui/material";
 import Head from "next/head";
 import FullLogo from "@/components/Logo/FullLogo";
-import Highlights from "@/content/Overview/Highlights/Highlights";
+import Highlights from "src/content/Overview/Highlights/Highlights";
 import Footer from "@/components/Footer";
 
 interface CommonProps {
