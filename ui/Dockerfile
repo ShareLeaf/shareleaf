@@ -11,11 +11,12 @@ COPY ./package*.json ./
 RUN npm install
 
 RUN ls
+
+COPY ./ ./
 RUN ls src
 RUN ls src/content
 RUN ls src/content/Overview/Highlights
 
-COPY ./ ./
 RUN npm run build
 EXPOSE 3000
 USER node
