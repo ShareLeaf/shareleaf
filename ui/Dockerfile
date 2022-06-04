@@ -7,7 +7,6 @@ FROM node:alpine
 RUN #npm install --global pm2
 
 
-
 #COPY ./package*.json ./
 
 RUN #npm install
@@ -16,8 +15,7 @@ COPY . .
 RUN ls src
 RUN ls src/content
 RUN ls src/content/Media
-RUN ls src/content/Overview
-RUN ls src/content/Overview/Highlights
+RUN ls src/content/Highlights
 
 RUN npm run build
 EXPOSE 3000
