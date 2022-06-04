@@ -1,21 +1,16 @@
 FROM node:alpine
 
 # Set working directory
-#WORKDIR /usr/app
+WORKDIR /usr/app
 
 # Install PM2 globally
-RUN #npm install --global pm2
+RUN npm install --global pm2
 
+COPY ./package*.json ./
 
-#COPY ./package*.json ./
+RUN npm install
 
-RUN #npm install
-
-COPY . .
-RUN ls src
-RUN ls src/content
-RUN ls src/content/Media
-RUN ls src/content/Highlights
+COPY ./ ./
 
 RUN npm run build
 EXPOSE 3000

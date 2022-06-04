@@ -47,16 +47,7 @@ jobs:
           ECR_REPOSITORY: ${{ env.AWS_ECR_REPO }}
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
         run: |
-          cd ui
-          echo *********WORKING DIRECTORY***********
-          pwd
-          echo *********ls*******
-          ls
-          ls pages
-          ls public
-          ls src
-          ls src/content
-          tree
+          cd ${{ env.PROJECT_NAME }}
           cp ${{ env.ENV_FILE }} .env
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
