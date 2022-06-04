@@ -8,7 +8,7 @@ import React, {FC, useEffect, useState} from "react";
 import axios from "axios";
 import VideoElement from "@/content/Media/VideoElement";
 import Loader from 'src/components/Loader';
-import Common from "@/content/Common";
+import Common from "@/content/Common/Common";
 import ImageElement from "@/content/Media/ImageElement";
 
 const OverviewWrapper = styled(Box)(
