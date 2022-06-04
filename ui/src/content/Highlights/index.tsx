@@ -5,15 +5,22 @@ import {
     Card,
     Avatar,
     Typography,
-    styled, IconButton
+    styled
 } from '@mui/material';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
-import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import SpeedIcon from '@mui/icons-material/Speed';
 
-const AvatarSuccess = styled(Avatar)(
+const AvatarError = styled(Avatar)(
   ({ theme }) => `
-    background: ${theme.colors.success.light};
+    background: ${theme.colors.error.main};
+    width: ${theme.spacing(4)};
+    height: ${theme.spacing(4)};
+`
+);
+
+const AvatarSuccess = styled(Avatar)(
+    ({ theme }) => `
+    background: ${theme.colors.success.main};
     width: ${theme.spacing(4)};
     height: ${theme.spacing(4)};
 `
@@ -89,7 +96,7 @@ function Highlights() {
                 overflow: 'visible'
               }}
             >
-              <AvatarSuccess
+              <AvatarError
                 sx={{
                   width: 60,
                   height: 60,
@@ -98,17 +105,14 @@ function Highlights() {
                   top: -28
                 }}
               >
-                <CheckTwoToneIcon />
-              </AvatarSuccess>
+                  <PersonOffIcon fontSize="large" />
+              </AvatarError>
               <Box
                 px={1}
                 pb={4}
                 display={{ xs: 'block', md: 'flex' }}
                 alignItems="flex-start"
               >
-                  <IconButton sx={{ mx: 1 }} color="error" component="span">
-                      <PersonOffIcon fontSize="large" />
-                  </IconButton>
                 <Box
                   sx={{
                     pl: { xs: 0, md: 4 }
@@ -123,9 +127,8 @@ function Highlights() {
                     }}
                     variant="subtitle2"
                   >
-                    {(
-                      'If you have a ShareLeaf link, you can view content from any social media site without creating an account.'
-                    )}
+                      If you have a ShareLeaf link, you can view content from any social media site without creating an account.
+                      That means no tracking and more privacy to you.
                   </Typography>
                 </Box>
               </Box>
@@ -147,7 +150,7 @@ function Highlights() {
                   top: -28
                 }}
               >
-                <CheckTwoToneIcon />
+                  <SpeedIcon fontSize="large" />
               </AvatarSuccess>
               <Box
                 px={1}
@@ -155,9 +158,6 @@ function Highlights() {
                 display={{ xs: 'block', md: 'flex' }}
                 alignItems="flex-start"
               >
-                  <IconButton sx={{ mx: 1 }} color="success" component="span">
-                      <SpeedIcon fontSize="large" />
-                  </IconButton>
                 <Box
                   sx={{
                     pl: { xs: 0, md: 4 }
@@ -172,7 +172,7 @@ function Highlights() {
                     }}
                     variant="subtitle2"
                   >
-                      Like really fast! Your don't need a fast Internet to view content on ShareLeaf. We distribute
+                      Your don't need a fast Internet to view content on ShareLeaf. We distribute
                       everything to your nearest location.
                   </Typography>
                 </Box>

@@ -32,6 +32,7 @@ interface MediaMetadata {
 const Media: FC<any> = () => {
     const [metadata, setMetadata] = useState<MediaMetadata | undefined>(undefined);
     const [showError, setShowError] = useState<boolean>(false);
+    const [showInvalidUrlError, setShowInvalidUrlError] = useState<boolean>(false);
     const [showInProgress, setShowInProgress] = useState<boolean>(false);
     let pathTokens = []
     if (typeof window !== 'undefined') {
@@ -43,10 +44,13 @@ const Media: FC<any> = () => {
             if (id) {
                 setShowInProgress(false);
                 setShowError(false);
+                setShowInvalidUrlError(false);
                 axios.get(`${process.env.REACT_APP_SERVER_BASE_URL}/metadata?key=` + id)
                     .then(response => {
-                        if (response.data.error || response.data.invalid_url) {
+                        if (response.data.error) {
                             setShowError(true);
+                        } else if (response.data.invalid_url) {
+                            setShowInvalidUrlError(true);
                         } else {
                             if (response.data.processed) {
                                 const parsed = {
@@ -110,6 +114,10 @@ const Media: FC<any> = () => {
         else if (showError) {
             return <Alert severity="error">
                 Sorry, could not find the page you're looking for :(
+            </Alert>
+        }  else if (showInvalidUrlError) {
+            return <Alert severity="warning">
+                Sorry, we were not able to process the original URL associated with the ShareLeaf URL :(
             </Alert>
         } else {
             return <Loader/>

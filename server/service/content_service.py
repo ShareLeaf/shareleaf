@@ -85,7 +85,10 @@ def get_metadata(uid: str, app: Flask, db: SQLAlchemy) -> {}:
                     "dislike_count": records[0].dislike_count,
                     "created_dt": records[0].created_dt
                 }
-
+            else:
+                return {
+                    "invalid_url": records[0].invalid_url,
+                }
         return {
             "error": True
         }

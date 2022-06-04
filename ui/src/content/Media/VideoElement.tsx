@@ -25,7 +25,7 @@ const VideoElement: FC<VideoElementProps> = (props) => {
                 sx={{
                     pt: 1
                 }}
-                variant="h4"
+                variant="h3"
             >
                 {props.title}
             </Typography>

@@ -71,10 +71,10 @@ def get_metadata():
     key = request.args.get("key")
     if key:
         return jsonify(cs.get_metadata(key, app, db)), 200
-    return jsonify(error="Key not found"), 200
+    return jsonify(error=True), 200
 
 
-@app.route('/health', methods=["GET"])
+@app.route('/', methods=["GET"])
 def health():
     now = datetime.datetime.now()
     response = {
@@ -87,7 +87,6 @@ def health():
 def create_app():
     return app
 
-
 if __name__ == "__main__":
     app = create_app()
-    app.run(host='0.0.0.0', port=configurations.get("server").port)
+    app.run(host='0.0.0.0', port=5000)
