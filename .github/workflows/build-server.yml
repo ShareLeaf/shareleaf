@@ -20,6 +20,7 @@ env:
   SHARELEAF_AWS_CDN: 'https://d1x2gijf3bj73j.cloudfront.net'
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  PYTHONUNBUFFERED: TRUE
   FLASK_APP: 'app.py'
   FLASK_RUN_HOST: '0.0.0.0'
   AWS_REGION_US: 'us-east-2'
@@ -55,6 +56,7 @@ jobs:
 
           echo FROM python:3.7 >> Dockerfile
           echo WORKDIR /usr/app/server >> Dockerfile
+          echo ENV PYTHONUNBUFFERED=${{ env.PYTHONUNBUFFERED }} >> Dockerfile
           echo ENV FLASK_APP=${{ env.FLASK_APP }} >> Dockerfile
           echo ENV FLASK_RUN_HOST=${{ env.FLASK_RUN_HOST }} >> Dockerfile
           echo ENV SHARELEAF_AWS_BUCKET_NAME=${{ env.SHARELEAF_AWS_BUCKET_NAME }} >> Dockerfile

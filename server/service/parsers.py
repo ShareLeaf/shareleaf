@@ -58,6 +58,7 @@ class Reddit(S3):
             }]
             self.db.session.bulk_update_mappings(Metadata, records_to_update)
             utils.save(self.db)
+        print("Metadata processed for {}: video={} audio={}".format(self.uid, video_url, audio_url))
         return {
             "title": title,
             "video_url": video_url,
