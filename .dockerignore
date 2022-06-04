@@ -1,0 +1,8 @@
+**/.gitkeep
+**/.DS_Store
+.next/
+.dockerignore
+Dockerfile
+docker-compose.yml
+node_modules/
+README.md
