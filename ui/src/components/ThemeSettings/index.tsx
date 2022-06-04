@@ -15,7 +15,6 @@ import { ThemeContext } from 'src/theme/ThemeProvider';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
 import Fab from '@mui/material/Fab';
-import { useTranslation } from 'react-i18next';
 import UnfoldMoreTwoToneIcon from '@mui/icons-material/UnfoldMoreTwoTone';
 import Link from 'src/components/Link';
 
@@ -197,7 +196,6 @@ const CheckSelected = styled(Box)(
 );
 
 const ThemeSettings: FC = () => {
-  const { t }: { t: any } = useTranslation();
 
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -237,7 +235,7 @@ const ThemeSettings: FC = () => {
   return (
     <>
       <ThemeSettingsButton>
-        <Tooltip arrow title={t('Theme Settings')}>
+        <Tooltip arrow title={('Theme Settings')}>
           <Fab ref={ref} onClick={handleOpen} color="primary" aria-label="add">
             <SettingsTwoToneIcon />
           </Fab>

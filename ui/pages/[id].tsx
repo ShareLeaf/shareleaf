@@ -33,7 +33,10 @@ const Media: FC<any> = () => {
     const [metadata, setMetadata] = useState<MediaMetadata | undefined>(undefined);
     const [showError, setShowError] = useState<boolean>(false);
     const [showInProgress, setShowInProgress] = useState<boolean>(false);
-    const pathTokens = window.location.pathname.split("/");
+    let pathTokens = []
+    if (typeof window !== 'undefined') {
+        pathTokens = window.location.pathname.split("/");
+    }
     useEffect(() => {
         if (pathTokens.length > 1) {
             const id = pathTokens[pathTokens.length-1]

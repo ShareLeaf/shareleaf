@@ -8,7 +8,6 @@ import {
   useTheme
 } from '@mui/material';
 import Link from 'src/components/Link';
-import { useTranslation } from 'react-i18next';
 
 const LogoWrapper = styled(Link)(
   ({ theme }) => `
@@ -96,11 +95,10 @@ const TooltipWrapper = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 function Logo() {
-  const { t }: { t: any } = useTranslation();
   const theme = useTheme();
 
   return (
-    <TooltipWrapper title={t('ShareLeaf')} arrow>
+    <TooltipWrapper title={('ShareLeaf')} arrow>
       <LogoWrapper href="/">
         <Badge
           sx={{
