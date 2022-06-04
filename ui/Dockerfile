@@ -16,7 +16,7 @@ RUN ls src
 RUN ls src/content
 RUN ls src/content/Media
 RUN ls src/content/overview
-RUN ls src/content/verview/Highlights
+RUN ls src/content/overview/Highlights
 
 RUN npm run build
 EXPOSE 3000
