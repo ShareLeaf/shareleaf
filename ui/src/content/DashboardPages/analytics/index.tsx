@@ -1,18 +1,18 @@
 import { Grid } from '@mui/material';
 
-import PageHeader from 'src/content/Dashboards/Analytics/PageHeader';
+import PageHeader from '@/content/Dashboards/Analytics/PageHeader';
 import Footer from 'src/components/Footer';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
-import AudienceOverview from 'src/content/Dashboards/Analytics/AudienceOverview';
-import Conversions from 'src/content/Dashboards/Analytics/Conversions';
-import TopLandingPages from 'src/content/Dashboards/Analytics/TopLandingPages';
-import ActiveReferrals from 'src/content/Dashboards/Analytics/ActiveReferrals';
-import PendingInvitations from 'src/content/Dashboards/Analytics/PendingInvitations';
-import BounceRate from 'src/content/Dashboards/Analytics/BounceRate';
-import ConversionsAlt from 'src/content/Dashboards/Analytics/ConversionsAlt';
-import SessionsByCountry from 'src/content/Dashboards/Analytics/SessionsByCountry';
-import TrafficSources from 'src/content/Dashboards/Analytics/TrafficSources';
+import AudienceOverview from '@/content/Dashboards/Analytics/AudienceOverview';
+import Conversions from '@/content/Dashboards/Analytics/Conversions';
+import TopLandingPages from '@/content/Dashboards/Analytics/TopLandingPages';
+import ActiveReferrals from '@/content/Dashboards/Analytics/ActiveReferrals';
+import PendingInvitations from '@/content/Dashboards/Analytics/PendingInvitations';
+import BounceRate from '@/content/Dashboards/Analytics/BounceRate';
+import ConversionsAlt from '@/content/Dashboards/Analytics/ConversionsAlt';
+import SessionsByCountry from '@/content/Dashboards/Analytics/SessionsByCountry';
+import TrafficSources from '@/content/Dashboards/Analytics/TrafficSources';
 
 function DashboardAnalyticsContent() {
   return (

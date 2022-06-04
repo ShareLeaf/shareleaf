@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 
-import PageHeader from 'src/content/Dashboards/Tasks/PageHeader';
+import PageHeader from '@/content/Dashboards/Tasks/PageHeader';
 import Footer from 'src/components/Footer';
 import {
   Grid,
@@ -17,13 +17,13 @@ import {
 } from '@mui/material';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
-import TeamOverview from 'src/content/Dashboards/Tasks/TeamOverview';
-import TasksAnalytics from 'src/content/Dashboards/Tasks/TasksAnalytics';
-import Performance from 'src/content/Dashboards/Tasks/Performance';
-import Projects from 'src/content/Dashboards/Tasks/Projects';
-import Checklist from 'src/content/Dashboards/Tasks/Checklist';
-import Profile from 'src/content/Dashboards/Tasks/Profile';
-import TaskSearch from 'src/content/Dashboards/Tasks/TaskSearch';
+import TeamOverview from '@/content/Dashboards/Tasks/TeamOverview';
+import TasksAnalytics from '@/content/Dashboards/Tasks/TasksAnalytics';
+import Performance from '@/content/Dashboards/Tasks/Performance';
+import Projects from '@/content/Dashboards/Tasks/Projects';
+import Checklist from '@/content/Dashboards/Tasks/Checklist';
+import Profile from '@/content/Dashboards/Tasks/Profile';
+import TaskSearch from '@/content/Dashboards/Tasks/TaskSearch';
 import { useTranslation } from 'react-i18next';
 import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
 

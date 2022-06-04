@@ -3,7 +3,7 @@ import Head from 'next/head';
 import BoxedSidebarLayout from 'src/layouts/BoxedSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
-import DashboardFitnessContent from 'src/content/DashboardPages/fitness';
+import DashboardFitnessContent from '@/content/DashboardPages/fitness';
 
 function DashboardFitness() {
   return (

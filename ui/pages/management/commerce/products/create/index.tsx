@@ -3,7 +3,7 @@ import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
 import Head from 'next/head';
-import PageHeader from 'src/content/Management/Commerce/create/PageHeader';
+import PageHeader from '@/content/Management/Commerce/create/PageHeader';
 import {
   Box,
   Drawer,
@@ -15,10 +15,10 @@ import {
 } from '@mui/material';
 import Scrollbar from 'src/components/Scrollbar';
 
-import Sidebar from 'src/content/Management/Commerce/create/Sidebar';
+import Sidebar from '@/content/Management/Commerce/create/Sidebar';
 
-import AdditionalInfo from 'src/content/Management/Commerce/create/AdditionalInfo';
-import GeneralSection from 'src/content/Management/Commerce/create/GeneralSection';
+import AdditionalInfo from '@/content/Management/Commerce/create/AdditionalInfo';
+import GeneralSection from '@/content/Management/Commerce/create/GeneralSection';
 import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 
 const DrawerWrapper = styled(Drawer)(

@@ -13,8 +13,8 @@ import { useRefMounted } from 'src/hooks/useRefMounted';
 import type { Invoice } from 'src/models/invoice';
 import { invoicesApi } from 'src/mocks/invoices';
 
-import InvoiceBody from 'src/content/Management/Invoices/single/InvoiceBody';
-import PageHeader from 'src/content/Management/Invoices/single/PageHeader';
+import InvoiceBody from '@/content/Management/Invoices/single/InvoiceBody';
+import PageHeader from '@/content/Management/Invoices/single/PageHeader';
 
 function ManagementInvoicesView() {
   const isMountedRef = useRefMounted();

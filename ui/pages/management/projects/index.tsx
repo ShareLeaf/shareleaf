@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
-import PageHeader from 'src/content/Management/Projects/PageHeader';
+import PageHeader from '@/content/Management/Projects/PageHeader';
 import Footer from 'src/components/Footer';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
@@ -13,7 +13,7 @@ import { Grid } from '@mui/material';
 import { useRefMounted } from 'src/hooks/useRefMounted';
 import type { Project } from 'src/models/project';
 import { projectsApi } from 'src/mocks/projects';
-import Results from 'src/content/Management/Projects/Results';
+import Results from '@/content/Management/Projects/Results';
 
 function ManagementProjects() {
   const isMountedRef = useRefMounted();

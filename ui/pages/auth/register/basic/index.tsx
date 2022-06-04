@@ -10,10 +10,10 @@ import {
 import Head from 'next/head';
 import { Guest } from 'src/components/Guest';
 import { useAuth } from 'src/hooks/useAuth';
-import { RegisterAuth0 } from 'src/content/Auth/Register/RegisterAuth0';
-import { RegisterFirebaseAuth } from 'src/content/Auth/Register/RegisterFirebaseAuth';
-import { RegisterJWT } from 'src/content/Auth/Register/RegisterJWT';
-import { RegisterAmplify } from 'src/content/Auth/Register/RegisterAmplify';
+import { RegisterAuth0 } from '@/content/Auth/Register/RegisterAuth0';
+import { RegisterFirebaseAuth } from '@/content/Auth/Register/RegisterFirebaseAuth';
+import { RegisterJWT } from '@/content/Auth/Register/RegisterJWT';
+import { RegisterAmplify } from '@/content/Auth/Register/RegisterAmplify';
 import { useTranslation } from 'react-i18next';
 import Logo from 'src/components/LogoSign';
 import BaseLayout from 'src/layouts/BaseLayout';

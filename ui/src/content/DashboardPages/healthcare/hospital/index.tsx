@@ -3,15 +3,15 @@ import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
 import { Grid } from '@mui/material';
 
-import PageHeader from 'src/content/Dashboards/Healthcare/hospital/PageHeaderHospital';
-import OverallStatus from 'src/content/Dashboards/Healthcare/hospital/OverallStatus';
-import AppointmentsAlt from 'src/content/Dashboards/Healthcare/hospital/AppointmentsAlt';
-import Surgeries from 'src/content/Dashboards/Healthcare/hospital/Surgeries';
-import Doctors from 'src/content/Dashboards/Healthcare/hospital/Doctors';
-import Departments from 'src/content/Dashboards/Healthcare/hospital/Departments';
-import RecentPatients from 'src/content/Dashboards/Healthcare/hospital/RecentPatients';
-import Notifications from 'src/content/Dashboards/Healthcare/hospital/Notifications';
-import UpcomingConsults from 'src/content/Dashboards/Healthcare/hospital/UpcomingConsults';
+import PageHeader from '@/content/Dashboards/Healthcare/hospital/PageHeaderHospital';
+import OverallStatus from '@/content/Dashboards/Healthcare/hospital/OverallStatus';
+import AppointmentsAlt from '@/content/Dashboards/Healthcare/hospital/AppointmentsAlt';
+import Surgeries from '@/content/Dashboards/Healthcare/hospital/Surgeries';
+import Doctors from '@/content/Dashboards/Healthcare/hospital/Doctors';
+import Departments from '@/content/Dashboards/Healthcare/hospital/Departments';
+import RecentPatients from '@/content/Dashboards/Healthcare/hospital/RecentPatients';
+import Notifications from '@/content/Dashboards/Healthcare/hospital/Notifications';
+import UpcomingConsults from '@/content/Dashboards/Healthcare/hospital/UpcomingConsults';
 
 function DashboardHospitalViewContent() {
   return (

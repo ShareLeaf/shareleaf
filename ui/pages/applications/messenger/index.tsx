@@ -2,10 +2,10 @@ import Head from 'next/head';
 import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
-import TopBarContent from 'src/content/Applications/Messenger/TopBarContent';
-import BottomBarContent from 'src/content/Applications/Messenger/BottomBarContent';
-import SidebarContent from 'src/content/Applications/Messenger/SidebarContent';
-import ChatContent from 'src/content/Applications/Messenger/ChatContent';
+import TopBarContent from '@/content/Applications/Messenger/TopBarContent';
+import BottomBarContent from '@/content/Applications/Messenger/BottomBarContent';
+import SidebarContent from '@/content/Applications/Messenger/SidebarContent';
+import ChatContent from '@/content/Applications/Messenger/ChatContent';
 
 import Scrollbar from 'src/components/Scrollbar';
 

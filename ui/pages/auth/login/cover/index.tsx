@@ -10,10 +10,10 @@ import {
 import Head from 'next/head';
 import { useAuth } from 'src/hooks/useAuth';
 import { Guest } from 'src/components/Guest';
-import { LoginAuth0 } from 'src/content/Auth/Login/LoginAuth0';
-import { LoginFirebaseAuth } from 'src/content/Auth/Login/LoginFirebaseAuth';
-import { LoginJWT } from 'src/content/Auth/Login/LoginJWT';
-import { LoginAmplify } from 'src/content/Auth/Login/LoginAmplify';
+import { LoginAuth0 } from '@/content/Auth/Login/LoginAuth0';
+import { LoginFirebaseAuth } from '@/content/Auth/Login/LoginFirebaseAuth';
+import { LoginJWT } from '@/content/Auth/Login/LoginJWT';
+import { LoginAmplify } from '@/content/Auth/Login/LoginAmplify';
 import BaseLayout from 'src/layouts/BaseLayout';
 import Link from 'src/components/Link';
 import { useRouter } from 'next/router';

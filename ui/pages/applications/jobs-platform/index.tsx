@@ -3,9 +3,9 @@ import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
 import Head from 'next/head';
-import PageHeader from 'src/content/Applications/JobsPlatform/PageHeader';
+import PageHeader from '@/content/Applications/JobsPlatform/PageHeader';
 import Footer from 'src/components/Footer';
-import Sidebar from 'src/content/Applications/JobsPlatform/Sidebar';
+import Sidebar from '@/content/Applications/JobsPlatform/Sidebar';
 
 import {
   TextField,
@@ -29,7 +29,7 @@ import { useRefMounted } from 'src/hooks/useRefMounted';
 import type { Job } from 'src/models/job';
 import { jobsApi } from 'src/mocks/jobs';
 
-import Results from 'src/content/Applications/JobsPlatform/Results';
+import Results from '@/content/Applications/JobsPlatform/Results';
 import Scrollbar from 'src/components/Scrollbar';
 
 const sidebarContent = (

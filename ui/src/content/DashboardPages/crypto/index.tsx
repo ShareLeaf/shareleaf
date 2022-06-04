@@ -1,14 +1,14 @@
-import PageHeader from 'src/content/Dashboards/Crypto/PageHeader';
+import PageHeader from '@/content/Dashboards/Crypto/PageHeader';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import Footer from 'src/components/Footer';
 
 import { Grid } from '@mui/material';
 
-import AccountBalance from 'src/content/Dashboards/Crypto/AccountBalance';
-import Wallets from 'src/content/Dashboards/Crypto/Wallets';
-import AccountSecurity from 'src/content/Dashboards/Crypto/AccountSecurity';
-import RecentOrders from 'src/content/Dashboards/Crypto/RecentOrders';
-import WatchList from 'src/content/Dashboards/Crypto/WatchList';
+import AccountBalance from '@/content/Dashboards/Crypto/AccountBalance';
+import Wallets from '@/content/Dashboards/Crypto/Wallets';
+import AccountSecurity from '@/content/Dashboards/Crypto/AccountSecurity';
+import RecentOrders from '@/content/Dashboards/Crypto/RecentOrders';
+import WatchList from '@/content/Dashboards/Crypto/WatchList';
 
 function DashboardCryptoContent() {
   return (

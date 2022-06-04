@@ -1,15 +1,15 @@
-import PageHeader from 'src/content/Dashboards/Products/PageHeader';
+import PageHeader from '@/content/Dashboards/Products/PageHeader';
 import Footer from 'src/components/Footer';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
 import { Grid } from '@mui/material';
 
-import Block1 from 'src/content/Dashboards/Products/Block1';
-import Block2 from 'src/content/Dashboards/Products/Block2';
-import Block3 from 'src/content/Blocks/ChartsLarge/Block5';
-import Block4 from 'src/content/Dashboards/Products/Block4';
-import Block5 from 'src/content/Blocks/ChartsSmall/Block5';
-import Block6 from 'src/content/Dashboards/Products/Block6';
+import Block1 from '@/content/Dashboards/Products/Block1';
+import Block2 from '@/content/Dashboards/Products/Block2';
+import Block3 from '@/content/Blocks/ChartsLarge/Block5';
+import Block4 from '@/content/Dashboards/Products/Block4';
+import Block5 from '@/content/Blocks/ChartsSmall/Block5';
+import Block6 from '@/content/Dashboards/Products/Block6';
 
 function DashboardProductsContent() {
   return (

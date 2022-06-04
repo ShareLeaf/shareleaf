@@ -1,17 +1,17 @@
-import PageHeader from 'src/content/Dashboards/Expenses/PageHeader';
+import PageHeader from '@/content/Dashboards/Expenses/PageHeader';
 import Footer from 'src/components/Footer';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
 import { Grid } from '@mui/material';
 
-import Block1 from 'src/content/Blocks/SparklinesLarge/Block7';
-import Block2 from 'src/content/Dashboards/Expenses/Block2';
-import Block3 from 'src/content/Blocks/ProgressCircular/Block8';
-import Block4 from 'src/content/Blocks/ListsLarge/Block3';
-import Block5 from 'src/content/Blocks/ListsLarge/Block4';
-import Block6 from 'src/content/Blocks/ListsLarge/Block9';
-import Block7 from 'src/content/Blocks/ListsLarge/Block10';
-import Block8 from 'src/content/Blocks/ChartsSmall/Block6';
+import Block1 from '@/content/Blocks/SparklinesLarge/Block7';
+import Block2 from '@/content/Dashboards/Expenses/Block2';
+import Block3 from '@/content/Blocks/ProgressCircular/Block8';
+import Block4 from '@/content/Blocks/ListsLarge/Block3';
+import Block5 from '@/content/Blocks/ListsLarge/Block4';
+import Block6 from '@/content/Blocks/ListsLarge/Block9';
+import Block7 from '@/content/Blocks/ListsLarge/Block10';
+import Block8 from '@/content/Blocks/ChartsSmall/Block6';
 
 function DashboardExpensesContent() {
   return (

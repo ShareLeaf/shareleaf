@@ -1,17 +1,17 @@
-import PageHeader from 'src/content/Dashboards/Banking/PageHeader';
+import PageHeader from '@/content/Dashboards/Banking/PageHeader';
 import Footer from 'src/components/Footer';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
 import { Grid } from '@mui/material';
 
-import Transfers from 'src/content/Dashboards/Banking/Transfers';
-import Bills from 'src/content/Dashboards/Banking/Bills';
-import Requests from 'src/content/Dashboards/Banking/Requests';
-import Payments from 'src/content/Dashboards/Banking/Payments';
-import MainAccount from 'src/content/Dashboards/Banking/MainAccount';
-import SecondaryAccounts from 'src/content/Dashboards/Banking/SecondaryAccounts';
-import Investments from 'src/content/Dashboards/Banking/Investments';
-import TransactionsStatistics from 'src/content/Dashboards/Banking/TransactionsStatistics';
+import Transfers from '@/content/Dashboards/Banking/Transfers';
+import Bills from '@/content/Dashboards/Banking/Bills';
+import Requests from '@/content/Dashboards/Banking/Requests';
+import Payments from '@/content/Dashboards/Banking/Payments';
+import MainAccount from '@/content/Dashboards/Banking/MainAccount';
+import SecondaryAccounts from '@/content/Dashboards/Banking/SecondaryAccounts';
+import Investments from '@/content/Dashboards/Banking/Investments';
+import TransactionsStatistics from '@/content/Dashboards/Banking/TransactionsStatistics';
 
 function DashboardBankingContent() {
   return (

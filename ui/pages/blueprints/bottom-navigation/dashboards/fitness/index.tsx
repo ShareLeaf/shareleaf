@@ -3,7 +3,7 @@ import Head from 'next/head';
 import BottomNavigationLayout from 'src/layouts/BottomNavigationLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
-import DashboardFitnessContent from 'src/content/DashboardPages/fitness';
+import DashboardFitnessContent from '@/content/DashboardPages/fitness';
 
 function DashboardFitness() {
   return (

@@ -1,22 +1,22 @@
-import PageHeader from 'src/content/Dashboards/Reports/PageHeader';
+import PageHeader from '@/content/Dashboards/Reports/PageHeader';
 import Footer from 'src/components/Footer';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
 import { Grid } from '@mui/material';
 
-import Block1 from 'src/content/Blocks/Statistics/Block3';
-import Block2 from 'src/content/Blocks/ListsLarge/Block8';
-import Block3 from 'src/content/Dashboards/Reports/Block3';
-import Block4 from 'src/content/Dashboards/Reports/Block4';
-import Block5 from 'src/content/Dashboards/Reports/Block5';
-import Block6 from 'src/content/Dashboards/Reports/Block6';
-import Block7 from 'src/content/Dashboards/Reports/Block7';
-import Block8 from 'src/content/Dashboards/Reports/Block8';
-import Block9 from 'src/content/Dashboards/Reports/Block9';
-import Block10 from 'src/content/Blocks/ListsSmall/Block7';
-import Block11 from 'src/content/Blocks/ListsSmall/Block8';
-import Block12 from 'src/content/Dashboards/Reports/Block12';
-import Block13 from 'src/content/Dashboards/Reports/Block13';
+import Block1 from '@/content/Blocks/Statistics/Block3';
+import Block2 from '@/content/Blocks/ListsLarge/Block8';
+import Block3 from '@/content/Dashboards/Reports/Block3';
+import Block4 from '@/content/Dashboards/Reports/Block4';
+import Block5 from '@/content/Dashboards/Reports/Block5';
+import Block6 from '@/content/Dashboards/Reports/Block6';
+import Block7 from '@/content/Dashboards/Reports/Block7';
+import Block8 from '@/content/Dashboards/Reports/Block8';
+import Block9 from '@/content/Dashboards/Reports/Block9';
+import Block10 from '@/content/Blocks/ListsSmall/Block7';
+import Block11 from '@/content/Blocks/ListsSmall/Block8';
+import Block12 from '@/content/Dashboards/Reports/Block12';
+import Block13 from '@/content/Dashboards/Reports/Block13';
 
 function DashboardReportsContent() {
   return (

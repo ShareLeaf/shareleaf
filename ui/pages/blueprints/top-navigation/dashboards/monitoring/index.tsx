@@ -3,7 +3,7 @@ import Head from 'next/head';
 import TopNavigationLayout from 'src/layouts/TopNavigationLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
-import DashboardMonitoringContent from 'src/content/DashboardPages/monitoring';
+import DashboardMonitoringContent from '@/content/DashboardPages/monitoring';
 
 function DashboardMonitoring() {
   return (

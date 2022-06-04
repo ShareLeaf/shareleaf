@@ -1,18 +1,18 @@
 import dynamic from 'next/dynamic';
 
-import PageHeader from 'src/content/Dashboards/Learning/PageHeader';
+import PageHeader from '@/content/Dashboards/Learning/PageHeader';
 import Footer from 'src/components/Footer';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
 import { Grid } from '@mui/material';
 
-import TimeSpent from 'src/content/Dashboards/Learning/TimeSpent';
-import TopTrainers from 'src/content/Dashboards/Learning/TopTrainers';
-import Leaderboard from 'src/content/Dashboards/Learning/Leaderboard';
-import RecentCourses from 'src/content/Dashboards/Learning/RecentCourses';
+import TimeSpent from '@/content/Dashboards/Learning/TimeSpent';
+import TopTrainers from '@/content/Dashboards/Learning/TopTrainers';
+import Leaderboard from '@/content/Dashboards/Learning/Leaderboard';
+import RecentCourses from '@/content/Dashboards/Learning/RecentCourses';
 
 const UpcomingConferences = dynamic(
-  () => import('src/content/Dashboards/Learning/UpcomingConferences'),
+  () => import('@/content/Dashboards/Learning/UpcomingConferences'),
   { ssr: true }
 );
 
