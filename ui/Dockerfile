@@ -4,15 +4,15 @@ FROM node:alpine
 WORKDIR /usr/app
 
 # Install PM2 globally
-RUN npm install --global pm2
+RUN #npm install --global pm2
 
-COPY ./package*.json ./
+#COPY ./package*.json ./
 
-RUN npm install
+RUN #npm install
 
 RUN ls
 
-COPY ./ ./
+COPY . ./
 RUN ls src
 RUN ls src/content
 RUN ls src/content/Overview/Highlights
