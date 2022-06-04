@@ -39,7 +39,7 @@ COPY package*.json ./
 
 RUN npm install --production --silent
 
-COPY . .
+COPY . ./
 
 RUN npm run build
 
