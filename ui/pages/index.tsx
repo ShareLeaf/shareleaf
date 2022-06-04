@@ -2,8 +2,8 @@ import { Box, styled } from '@mui/material';
 import type { ReactElement } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
 import React from 'react';
-import LinkGenerator from "src/content/LinkGenerator/LinkGenerator";
-import Common from "src/content/Common/Common";
+import LinkGenerator from "@/content/LinkGenerator";
+import Common from "@/content/Common";
 
 const OverviewWrapper = styled(Box)(
     ({ theme }) => `
