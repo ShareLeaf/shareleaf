@@ -3,7 +3,7 @@ import Head from 'next/head';
 import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
-import DashboardExpensesContent from '@/content/DashboardPages/expenses';
+import DashboardExpensesContent from 'src/content/DashboardPages/expenses';
 
 function DashboardExpenses() {
   return (

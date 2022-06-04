@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { Authenticated } from 'src/components/Authenticated';
 import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';
 
-import DashboardBankingContent from '@/content/DashboardPages/banking';
+import DashboardBankingContent from 'src/content/DashboardPages/banking';
 
 function DashboardBanking() {
   return (

@@ -15,9 +15,9 @@ import {
   styled,
   useTheme
 } from '@mui/material';
-import { MailboxResults } from '@/content/Applications/Mailbox/Results';
-import { MailboxSingle } from '@/content/Applications/Mailbox/Single';
-import { MailboxSidebar } from '@/content/Applications/Mailbox/Sidebar';
+import { MailboxResults } from 'src/content/Applications/Mailbox/Results';
+import { MailboxSingle } from 'src/content/Applications/Mailbox/Single';
+import { MailboxSidebar } from 'src/content/Applications/Mailbox/Sidebar';
 import { getTags, openSidebar, closeSidebar } from 'src/slices/mailbox';
 import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 

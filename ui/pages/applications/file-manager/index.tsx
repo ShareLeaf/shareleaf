@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import Head from 'next/head';
-import PageHeader from '@/content/Applications/FileManager/PageHeader';
+import PageHeader from 'src/content/Applications/FileManager/PageHeader';
 import {
   Box,
   Divider,
@@ -13,10 +13,10 @@ import {
 } from '@mui/material';
 import Scrollbar from 'src/components/Scrollbar';
 
-import FileManagerSidebar from '@/content/Applications/FileManager/FileManagerSidebar';
-import QuickAccess from '@/content/Applications/FileManager/QuickAccess';
-import TeamFolders from '@/content/Applications/FileManager/TeamFolders';
-import AllFolders from '@/content/Applications/FileManager/AllFolders';
+import FileManagerSidebar from 'src/content/Applications/FileManager/FileManagerSidebar';
+import QuickAccess from 'src/content/Applications/FileManager/QuickAccess';
+import TeamFolders from 'src/content/Applications/FileManager/TeamFolders';
+import AllFolders from 'src/content/Applications/FileManager/AllFolders';
 
 import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';

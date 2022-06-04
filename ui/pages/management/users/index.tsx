@@ -5,7 +5,7 @@ import Head from 'next/head';
 import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
-import PageHeader from '@/content/Management/Users/PageHeader';
+import PageHeader from 'src/content/Management/Users/PageHeader';
 import Footer from 'src/components/Footer';
 
 import { Grid } from '@mui/material';
@@ -16,7 +16,7 @@ import { usersApi } from 'src/mocks/users';
 
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
-import Results from '@/content/Management/Users/Results';
+import Results from 'src/content/Management/Users/Results';
 
 function ManagementUsers() {
   const isMountedRef = useRefMounted();

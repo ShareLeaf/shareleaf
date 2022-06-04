@@ -6,9 +6,9 @@ import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
 import Footer from 'src/components/Footer';
-import PageHeader from '@/content/Management/Commerce/shop/PageHeader';
-import Sidebar from '@/content/Management/Commerce/shop/Sidebar';
-import Results from '@/content/Management/Commerce/shop/Results';
+import PageHeader from 'src/content/Management/Commerce/shop/PageHeader';
+import Sidebar from 'src/content/Management/Commerce/shop/Sidebar';
+import Results from 'src/content/Management/Commerce/shop/Results';
 
 import {
   Hidden,

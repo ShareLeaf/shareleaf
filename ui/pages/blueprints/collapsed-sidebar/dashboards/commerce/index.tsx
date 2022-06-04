@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { Authenticated } from 'src/components/Authenticated';
 import CollapsedSidebarLayout from 'src/layouts/CollapsedSidebarLayout';
 
-import DashboardCommerceContent from '@/content/DashboardPages/commerce';
+import DashboardCommerceContent from 'src/content/DashboardPages/commerce';
 
 function DashboardCommerce() {
   return (

@@ -1,4 +1,4 @@
-import PageHeader from '@/content/Blocks/ChartsSmall/PageHeader';
+import PageHeader from 'src/content/Blocks/ChartsSmall/PageHeader';
 import Footer from 'src/components/Footer';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import Head from 'next/head';
@@ -6,12 +6,12 @@ import Head from 'next/head';
 import { Authenticated } from 'src/components/Authenticated';
 import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';
 
-import Block1 from '@/content/Blocks/ChartsSmall/Block1';
-import Block2 from '@/content/Blocks/ChartsSmall/Block2';
-import Block3 from '@/content/Blocks/ChartsSmall/Block3';
-import Block4 from '@/content/Blocks/ChartsSmall/Block4';
-import Block5 from '@/content/Blocks/ChartsSmall/Block5';
-import Block6 from '@/content/Blocks/ChartsSmall/Block6';
+import Block1 from 'src/content/Blocks/ChartsSmall/Block1';
+import Block2 from 'src/content/Blocks/ChartsSmall/Block2';
+import Block3 from 'src/content/Blocks/ChartsSmall/Block3';
+import Block4 from 'src/content/Blocks/ChartsSmall/Block4';
+import Block5 from 'src/content/Blocks/ChartsSmall/Block5';
+import Block6 from 'src/content/Blocks/ChartsSmall/Block6';
 import { Grid } from '@mui/material';
 
 function DataDisplayChartsSmall() {

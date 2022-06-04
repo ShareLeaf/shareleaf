@@ -5,7 +5,7 @@ import { Authenticated } from 'src/components/Authenticated';
 import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';
 
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import PageHeader from '@/content/Applications/Calendar/PageHeader';
+import PageHeader from 'src/content/Applications/Calendar/PageHeader';
 import Footer from 'src/components/Footer';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -28,8 +28,8 @@ import type { View } from 'src/models/calendar';
 import { useDispatch, useSelector } from 'src/store';
 import { getEvents, updateEvent } from 'src/slices/calendar';
 
-import Actions from '@/content/Applications/Calendar/Actions';
-import EventDrawer from '@/content/Applications/Calendar/EventDrawer';
+import Actions from 'src/content/Applications/Calendar/Actions';
+import EventDrawer from 'src/content/Applications/Calendar/EventDrawer';
 
 const FullCalendarWrapper = styled(Box)(
   ({ theme }) => `

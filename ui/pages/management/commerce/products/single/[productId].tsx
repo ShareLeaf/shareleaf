@@ -8,9 +8,9 @@ import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import { Grid } from '@mui/material';
 import { useRefMounted } from 'src/hooks/useRefMounted';
 import type { Product } from 'src/models/product';
-import ProductBody from '@/content/Management/Commerce/single/ProductBody';
+import ProductBody from 'src/content/Management/Commerce/single/ProductBody';
 import Footer from 'src/components/Footer';
-import PageHeader from '@/content/Management/Commerce/single/PageHeader';
+import PageHeader from 'src/content/Management/Commerce/single/PageHeader';
 import { productsApi } from 'src/mocks/products';
 
 function ManagementProductSingle() {

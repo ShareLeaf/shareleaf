@@ -2,18 +2,18 @@ import { useState } from 'react';
 
 import Scrollbar from 'src/components/Scrollbar';
 
-import PageHeader from '@/content/Dashboards/Healthcare/doctor/PageHeader';
+import PageHeader from 'src/content/Dashboards/Healthcare/doctor/PageHeader';
 import Footer from 'src/components/Footer';
 
 import { Box, Drawer, Grid, useTheme, IconButton, styled } from '@mui/material';
 import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 
-import HealthcareSidebar from '@/content/Dashboards/Healthcare/doctor/HealthcareSidebar';
-import AccountVerification from '@/content/Dashboards/Healthcare/doctor/AccountVerification';
-import Appointments from '@/content/Dashboards/Healthcare/doctor/Appointments';
-import PrescriptionRequests from '@/content/Dashboards/Healthcare/doctor/PrescriptionRequests';
-import Consultations from '@/content/Dashboards/Healthcare/doctor/Consultations';
-import Cancelled from '@/content/Dashboards/Healthcare/doctor/Cancelled';
+import HealthcareSidebar from 'src/content/Dashboards/Healthcare/doctor/HealthcareSidebar';
+import AccountVerification from 'src/content/Dashboards/Healthcare/doctor/AccountVerification';
+import Appointments from 'src/content/Dashboards/Healthcare/doctor/Appointments';
+import PrescriptionRequests from 'src/content/Dashboards/Healthcare/doctor/PrescriptionRequests';
+import Consultations from 'src/content/Dashboards/Healthcare/doctor/Consultations';
+import Cancelled from 'src/content/Dashboards/Healthcare/doctor/Cancelled';
 
 const DrawerWrapper = styled(Drawer)(
   ({ theme }) => `

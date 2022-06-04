@@ -3,7 +3,7 @@ import Head from 'next/head';
 import AccentSidebarLayout from 'src/layouts/AccentSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
-import DashboardFitnessContent from '@/content/DashboardPages/fitness';
+import DashboardFitnessContent from 'src/content/DashboardPages/fitness';
 
 function DashboardFitness() {
   return (

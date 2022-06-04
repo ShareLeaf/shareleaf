@@ -2,16 +2,16 @@ import { useTranslation } from 'react-i18next';
 
 import { Grid, Tooltip, Box, Typography, IconButton } from '@mui/material';
 
-import Weather from '@/content/Dashboards/Automation/Weather';
-import Devices from '@/content/Dashboards/Automation/Devices';
-import Scenes from '@/content/Dashboards/Automation/Scenes';
-import VideoCameras from '@/content/Dashboards/Automation/VideoCameras';
-import PowerConsumption from '@/content/Dashboards/Automation/PowerConsumption';
-import Users from '@/content/Dashboards/Automation/Users';
-import Search from '@/content/Dashboards/Automation/Search';
-import Sensors from '@/content/Dashboards/Automation/Sensors';
-import Thermostat from '@/content/Dashboards/Automation/Thermostat';
-import EnergySaving from '@/content/Dashboards/Automation/EnergySaving';
+import Weather from 'src/content/Dashboards/Automation/Weather';
+import Devices from 'src/content/Dashboards/Automation/Devices';
+import Scenes from 'src/content/Dashboards/Automation/Scenes';
+import VideoCameras from 'src/content/Dashboards/Automation/VideoCameras';
+import PowerConsumption from 'src/content/Dashboards/Automation/PowerConsumption';
+import Users from 'src/content/Dashboards/Automation/Users';
+import Search from 'src/content/Dashboards/Automation/Search';
+import Sensors from 'src/content/Dashboards/Automation/Sensors';
+import Thermostat from 'src/content/Dashboards/Automation/Thermostat';
+import EnergySaving from 'src/content/Dashboards/Automation/EnergySaving';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 
 function DashboardAutomationContent() {

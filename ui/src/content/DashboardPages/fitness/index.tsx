@@ -1,31 +1,31 @@
 import dynamic from 'next/dynamic';
 
-import PageHeader from '@/content/Dashboards/Fitness/PageHeader';
+import PageHeader from 'src/content/Dashboards/Fitness/PageHeader';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import Footer from 'src/components/Footer';
 
 import { Grid } from '@mui/material';
 
-import Steps from '@/content/Dashboards/Fitness/Steps';
-import Energy from '@/content/Dashboards/Fitness/Energy';
-import Water from '@/content/Dashboards/Fitness/Water';
-import Calories from '@/content/Dashboards/Fitness/Calories';
-import Activity from '@/content/Dashboards/Fitness/Activity';
-import UpcomingEvents from '@/content/Dashboards/Fitness/UpcomingEvents';
-import ProfileGoals from '@/content/Dashboards/Fitness/ProfileGoals';
-import CaloriesAlt from '@/content/Dashboards/Fitness/CaloriesAlt';
-import ProteinAlt from '@/content/Dashboards/Fitness/ProteinAlt';
-import CarbsAlt from '@/content/Dashboards/Fitness/CarbsAlt';
-import FatAlt from '@/content/Dashboards/Fitness/FatAlt';
-import Parameters from '@/content/Dashboards/Fitness/Parameters';
+import Steps from 'src/content/Dashboards/Fitness/Steps';
+import Energy from 'src/content/Dashboards/Fitness/Energy';
+import Water from 'src/content/Dashboards/Fitness/Water';
+import Calories from 'src/content/Dashboards/Fitness/Calories';
+import Activity from 'src/content/Dashboards/Fitness/Activity';
+import UpcomingEvents from 'src/content/Dashboards/Fitness/UpcomingEvents';
+import ProfileGoals from 'src/content/Dashboards/Fitness/ProfileGoals';
+import CaloriesAlt from 'src/content/Dashboards/Fitness/CaloriesAlt';
+import ProteinAlt from 'src/content/Dashboards/Fitness/ProteinAlt';
+import CarbsAlt from 'src/content/Dashboards/Fitness/CarbsAlt';
+import FatAlt from 'src/content/Dashboards/Fitness/FatAlt';
+import Parameters from 'src/content/Dashboards/Fitness/Parameters';
 
 const TrainingPrograms = dynamic(
-  () => import('@/content/Dashboards/Fitness/TrainingPrograms'),
+  () => import('src/content/Dashboards/Fitness/TrainingPrograms'),
   { ssr: true }
 );
 
 const MonthlyGoalsTarget = dynamic(
-  () => import('@/content/Dashboards/Fitness/MonthlyGoalsTarget'),
+  () => import('src/content/Dashboards/Fitness/MonthlyGoalsTarget'),
   { ssr: true }
 );
 

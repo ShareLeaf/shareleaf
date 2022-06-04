@@ -1,15 +1,15 @@
-import PageHeader from '@/content/Dashboards/Finance/PageHeader';
+import PageHeader from 'src/content/Dashboards/Finance/PageHeader';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import Footer from 'src/components/Footer';
 
 import { Grid } from '@mui/material';
 
-import RecentTransactions from '@/content/Dashboards/Finance/RecentTransactions';
-import MyCards from '@/content/Dashboards/Finance/MyCards';
-import UpgradeAccount from '@/content/Dashboards/Finance/UpgradeAccount';
-import Budget from '@/content/Dashboards/Finance/Budget';
-import AllExpenses from '@/content/Dashboards/Finance/AllExpenses';
-import ActiveSubscriptions from '@/content/Dashboards/Finance/ActiveSubscriptions';
+import RecentTransactions from 'src/content/Dashboards/Finance/RecentTransactions';
+import MyCards from 'src/content/Dashboards/Finance/MyCards';
+import UpgradeAccount from 'src/content/Dashboards/Finance/UpgradeAccount';
+import Budget from 'src/content/Dashboards/Finance/Budget';
+import AllExpenses from 'src/content/Dashboards/Finance/AllExpenses';
+import ActiveSubscriptions from 'src/content/Dashboards/Finance/ActiveSubscriptions';
 
 function DashboardFinanceContent() {
   return (

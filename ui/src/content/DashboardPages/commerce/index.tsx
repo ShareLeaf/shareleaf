@@ -1,22 +1,22 @@
-import PageHeader from '@/content/Dashboards/Commerce/PageHeader';
+import PageHeader from 'src/content/Dashboards/Commerce/PageHeader';
 import Footer from 'src/components/Footer';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
 import { Grid } from '@mui/material';
 
-import GrossSales from '@/content/Dashboards/Commerce/GrossSales';
-import Customers from '@/content/Dashboards/Commerce/Customers';
-import Orders from '@/content/Dashboards/Commerce/Orders';
-import Refunds from '@/content/Dashboards/Commerce/Refunds';
-import VisitorsOverview from '@/content/Dashboards/Commerce/VisitorsOverview';
-import RecentTransactions from '@/content/Dashboards/Commerce/RecentTransactions';
-import FullReport from '@/content/Dashboards/Commerce/FullReport';
-import SalesByCategory from '@/content/Dashboards/Commerce/SalesByCategory';
-import TopProducts from '@/content/Dashboards/Commerce/TopProducts';
-import MonthlyComparison from '@/content/Dashboards/Commerce/MonthlyComparison';
-import MonthlyGoals from '@/content/Dashboards/Commerce/MonthlyGoals';
-import SalesByCountry from '@/content/Dashboards/Commerce/SalesByCountry';
-import Traffic from '@/content/Dashboards/Commerce/Traffic';
+import GrossSales from 'src/content/Dashboards/Commerce/GrossSales';
+import Customers from 'src/content/Dashboards/Commerce/Customers';
+import Orders from 'src/content/Dashboards/Commerce/Orders';
+import Refunds from 'src/content/Dashboards/Commerce/Refunds';
+import VisitorsOverview from 'src/content/Dashboards/Commerce/VisitorsOverview';
+import RecentTransactions from 'src/content/Dashboards/Commerce/RecentTransactions';
+import FullReport from 'src/content/Dashboards/Commerce/FullReport';
+import SalesByCategory from 'src/content/Dashboards/Commerce/SalesByCategory';
+import TopProducts from 'src/content/Dashboards/Commerce/TopProducts';
+import MonthlyComparison from 'src/content/Dashboards/Commerce/MonthlyComparison';
+import MonthlyGoals from 'src/content/Dashboards/Commerce/MonthlyGoals';
+import SalesByCountry from 'src/content/Dashboards/Commerce/SalesByCountry';
+import Traffic from 'src/content/Dashboards/Commerce/Traffic';
 
 function DashboardCommerceContent() {
   return (

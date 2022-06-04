@@ -3,7 +3,7 @@ import Head from 'next/head';
 import CollapsedSidebarLayout from 'src/layouts/CollapsedSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
-import DashboardTasksContent from '@/content/DashboardPages/tasks';
+import DashboardTasksContent from 'src/content/DashboardPages/tasks';
 
 function DashboardTasks() {
   return (

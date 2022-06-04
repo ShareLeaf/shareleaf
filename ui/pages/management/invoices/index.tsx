@@ -4,16 +4,16 @@ import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
 import Head from 'next/head';
-import PageHeader from '@/content/Management/Invoices/PageHeader';
+import PageHeader from 'src/content/Management/Invoices/PageHeader';
 import Footer from 'src/components/Footer';
-import Statistics from '@/content/Management/Invoices/Statistics';
+import Statistics from 'src/content/Management/Invoices/Statistics';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
 import { Grid } from '@mui/material';
 import { useRefMounted } from 'src/hooks/useRefMounted';
 import type { Invoice } from 'src/models/invoice';
 import { invoicesApi } from 'src/mocks/invoices';
-import Results from '@/content/Management/Invoices/Results';
+import Results from 'src/content/Management/Invoices/Results';
 
 function ManagementInvoices() {
   const isMountedRef = useRefMounted();

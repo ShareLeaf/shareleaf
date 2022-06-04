@@ -2,20 +2,20 @@ import { useState } from 'react';
 
 import Scrollbar from 'src/components/Scrollbar';
 
-import PageHeader from '@/content/Dashboards/Helpdesk/PageHeader';
+import PageHeader from 'src/content/Dashboards/Helpdesk/PageHeader';
 
 import { Box, Drawer, Grid, useTheme, IconButton, styled } from '@mui/material';
 
-import HelpdeskSidebar from '@/content/Dashboards/Helpdesk/HelpdeskSidebar';
-import UnresolvedTickets from '@/content/Dashboards/Helpdesk/UnresolvedTickets';
-import PendingQuestions from '@/content/Dashboards/Helpdesk/PendingQuestions';
-import UpdatedTickets from '@/content/Dashboards/Helpdesk/UpdatedTickets';
-import AssignedTasks from '@/content/Dashboards/Helpdesk/AssignedTasks';
-import PendingTickets from '@/content/Dashboards/Helpdesk/PendingTickets';
-import RecentQuestions from '@/content/Dashboards/Helpdesk/RecentQuestions';
-import TopAgentsHeading from '@/content/Dashboards/Helpdesk/TopAgentsHeading';
-import TopAgents1 from '@/content/Dashboards/Helpdesk/TopAgents1';
-import TopAgents2 from '@/content/Dashboards/Helpdesk/TopAgents2';
+import HelpdeskSidebar from 'src/content/Dashboards/Helpdesk/HelpdeskSidebar';
+import UnresolvedTickets from 'src/content/Dashboards/Helpdesk/UnresolvedTickets';
+import PendingQuestions from 'src/content/Dashboards/Helpdesk/PendingQuestions';
+import UpdatedTickets from 'src/content/Dashboards/Helpdesk/UpdatedTickets';
+import AssignedTasks from 'src/content/Dashboards/Helpdesk/AssignedTasks';
+import PendingTickets from 'src/content/Dashboards/Helpdesk/PendingTickets';
+import RecentQuestions from 'src/content/Dashboards/Helpdesk/RecentQuestions';
+import TopAgentsHeading from 'src/content/Dashboards/Helpdesk/TopAgentsHeading';
+import TopAgents1 from 'src/content/Dashboards/Helpdesk/TopAgents1';
+import TopAgents2 from 'src/content/Dashboards/Helpdesk/TopAgents2';
 
 import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 

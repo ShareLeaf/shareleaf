@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { Authenticated } from 'src/components/Authenticated';
 import AccentHeaderLayout from 'src/layouts/AccentHeaderLayout';
 
-import DashboardAnalyticsContent from '@/content/DashboardPages/analytics';
+import DashboardAnalyticsContent from 'src/content/DashboardPages/analytics';
 
 function DashboardAnalytics() {
   return (

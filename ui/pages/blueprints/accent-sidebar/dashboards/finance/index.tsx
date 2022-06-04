@@ -3,7 +3,7 @@ import Head from 'next/head';
 import AccentSidebarLayout from 'src/layouts/AccentSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
-import DashboardFinanceContent from '@/content/DashboardPages/finance';
+import DashboardFinanceContent from 'src/content/DashboardPages/finance';
 
 function DashboardFinance() {
   return (

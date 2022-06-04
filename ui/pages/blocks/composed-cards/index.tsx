@@ -1,4 +1,4 @@
-import PageHeader from '@/content/Blocks/ComposedCards/PageHeader';
+import PageHeader from 'src/content/Blocks/ComposedCards/PageHeader';
 import Footer from 'src/components/Footer';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import Head from 'next/head';
@@ -6,15 +6,15 @@ import Head from 'next/head';
 import { Authenticated } from 'src/components/Authenticated';
 import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';
 
-import Block1 from '@/content/Blocks/ComposedCards/Block1';
-import Block2 from '@/content/Blocks/ComposedCards/Block2';
-import Block3 from '@/content/Blocks/ComposedCards/Block3';
-import Block4 from '@/content/Blocks/ComposedCards/Block4';
-import Block5 from '@/content/Blocks/ComposedCards/Block5';
-import Block6 from '@/content/Blocks/ComposedCards/Block6';
-import Block7 from '@/content/Blocks/ComposedCards/Block7';
-import Block8 from '@/content/Blocks/ComposedCards/Block8';
-import Block9 from '@/content/Blocks/ComposedCards/Block9';
+import Block1 from 'src/content/Blocks/ComposedCards/Block1';
+import Block2 from 'src/content/Blocks/ComposedCards/Block2';
+import Block3 from 'src/content/Blocks/ComposedCards/Block3';
+import Block4 from 'src/content/Blocks/ComposedCards/Block4';
+import Block5 from 'src/content/Blocks/ComposedCards/Block5';
+import Block6 from 'src/content/Blocks/ComposedCards/Block6';
+import Block7 from 'src/content/Blocks/ComposedCards/Block7';
+import Block8 from 'src/content/Blocks/ComposedCards/Block8';
+import Block9 from 'src/content/Blocks/ComposedCards/Block9';
 import { Grid } from '@mui/material';
 
 function DataDisplayComposedCards() {

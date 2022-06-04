@@ -1,16 +1,16 @@
-import PageHeader from '@/content/Dashboards/Statistics/PageHeader';
+import PageHeader from 'src/content/Dashboards/Statistics/PageHeader';
 import Footer from 'src/components/Footer';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
 import { Grid } from '@mui/material';
 
-import Block1 from '@/content/Dashboards/Statistics/Block1';
-import Block2 from '@/content/Dashboards/Statistics/Block2';
-import Block3 from '@/content/Dashboards/Statistics/Block3';
-import Block4 from '@/content/Blocks/SparklinesLarge/Block6';
-import Block5 from '@/content/Dashboards/Statistics/Block5';
-import Block6 from '@/content/Blocks/Grids/Block5';
-import Block7 from '@/content/Blocks/IconCards/Block4';
+import Block1 from 'src/content/Dashboards/Statistics/Block1';
+import Block2 from 'src/content/Dashboards/Statistics/Block2';
+import Block3 from 'src/content/Dashboards/Statistics/Block3';
+import Block4 from 'src/content/Blocks/SparklinesLarge/Block6';
+import Block5 from 'src/content/Dashboards/Statistics/Block5';
+import Block6 from 'src/content/Blocks/Grids/Block5';
+import Block7 from 'src/content/Blocks/IconCards/Block4';
 
 function DashboardStatisticsContent() {
   return (

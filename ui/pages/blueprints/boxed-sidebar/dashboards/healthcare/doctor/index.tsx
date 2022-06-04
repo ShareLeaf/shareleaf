@@ -3,7 +3,7 @@ import Head from 'next/head';
 import BoxedSidebarLayout from 'src/layouts/BoxedSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
-import DashboardHealthcareContent from '@/content/DashboardPages/healthcare/doctor';
+import DashboardHealthcareContent from 'src/content/DashboardPages/healthcare/doctor';
 
 function DashboardHealthcare() {
   return (

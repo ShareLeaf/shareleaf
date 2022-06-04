@@ -3,7 +3,7 @@ import Head from 'next/head';
 import BoxedSidebarLayout from 'src/layouts/BoxedSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
-import DashboardReportsContent from '@/content/DashboardPages/reports';
+import DashboardReportsContent from 'src/content/DashboardPages/reports';
 
 function DashboardReports() {
   return (

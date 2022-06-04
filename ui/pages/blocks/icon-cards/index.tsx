@@ -1,4 +1,4 @@
-import PageHeader from '@/content/Blocks/IconCards/PageHeader';
+import PageHeader from 'src/content/Blocks/IconCards/PageHeader';
 import Footer from 'src/components/Footer';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import Head from 'next/head';
@@ -6,15 +6,15 @@ import Head from 'next/head';
 import { Authenticated } from 'src/components/Authenticated';
 import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';
 
-import Block1 from '@/content/Blocks/IconCards/Block1';
-import Block2 from '@/content/Blocks/IconCards/Block2';
-import Block3 from '@/content/Blocks/IconCards/Block3';
-import Block4 from '@/content/Blocks/IconCards/Block4';
-import Block5 from '@/content/Blocks/IconCards/Block5';
-import Block6 from '@/content/Blocks/IconCards/Block6';
-import Block7 from '@/content/Blocks/IconCards/Block7';
-import Block8 from '@/content/Blocks/IconCards/Block8';
-import Block9 from '@/content/Blocks/IconCards/Block9';
+import Block1 from 'src/content/Blocks/IconCards/Block1';
+import Block2 from 'src/content/Blocks/IconCards/Block2';
+import Block3 from 'src/content/Blocks/IconCards/Block3';
+import Block4 from 'src/content/Blocks/IconCards/Block4';
+import Block5 from 'src/content/Blocks/IconCards/Block5';
+import Block6 from 'src/content/Blocks/IconCards/Block6';
+import Block7 from 'src/content/Blocks/IconCards/Block7';
+import Block8 from 'src/content/Blocks/IconCards/Block8';
+import Block9 from 'src/content/Blocks/IconCards/Block9';
 import { Grid } from '@mui/material';
 
 function DataDisplayIconCards() {

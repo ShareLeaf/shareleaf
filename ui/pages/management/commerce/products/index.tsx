@@ -5,7 +5,7 @@ import Head from 'next/head';
 import ExtendedSidebarLayout from 'src/layouts/ExtendedSidebarLayout';
 import { Authenticated } from 'src/components/Authenticated';
 
-import PageHeader from '@/content/Management/Commerce/PageHeader';
+import PageHeader from 'src/content/Management/Commerce/PageHeader';
 import Footer from 'src/components/Footer';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
@@ -15,7 +15,7 @@ import { useRefMounted } from 'src/hooks/useRefMounted';
 import type { Product } from 'src/models/product';
 import { productsApi } from 'src/mocks/products';
 
-import Results from '@/content/Management/Commerce/Results';
+import Results from 'src/content/Management/Commerce/Results';
 
 function ManagementProducts() {
   const isMountedRef = useRefMounted();
