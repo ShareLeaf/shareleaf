@@ -4,16 +4,5 @@ services:
     image: 537408061242.dkr.ecr.us-east-2.amazonaws.com/shareleaf:shareleaf-prod-ui-latest
     container_name: shareleaf-ui
     restart: always
-    labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:shareleaf.co"
-      - "traefik.port=80"
-      - "traefik.backend=shareleaf_ui"
-      - "traefik.docker.network=traefik_network"
-      - "traefik.frontend.entryPoints=http,https"
-    networks:
-      - traefik_network
-
-networks:
-  traefik_network:
-    external: true
+    ports:
+      - "3000:3000"
