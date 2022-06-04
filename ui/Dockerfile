@@ -13,6 +13,7 @@ RUN #npm install
 COPY ./ ./
 RUN ls src
 RUN ls src/content
+RUN ls src/content/Overview
 RUN ls src/content/Overview/Highlights
 
 RUN npm run build
