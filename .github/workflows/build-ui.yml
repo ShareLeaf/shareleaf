@@ -4,7 +4,7 @@
 name: ShareLeaf UI | Prod
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ release ]
     types: [closed]
     paths:
       - "ui/**"
