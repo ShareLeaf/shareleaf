@@ -117,7 +117,7 @@ const Media: FC<any> = () => {
             </Alert>
         }  else if (showInvalidUrlError) {
             return <Alert severity="warning">
-                Sorry, something went wrong while processing this URL :(
+                Sorry, we were not able to process the original URL associated with the ShareLeaf URL :(
             </Alert>
         } else {
             return <Loader/>

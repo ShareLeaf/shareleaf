@@ -71,7 +71,7 @@ def get_metadata():
     key = request.args.get("key")
     if key:
         return jsonify(cs.get_metadata(key, app, db)), 200
-    return jsonify(error="Key not found"), 200
+    return jsonify(error=True), 200
 
 
 @app.route('/', methods=["GET"])
