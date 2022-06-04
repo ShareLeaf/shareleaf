@@ -17,7 +17,7 @@ const ImageElement: FC<ImageElementProps> = (props) => {
     </Box>
             <Box sx={{marginTop: '0.5rem'}}>
                         <Typography
-                            variant="h4"
+                            variant="h3"
                         >
                             {props.title}
                         </Typography>
