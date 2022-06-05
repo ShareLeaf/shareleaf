@@ -25,7 +25,9 @@ const VideoElement: FC<VideoElementProps> = (props) => {
                 <source src={props.src} type="video/mp4"/>
             </video>
             <Box sx={{
-                marginTop: '0.5rem'
+                marginTop: '0.5rem',
+                pl: 1,
+                pr: 1
             }}>
             <Typography
                 sx={{

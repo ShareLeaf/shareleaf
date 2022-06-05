@@ -78,13 +78,14 @@ const Media: FC<any> = () => {
                 <Common
                     title={metadata.title}
                     children={
-                        <Container maxWidth="lg">
+                        <Container maxWidth="lg" sx={{ p: 0}}>
                             <Grid
                                 justifyContent="center"
                                 alignItems="center"
                                 container
                                 sx={{
-                                    textAlign: "center"
+                                    textAlign: "center",
+                                    p: 0
                                 }}
                             >
                                 <Grid item md={12}>

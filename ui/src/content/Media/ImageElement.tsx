@@ -15,7 +15,7 @@ const ImageElement: FC<ImageElementProps> = (props) => {
             alt={props.title}
             src={props.src} />
     </Box>
-            <Box sx={{marginTop: '0.5rem'}}>
+            <Box sx={{marginTop: '0.5rem', pl: 1, pr: 1}}>
                 <Typography variant="h3" sx={{textAlign: 'left'}}>
                     {props.title}
                 </Typography>
