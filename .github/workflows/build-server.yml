@@ -54,7 +54,7 @@ jobs:
           rm -rf Dockerfile
           touch Dockerfile
 
-          echo FROM python:3.7 >> Dockerfile
+          echo FROM borda/docker_python-opencv-ffmpeg >> Dockerfile
           echo WORKDIR /usr/app/server >> Dockerfile
           echo ENV PYTHONUNBUFFERED=${{ env.PYTHONUNBUFFERED }} >> Dockerfile
           echo ENV FLASK_APP=${{ env.FLASK_APP }} >> Dockerfile

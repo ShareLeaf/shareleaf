@@ -9,7 +9,7 @@ interface VideoElementProps {
 const VideoElement: FC<VideoElementProps> = (props) => {
     return (
         <Box sx={{marginTop: '2rem'}}>
-            <video controls autoPlay loop muted width="100%">
+            <video controls autoPlay loop muted>
                 <source src={props.src} type={props.encoding}/>
             </video>
             <Box sx={{
