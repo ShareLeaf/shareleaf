@@ -87,11 +87,14 @@ class Reddit(S3):
             a_filename = filename + ".mp3"
             v_downloaded = self._download_media(metadata.get("video_url"), v_filename)
             a_downloaded = self._download_media(metadata.get("audio_url"), a_filename)
-            if v_downloaded and a_downloaded:
-                # merge the audio and video streams into one
-                video_stream = ffmpeg.input(v_filename)
-                audio_stream = ffmpeg.input(a_filename)
-                ffmpeg.output(audio_stream, video_stream, merged_filename).run()
+            if v_downloaded or a_downloaded:
+                # merge the audio and video streams into one if both are present
+                if v_downloaded and a_downloaded:
+                    video_stream = ffmpeg.input(v_filename)
+                    audio_stream = ffmpeg.input(a_filename)
+                    ffmpeg.output(audio_stream, video_stream, merged_filename).run()
+                else:
+                    merged_filename = v_filename # this is the case if it's a GIF
 
                 # Upload to S3 for CDN distribution
                 self.upload_file(merged_filename, self.uid + ".mp4")
