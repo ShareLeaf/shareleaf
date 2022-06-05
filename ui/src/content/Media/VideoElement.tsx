@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, {FC, useEffect, useRef} from "react";
 import {Box, Typography} from "@mui/material";
 
 interface VideoElementProps {
@@ -7,12 +7,22 @@ interface VideoElementProps {
     title?: string
 }
 const VideoElement: FC<VideoElementProps> = (props) => {
+    const videoRef = useRef(undefined);
+    useEffect(() => {
+        videoRef.current.defaultMuted = true;
+    })
+
     return (
-
         <Box sx={{marginTop: '2rem'}}>
-
-            <video controls autoPlay loop muted width={"100%"} playsInline>
-                <source src={props.src} type={props.encoding}/>
+            <video
+                ref={videoRef}
+                className="sl-video-player"
+                controls
+                autoPlay
+                loop
+                playsInline
+                muted width={"100%"}>
+                <source src={props.src} type="video/mp4"/>
             </video>
             <Box sx={{
                 marginTop: '0.5rem'
