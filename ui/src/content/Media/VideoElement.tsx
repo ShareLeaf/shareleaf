@@ -11,7 +11,7 @@ const VideoElement: FC<VideoElementProps> = (props) => {
 
         <Box sx={{marginTop: '2rem'}}>
 
-            <video controls autoPlay loop muted width={"100%"} playsinline>
+            <video controls autoPlay loop muted width={"100%"} playsInline>
                 <source src={props.src} type={props.encoding}/>
             </video>
             <Box sx={{
