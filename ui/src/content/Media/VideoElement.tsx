@@ -1,6 +1,4 @@
 import React, { FC } from "react";
-import { DefaultPlayer as Video } from 'react-html5video';
-import 'react-html5video/dist/styles.css';
 import {Box, Typography} from "@mui/material";
 
 interface VideoElementProps {
@@ -11,13 +9,9 @@ interface VideoElementProps {
 const VideoElement: FC<VideoElementProps> = (props) => {
     return (
         <Box sx={{marginTop: '2rem'}}>
-            <Video autoPlay loop muted
-                   controls={['PlayPause', 'Seek', 'Time', 'Volume', 'Fullscreen']}
-                   onCanPlayThrough={() => {
-                       // Do stuff
-                   }}>
-                <source src={props.src} type={props.encoding} />
-            </Video>
+            <video controls autoPlay loop muted width="100%">
+                <source src={props.src} type={props.encoding}/>
+            </video>
             <Box sx={{
                 marginTop: '0.5rem'
             }}>
