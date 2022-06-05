@@ -4,6 +4,7 @@ import BaseLayout from 'src/layouts/BaseLayout';
 import React from 'react';
 import LinkGenerator from "@/content/LinkGenerator";
 import Common from "@/content/Common";
+import Head from "next/head";
 
 const OverviewWrapper = styled(Box)(
     ({ theme }) => `
@@ -14,13 +15,37 @@ const OverviewWrapper = styled(Box)(
 `
 );
 
-function Overview() {
+interface OverViewProps {
+    title: string;
+    description: string;
+    siteImage: string;
+}
+
+export async function getServerSideProps() {
+    return {
+        props: {
+            title: "ShareLeaf",
+            description: "Share Content from Anywhere",
+            siteImage: "https://shareleaf.co/static/images/placeholders/covers/shareleaf.png"
+        }
+    }
+}
+
+function Overview(props: OverViewProps) {
     return (
+        <>
+            <Head>
+                <title>{props.title}</title>
+                <meta property="og:title" content={props.title} key="title"/>
+                <meta property="og:description" content={props.description} key="description"/>
+                <meta property="og:image" content={props.siteImage} key="image"/>
+            </Head>
         <OverviewWrapper>
             <Common
-                title={"ShareLeaf | Share Anything, with Anyone"}
+                title={props.title}
                 children={<LinkGenerator />}/>
         </OverviewWrapper>
+        </>
     );
 }
 

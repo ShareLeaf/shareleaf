@@ -97,7 +97,7 @@ const LinkGenerator: FC<any> = () => {
                                 }}
                                 variant="h1"
                             >
-                                {('Share videos and images from any site, with anyone')}
+                                {('Share videos, GIFS, and memes with anyone')}
                             </TypographyH1Primary>
                         </Box>
                         <SearchBoxWrapper>
