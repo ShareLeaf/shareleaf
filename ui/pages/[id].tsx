@@ -104,6 +104,7 @@ const Media: FC<MediaMetadataProps> = (props) => {
                                 <Grid item md={12}>
                                     {metadata.type === "video" &&
                                         <VideoElement
+                                            thumbnail={metadata.thumbnail}
                                             encoding={metadata.encoding}
                                             src={metadata.url}
                                             title={metadata.title}
