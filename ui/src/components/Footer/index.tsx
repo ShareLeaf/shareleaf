@@ -31,7 +31,7 @@ function Footer() {
           variant="subtitle1"
         >
           <Link
-            href="https://twitter.com/shareleaf"
+            href="https://twitter.com/share_leaf"
             target="_blank"
             rel="noopener noreferrer"
           >
