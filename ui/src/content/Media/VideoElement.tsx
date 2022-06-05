@@ -4,7 +4,8 @@ import {Box, Typography} from "@mui/material";
 interface VideoElementProps {
     encoding: string
     src: string,
-    title?: string
+    title?: string,
+    thumbnail?: string
 }
 const VideoElement: FC<VideoElementProps> = (props) => {
     const videoRef = useRef(undefined);
@@ -21,8 +22,10 @@ const VideoElement: FC<VideoElementProps> = (props) => {
                 autoPlay
                 loop
                 playsInline
-                muted width={"100%"}>
-                <source src={props.src} type={props.encoding}/>
+                muted
+                width={"100%"}>
+                preload="metadata"
+                <source src={props.src + "#t=0.1"} type={props.encoding}/>
             </video>
             <Box sx={{
                 marginTop: '0.5rem',
