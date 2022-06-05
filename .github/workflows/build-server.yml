@@ -54,7 +54,8 @@ jobs:
           rm -rf Dockerfile
           touch Dockerfile
 
-          echo FROM ffmpeg-python-docker >> Dockerfile
+          echo FROM python:3.7 >> Dockerfile
+          echo RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/* >> Dockerfile
           echo WORKDIR /usr/app/server >> Dockerfile
           echo ENV PYTHONUNBUFFERED=${{ env.PYTHONUNBUFFERED }} >> Dockerfile
           echo ENV FLASK_APP=${{ env.FLASK_APP }} >> Dockerfile
