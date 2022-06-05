@@ -5,6 +5,7 @@ import subprocess
 import sys
 from os.path import dirname
 import datetime
+import ffmpeg
 
 sys.path.append(dirname(__file__).split("/server")[0])
 
@@ -53,7 +54,6 @@ class Reddit(S3):
                 'title': title,
                 'encoding': 'video/webm',
                 'media_type': 'video',
-                'processed': True,
                 'updated_at': datetime.datetime.now()
             }]
             self.db.session.bulk_update_mappings(Metadata, records_to_update)
@@ -89,8 +89,9 @@ class Reddit(S3):
             a_downloaded = self._download_media(metadata.get("audio_url"), a_filename)
             if v_downloaded and a_downloaded:
                 # merge the audio and video streams into one
-                subprocess.call(['ffmpeg', '-i', v_filename, '-i', a_filename, '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
-                                 merged_filename])
+                video_stream = ffmpeg.input(v_filename)
+                audio_stream = ffmpeg.input(a_filename)
+                ffmpeg.output(audio_stream, video_stream, merged_filename).run()
 
                 # Upload to S3 for CDN distribution
                 self.upload_file(merged_filename, self.uid + ".mp4")
@@ -98,6 +99,15 @@ class Reddit(S3):
                 # Delete the files
                 subprocess.call(['rm', v_filename, a_filename, merged_filename])
                 print("Done with processing Reddit soup", metadata)
+                with self.app.app_context():
+                    records_to_update = [{
+                        "id": self.uid,
+                        "processed": True,
+                        'updated_at': datetime.datetime.now()
+                    }]
+                    self.db.session.bulk_update_mappings(Metadata, records_to_update)
+                    utils.save(self.db)
+
             else:
                 print("Failed to download either video or audio component")
         except Exception as e:
