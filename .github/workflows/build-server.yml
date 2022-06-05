@@ -4,17 +4,12 @@
 
 name: ShareLeaf Server | Prod
 on:
-  push:
-    branches: [bm/SL-2_server_CI]
-#  pull_request:
-#    branches: [ release ]
-#    types: [closed]
+  pull_request:
+    branches: [ release ]
+    types: [closed]
     paths:
       - "server/**"
 env:
-#  SHARELEAF_DATASOURCE_USERNAME: ${{ secrets.SHARELEAF_DATASOURCE_USERNAME }}
-#  SHARELEAF_DATASOURCE_PASSWORD: ${{ secrets.SHARELEAF_DATASOURCE_PASSWORD }}
-#  SHARELEAF_DATASOURCE_URL: ${{ secrets.SHARELEAF_DATASOURCE_URL }}
   SHARELEAF_DATASOURCE_USERNAME: shareleaf
   SHARELEAF_DATASOURCE_PASSWORD: shareleaf
   SHARELEAF_DATASOURCE_URL: '18.222.71.85:7432/content'
@@ -33,7 +28,7 @@ env:
   ARTIFACT_PATH: 'covalent/build'
 jobs:
   build:
-#    if: ${{ github.event.pull_request.merged }}
+    if: ${{ github.event.pull_request.merged }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

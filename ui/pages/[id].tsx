@@ -83,6 +83,9 @@ const Media: FC<any> = () => {
                                 justifyContent="center"
                                 alignItems="center"
                                 container
+                                sx={{
+                                    textAlign: "center"
+                                }}
                             >
                                 <Grid item md={12}>
                                     {metadata.type === "video" &&
