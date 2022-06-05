@@ -8,8 +8,10 @@ interface VideoElementProps {
 }
 const VideoElement: FC<VideoElementProps> = (props) => {
     return (
+
         <Box sx={{marginTop: '2rem'}}>
-            <video controls autoPlay loop muted>
+
+            <video controls autoPlay loop muted width={"100%"}>
                 <source src={props.src} type={props.encoding}/>
             </video>
             <Box sx={{
@@ -17,7 +19,8 @@ const VideoElement: FC<VideoElementProps> = (props) => {
             }}>
             <Typography
                 sx={{
-                    pt: 1
+                    pt: 1,
+                    textAlign: 'left'
                 }}
                 variant="h3"
             >

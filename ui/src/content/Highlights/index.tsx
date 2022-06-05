@@ -118,7 +118,7 @@ function Highlights() {
                     pl: { xs: 0, md: 4 }
                   }}
                 >
-                  <Typography variant="h3">
+                  <Typography variant="h3" textAlign="center">
                     No Account Needed
                   </Typography>
                   <Typography
@@ -128,7 +128,7 @@ function Highlights() {
                     variant="subtitle2"
                   >
                       If you have a ShareLeaf link, you can view content from any social media site without creating an account.
-                      That means no tracking and more privacy to you.
+                      That means no tracking and more privacy for you.
                   </Typography>
                 </Box>
               </Box>
@@ -163,7 +163,7 @@ function Highlights() {
                     pl: { xs: 0, md: 4 }
                   }}
                 >
-                  <Typography variant="h3">
+                  <Typography variant="h3" textAlign="center">
                     ShareLeaf is Fast
                   </Typography>
                   <Typography

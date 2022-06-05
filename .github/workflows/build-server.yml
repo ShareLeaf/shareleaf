@@ -10,9 +10,6 @@ on:
     paths:
       - "server/**"
 env:
-#  SHARELEAF_DATASOURCE_USERNAME: ${{ secrets.SHARELEAF_DATASOURCE_USERNAME }}
-#  SHARELEAF_DATASOURCE_PASSWORD: ${{ secrets.SHARELEAF_DATASOURCE_PASSWORD }}
-#  SHARELEAF_DATASOURCE_URL: ${{ secrets.SHARELEAF_DATASOURCE_URL }}
   SHARELEAF_DATASOURCE_USERNAME: shareleaf
   SHARELEAF_DATASOURCE_PASSWORD: shareleaf
   SHARELEAF_DATASOURCE_URL: '18.222.71.85:7432/content'
@@ -54,10 +51,11 @@ jobs:
           rm -rf Dockerfile
           touch Dockerfile
 
-          echo FROM python:3.7 >> Dockerfile
+          echo FROM python:3.9 >> Dockerfile
           echo ENV LD_LIBRARY_PATH=/usr/local/lib >> Dockerfile
           echo COPY --from=jrottenberg/ffmpeg /usr/local /usr/local/ >> Dockerfile
-          echo COPY --from=jrottenberg/ffmpeg /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu >> Dockerfile
+          echo RUN wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5.9_amd64.deb >> Dockerfile
+          echo RUN apt install ./libssl1.0.0_1.0.2n-1ubuntu5.9_amd64.deb >> Dockerfile
           echo WORKDIR /usr/app/server >> Dockerfile
           echo ENV PYTHONUNBUFFERED=${{ env.PYTHONUNBUFFERED }} >> Dockerfile
           echo ENV FLASK_APP=${{ env.FLASK_APP }} >> Dockerfile
