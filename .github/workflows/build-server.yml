@@ -4,9 +4,11 @@
 
 name: ShareLeaf Server | Prod
 on:
-  pull_request:
-    branches: [ release ]
-    types: [closed]
+  push:
+    branches: [bm/SL-2_server_CI]
+#  pull_request:
+#    branches: [ release ]
+#    types: [closed]
     paths:
       - "server/**"
 env:
@@ -58,6 +60,7 @@ jobs:
           echo ENV LD_LIBRARY_PATH=/usr/local/lib >> Dockerfile
           echo COPY --from=jrottenberg/ffmpeg /usr/local /usr/local/ >> Dockerfile
           echo COPY --from=jrottenberg/ffmpeg /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu >> Dockerfile
+          echo RUN ln -s libssl.so.1.0.0 /usr/lib/libssl.so.10 >> Dockerfile
           echo WORKDIR /usr/app/server >> Dockerfile
           echo ENV PYTHONUNBUFFERED=${{ env.PYTHONUNBUFFERED }} >> Dockerfile
           echo ENV FLASK_APP=${{ env.FLASK_APP }} >> Dockerfile
