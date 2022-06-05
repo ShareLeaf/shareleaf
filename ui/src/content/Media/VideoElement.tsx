@@ -22,7 +22,7 @@ const VideoElement: FC<VideoElementProps> = (props) => {
                 loop
                 playsInline
                 muted width={"100%"}>
-                <source src={props.src} type="video/mp4"/>
+                <source src={props.src} type={props.encoding}/>
             </video>
             <Box sx={{
                 marginTop: '0.5rem',

@@ -52,7 +52,7 @@ class Reddit(S3):
             records_to_update = [{
                 "id": self.uid,
                 'title': title,
-                'encoding': 'video/webm',
+                'encoding': 'video/mp4',
                 'media_type': 'video',
                 'updated_at': datetime.datetime.now()
             }]

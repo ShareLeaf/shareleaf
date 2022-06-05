@@ -11,11 +11,11 @@ import ThemeProvider from 'src/theme/ThemeProvider';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import createEmotionCache from 'src/createEmotionCache';
-import { appWithTranslation } from 'next-i18next';
 import { SidebarProvider } from 'src/contexts/SidebarContext';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { SnackbarProvider } from 'notistack';
+import React from "react";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -26,6 +26,19 @@ type NextPageWithLayout = NextPage & {
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
   Component: NextPageWithLayout;
+  title: string;
+  description: string;
+  siteImage: string;
+}
+
+export async function getServerSideProps() {
+    return {
+        props: {
+            title: "ShareLeaf",
+            description: "Share Content from Anywhere",
+            siteImage: "https://shareleaf.co/static/images/placeholders/covers/shareleaf.png"
+        }
+    }
 }
 
 function MyApp(props: MyAppProps) {
@@ -36,14 +49,15 @@ function MyApp(props: MyAppProps) {
   Router.events.on('routeChangeError', nProgress.done);
   Router.events.on('routeChangeComplete', nProgress.done);
 
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>ShareLeaf</title>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
+        <title>{props.title}</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+          <meta property="og:title" content={props.title} key="title"/>
+          <meta property="og:description" content={props.description} key="description" />
+          <meta property="og:image" content={props.siteImage} key="image"/>
       </Head>
         <SidebarProvider>
           <ThemeProvider>
@@ -65,4 +79,4 @@ function MyApp(props: MyAppProps) {
   );
 }
 
-export default appWithTranslation(MyApp);
+export default MyApp;
