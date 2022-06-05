@@ -74,6 +74,7 @@ def get_metadata(uid: str, app: Flask, db: SQLAlchemy) -> {}:
             if records[0].processed:
                 return {
                     "url": f'{AWSProps().cdn}/{records[0].id}.mp4',
+                    "thumbnail": f'{AWSProps().cdn}/{records[0].id}.jpeg',
                     "media_type": records[0].media_type,
                     "processed": records[0].processed,
                     "encoding": records[0].encoding,

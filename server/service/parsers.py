@@ -16,6 +16,21 @@ from server.utils import utils
 headers = {'User-Agent': utils.USER_AGENT}
 
 
+def _generate_thumbnail(v_filename, thumbnail_filename):
+    """Generate a thumbnail from a given video file"""
+    try:
+        (
+            ffmpeg
+                .input(v_filename, ss=0.1)
+                .filter('scale', 256, -1)
+                .output(thumbnail_filename, vframes=1)
+                .overwrite_output()
+                .run(capture_stdout=True, capture_stderr=True)
+        )
+    except ffmpeg.Error as e:
+        print(e.stderr.decode(), file=sys.stderr)
+
+
 class Reddit(S3):
     """Parses Reddit content"""
 
@@ -82,7 +97,8 @@ class Reddit(S3):
         try:
             metadata = self._parse_video_audio_urls()
             filename = str(uuid.uuid4())
-            merged_filename = str(uuid.uuid4()) + ".mp4"
+            merged_video_filename = str(uuid.uuid4()) + ".mp4"
+            thumbnail_filename = str(uuid.uuid4()) + ".jpeg"
             v_filename = filename + ".mp4"
             a_filename = filename + ".mp3"
             v_downloaded = self._download_media(metadata.get("video_url"), v_filename)
@@ -90,17 +106,23 @@ class Reddit(S3):
             if v_downloaded or a_downloaded:
                 # merge the audio and video streams into one if both are present
                 if v_downloaded and a_downloaded:
+                    _generate_thumbnail(v_filename, thumbnail_filename)
                     video_stream = ffmpeg.input(v_filename)
                     audio_stream = ffmpeg.input(a_filename)
-                    ffmpeg.output(audio_stream, video_stream, merged_filename).run()
+                    ffmpeg.output(audio_stream, video_stream, merged_video_filename).run()
                 else:
-                    merged_filename = v_filename # this is the case if it's a GIF
+                    # this is the case if it's a GIF
+                    merged_video_filename = v_filename
+                    _generate_thumbnail(v_filename, thumbnail_filename)
 
-                # Upload to S3 for CDN distribution
-                self.upload_file(merged_filename, self.uid + ".mp4")
+                # Upload the video S3 for CDN distribution
+                self.upload_file(merged_video_filename, self.uid + ".mp4")
+                
+                # Upload the thumbnail
+                self.upload_file(thumbnail_filename, self.uid + ".jpeg")
 
                 # Delete the files
-                subprocess.call(['rm', v_filename, a_filename, merged_filename])
+                subprocess.call(['rm', v_filename, a_filename, merged_video_filename, thumbnail_filename])
                 print("Done with processing Reddit soup", metadata)
                 with self.app.app_context():
                     records_to_update = [{
