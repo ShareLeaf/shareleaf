@@ -16,7 +16,7 @@ const ImageElement: FC<ImageElementProps> = (props) => {
             src={props.src} />
     </Box>
             <Box sx={{marginTop: '0.5rem', pl: 1, pr: 1}}>
-                <Typography variant="h3" sx={{textAlign: 'left'}}>
+                <Typography variant="h3" sx={{textAlign: 'left', color: '#223354b3'}}>
                     {props.title}
                 </Typography>
             </Box>

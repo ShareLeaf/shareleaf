@@ -91,7 +91,7 @@ const Media: FC<MediaMetadataProps> = (props) => {
                 <Common
                     title={metadata.title}
                     children={
-                        <Container maxWidth="lg" sx={{ p: 0}}>
+                        <Container maxWidth="lg" sx={{ p: 0, mb: 10}}>
                             <Grid
                                 justifyContent="center"
                                 alignItems="center"
