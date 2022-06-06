@@ -30,41 +30,51 @@ def generate_uid() -> str:
     return uid
 
 
-def generate_content_id(src: str, app: Flask, db: SQLAlchemy) -> str:
-    """Return content id if one exists or generate a unique one otherwise"""
+def get_content_id(src: str, app: Flask, db: SQLAlchemy):
     with app.app_context():
         query = db.session.query(Metadata).filter(Metadata.canonical_url.in_(tuple([src])))
         records = query.all()
         if records:
-            return records[0].id
-        _generated_id = generate_uid()
-        record = Metadata(
-            id=_generated_id,
-            processed=False,
-            canonical_url=src,
-            view_count=0,
-            like_count=0,
-            dislike_count=0,
-            created_dt=datetime.datetime.now(),
-            updated_at=datetime.datetime.now())
-        db.session.add(record)
-        utils.save(db)
-        return _generated_id
+            return records[0]
+
+
+def generate_content_id(src: str, app: Flask, db: SQLAlchemy) -> str:
+    """Return content id if one exists or generate a unique one otherwise"""
+    record = get_content_id(src, app, db)
+    if record:
+        return record.id
+
+    # Generate a new id since the content wasn't previously downloaded
+    _generated_id = generate_uid()
+    record = Metadata(
+        id=_generated_id,
+        processed=False,
+        canonical_url=src,
+        view_count=0,
+        like_count=0,
+        dislike_count=0,
+        created_dt=datetime.datetime.now(),
+        updated_at=datetime.datetime.now())
+    db.session.add(record)
+    utils.save(db)
+    return _generated_id
 
 
 def download_media(src, uid, app, db):
     # TODO use content metadata to check if it should be downloaded again or not
-    response = requests.get(src, headers=headers)
-    handler = None
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'lxml')
-        if soup:
-            if "reddit.com" in src:
-                handler = Reddit(soup, src, uid, db, app)
-        else:
-            print("Unable to parse ", src)
-    if handler:
-        handler.process_soup()
+    record = get_content_id(src, app, db)
+    if not record.processed:
+        response = requests.get(src, headers=headers)
+        handler = None
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, 'lxml')
+            if soup:
+                if "reddit.com" in src:
+                    handler = Reddit(soup, src, uid, db, app)
+            else:
+                print("Unable to parse ", src)
+        if handler:
+            handler.process_soup()
 
 
 def get_metadata(uid: str, app: Flask, db: SQLAlchemy) -> {}:
