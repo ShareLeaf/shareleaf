@@ -6,6 +6,7 @@ import sys
 from os.path import dirname
 import datetime
 import ffmpeg
+import time
 
 sys.path.append(dirname(__file__).split("/server")[0])
 
@@ -109,21 +110,33 @@ class Reddit(S3):
                     _generate_thumbnail(v_filename, thumbnail_filename)
                     video_stream = ffmpeg.input(v_filename)
                     audio_stream = ffmpeg.input(a_filename)
-                    ffmpeg.output(audio_stream, video_stream, merged_video_filename).run()
+                    start = int(time.time() * 1000)
+                    print("ffmpeg Processing has started...")
+                    ffmpeg.output(audio_stream, video_stream, merged_video_filename, vcodec='copy').run()
+                    end = int(time.time() * 1000)
+                    print("ffmpeg Processing has ended...Time(ms): ", end - start)
+
                 else:
                     # this is the case if it's a GIF
                     merged_video_filename = v_filename
                     _generate_thumbnail(v_filename, thumbnail_filename)
 
                 # Upload the video S3 for CDN distribution
+                start = int(time.time() * 1000)
                 self.upload_file(merged_video_filename, self.uid + ".mp4")
+                end = int(time.time() * 1000)
+                print("video upload has ended...Time(ms): ", end - start)
                 
                 # Upload the thumbnail
+                start = int(time.time() * 1000)
                 self.upload_file(thumbnail_filename, self.uid + ".jpeg")
+                end = int(time.time() * 1000)
+                print("thumbnail upload has ended...Time(ms): ", end - start)
 
                 # Delete the files
                 subprocess.call(['rm', v_filename, a_filename, merged_video_filename, thumbnail_filename])
                 print("Done with processing Reddit soup", metadata)
+                start = int(time.time() * 1000)
                 with self.app.app_context():
                     records_to_update = [{
                         "id": self.uid,
@@ -132,6 +145,8 @@ class Reddit(S3):
                     }]
                     self.db.session.bulk_update_mappings(Metadata, records_to_update)
                     utils.save(self.db)
+                end = int(time.time() * 1000)
+                print("db save has ended...Time(ms): ", end - start)
 
             else:
                 print("Failed to download either video or audio component")

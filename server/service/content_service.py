@@ -53,6 +53,7 @@ def generate_content_id(src: str, app: Flask, db: SQLAlchemy) -> str:
 
 
 def download_media(src, uid, app, db):
+    # TODO use content metadata to check if it should be downloaded again or not
     response = requests.get(src, headers=headers)
     handler = None
     if response.status_code == 200:
