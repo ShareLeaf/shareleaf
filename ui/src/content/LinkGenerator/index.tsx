@@ -1,12 +1,16 @@
-import {ChangeEvent, FC, useState} from "react";
+import React, {ChangeEvent, FC, useState} from "react";
 import {Box, Button, Container, Grid, IconButton, InputBase, styled, Typography} from "@mui/material";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import axios from "axios";
+import Typed from "react-typed";
 
 const SearchInputWrapper = styled(InputBase)(
     ({ theme }) => `
     font-size: ${theme.typography.pxToRem(18)};
-    padding: ${theme.spacing(2)};
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 5px;
+    padding-bottom: 5px;
     width: 100%;
 `
 );
@@ -29,7 +33,16 @@ const ShareableLinkWrapper = styled(Box)(
 
 const TypographyH1Primary = styled(Typography)(
     ({ theme }) => `
-    font-size: ${theme.typography.pxToRem(36)};
+    font-size: ${theme.typography.pxToRem(28)};
+`
+);
+
+const TypographyH1Socials = styled(Typography)(
+    ({ theme }) => `
+    background: linear-gradient(88.28deg,#0094FF 16.83%,#9B8FFE 44.77%,#FF33DE 71.88%,#FF60E6 98.01%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: ${theme.typography.pxToRem(28)};
 `
 );
 
@@ -87,7 +100,7 @@ const LinkGenerator: FC<any> = () => {
                 alignItems="center"
                 container
             >
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={8}>
                     <Grid item xs={12}>
                         <Box>
                             <TypographyH1Primary
@@ -95,10 +108,25 @@ const LinkGenerator: FC<any> = () => {
                                 sx={{
                                     mb: 2
                                 }}
-                                variant="h1"
+                                variant="h5"
                             >
-                                {('Share videos, GIFS, and memes with anyone')}
+                                Instantly share videos, pictures, and reels from
                             </TypographyH1Primary>
+                            <TypographyH1Socials
+                                textAlign="center"
+                                sx={{
+                                    mb: 2
+                                }}
+                                variant="h2"
+                            >
+                                <Typed
+                                    strings={["Reddit", "Facebook", "Instagram", "TikTok"]}
+                                    typeSpeed={100}
+                                    backSpeed={100}
+                                    loop
+                                />
+                            </TypographyH1Socials>
+
                         </Box>
                         <SearchBoxWrapper>
                             <form onSubmit={submitSearch}>
@@ -115,13 +143,19 @@ const LinkGenerator: FC<any> = () => {
                                         sx={{
 
                                             ml: 'auto',
-                                            mr: 2,
-                                            py: 0.5,
-                                            px: 2,
+                                            // mr: 2,
+                                            // py: 0.5,
+                                            // px: 2,
                                         }}
                                     >
                                         <Button
-
+                                            sx={{
+                                                padding: 0,
+                                                paddingLeft: '24px',
+                                                paddingRight: '24px',
+                                                paddingTop: '12px',
+                                                paddingBottom: '12px'
+                                            }}
                                             size="medium"
                                             variant="contained"
                                             color="info"
