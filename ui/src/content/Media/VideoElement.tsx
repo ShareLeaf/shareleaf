@@ -35,7 +35,8 @@ const VideoElement: FC<VideoElementProps> = (props) => {
             <Typography
                 sx={{
                     pt: 1,
-                    textAlign: 'left'
+                    textAlign: 'left',
+                    color: '#223354b3'
                 }}
                 variant="h3"
             >

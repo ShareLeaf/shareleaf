@@ -8,11 +8,29 @@ import {
     styled
 } from '@mui/material';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
-import SpeedIcon from '@mui/icons-material/Speed';
+import AddLinkIcon from '@mui/icons-material/AddLink';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import TimerIcon from '@mui/icons-material/Timer';
 
 const AvatarError = styled(Avatar)(
   ({ theme }) => `
     background: ${theme.colors.error.main};
+    width: ${theme.spacing(4)};
+    height: ${theme.spacing(4)};
+`
+);
+
+const AvatarPrimary = styled(Avatar)(
+    ({ theme }) => `
+    background: ${theme.colors.primary.main};
+    width: ${theme.spacing(4)};
+    height: ${theme.spacing(4)};
+`
+);
+
+const AvatarWarning = styled(Avatar)(
+    ({ theme }) => `
+    background: ${theme.colors.warning.main};
     width: ${theme.spacing(4)};
     height: ${theme.spacing(4)};
 `
@@ -34,12 +52,6 @@ const TypographyH1Primary = styled(Typography)(
 `
 );
 
-const TypographyH2 = styled(Typography)(
-  ({ theme }) => `
-    font-size: ${theme.typography.pxToRem(17)};
-`
-);
-
 const BoxHighlights = styled(Box)(
   () => `
     position: relative;
@@ -51,134 +63,201 @@ function Highlights() {
   return (
     <BoxHighlights>
       <Container
-        sx={{
-          pt: { xs: 6, md: 12 },
-          pb: { xs: 5, md: 15 }
-        }}
         maxWidth="md"
       >
         <TypographyH1Primary
           textAlign="center"
           sx={{
-            mb: 2
+            mb: 4, paddingBottom: '4rem'
           }}
-          variant="h1"
+          variant="h5"
         >
-          {('What is ShareLeaf?')}
+         How does ShareLeaf work?
         </TypographyH1Primary>
-        <Container
-          sx={{
-            mb: 6,
-            textAlign: 'center'
-          }}
-          maxWidth="sm"
-        >
-          <TypographyH2
-            sx={{
-              pb: 4,
-              lineHeight: 1.5
-            }}
-            textAlign="center"
-            variant="h4"
-            color="text.secondary"
-            fontWeight="normal"
-          >
-            {(
-              'ShareLeaf allows you to share videos and images from Reddit, Facebook, Instagram, and Twitter with your friends by ' +
-                'creating a unique ShareLeaf URL'
-            )}
-          </TypographyH2>
-        </Container>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
-            <Card
-              sx={{
-                overflow: 'visible'
-              }}
-            >
-              <AvatarError
-                sx={{
-                  width: 60,
-                  height: 60,
-                  mx: 'auto',
-                  position: 'relative',
-                  top: -28
-                }}
-              >
-                  <PersonOffIcon fontSize="large" />
-              </AvatarError>
-              <Box
-                px={1}
-                pb={4}
-                display={{ xs: 'block', md: 'flex' }}
-                alignItems="flex-start"
-              >
-                <Box
-                  sx={{
-                    pl: { xs: 0, md: 4 }
-                  }}
-                >
-                  <Typography variant="h3" textAlign="center">
-                    No Account Needed
-                  </Typography>
-                  <Typography
+        <Grid container spacing={2}>
+            <Grid item xs={12} md={3} sx={{mb: {xs: 4, md: 2}}}>
+                <Card
                     sx={{
-                      pt: 1
+                        overflow: 'visible',
+                        height: '16rem'
                     }}
-                    variant="subtitle2"
-                  >
-                      If you have a ShareLeaf link, you can view content from any social media site without creating an account.
-                      That means no tracking and more privacy for you.
-                  </Typography>
-                </Box>
-              </Box>
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Card
-              sx={{
-                mt: { xs: 5, md: 0 },
-                overflow: 'visible'
-              }}
-            >
-              <AvatarSuccess
-                sx={{
-                  width: 60,
-                  height: 60,
-                  mx: 'auto',
-                  position: 'relative',
-                  top: -28
-                }}
-              >
-                  <SpeedIcon fontSize="large" />
-              </AvatarSuccess>
-              <Box
-                px={1}
-                pb={4}
-                display={{ xs: 'block', md: 'flex' }}
-                alignItems="flex-start"
-              >
-                <Box
-                  sx={{
-                    pl: { xs: 0, md: 4 }
-                  }}
                 >
-                  <Typography variant="h3" textAlign="center">
-                    ShareLeaf is Fast
-                  </Typography>
-                  <Typography
+                    <AvatarPrimary
+                        sx={{
+                            width: 60,
+                            height: 60,
+                            mx: 'auto',
+                            position: 'relative',
+                            top: -28
+                        }}
+                    >
+                        <AddLinkIcon fontSize="large" />
+                    </AvatarPrimary>
+                    <Box
+                        px={1}
+                        pb={4}
+                        display={{ xs: 'block', md: 'flex' }}
+                        alignItems="flex-start"
+                    >
+                        <Box
+                            sx={{
+                                p: { xs: 1, md: 2 }
+                            }}
+                        >
+                            <Typography variant="h4" textAlign="center">
+                               Generate a Link
+                            </Typography>
+                            <Typography
+                                sx={{
+                                    pt: 1
+                                }}
+                                variant="subtitle2"
+                            >
+                                Paste a shareable link from a top social media site above and
+                                generate a ShareLeaf link
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Card>
+            </Grid>
+            <Grid item xs={12} md={3} sx={{mb: {xs: 4, md: 2}}}>
+                <Card
                     sx={{
-                      pt: 1
+                        height: '16rem',
+                        padding: 0,
+                        paddingLeft: '0px',
+                        overflow: 'visible'
                     }}
-                    variant="subtitle2"
-                  >
-                      Your don't need a fast Internet to view content on ShareLeaf. We distribute
-                      everything to your nearest location.
-                  </Typography>
-                </Box>
-              </Box>
-            </Card>
-          </Grid>
+                >
+                    <AvatarWarning
+                        sx={{
+                            width: 60,
+                            height: 60,
+                            mx: 'auto',
+                            position: 'relative',
+                            top: -28
+                        }}
+                    >
+                        <CloudDownloadIcon fontSize="large" />
+                    </AvatarWarning>
+                    <Box
+                        px={1}
+                        pb={4}
+                        display={{ xs: 'block', md: 'flex' }}
+                        alignItems="flex-start"
+                    >
+                        <Box
+                            sx={{
+                                p: { xs: 1, md: 2 }
+                            }}
+                        >
+                            <Typography variant="h4" textAlign="center">
+                                Content Download
+                            </Typography>
+                            <Typography
+                                sx={{
+                                    pt: 1
+                                }}
+                                variant="subtitle2"
+                            >
+                                We will download the content immediately and make it available for viewing
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Card>
+            </Grid>
+            <Grid item xs={12} md={3} sx={{mb: {xs: 4, md: 2}}}>
+                <Card
+                    sx={{
+                        height: '16rem',
+                        padding: 0,
+                        paddingLeft: '0px',
+                        overflow: 'visible'
+                    }}
+                >
+                    <AvatarError
+                        sx={{
+                            width: 60,
+                            height: 60,
+                            mx: 'auto',
+                            position: 'relative',
+                            top: -28
+                        }}
+                    >
+                        <PersonOffIcon fontSize="large" />
+                    </AvatarError>
+                    <Box
+                        px={1}
+                        pb={4}
+                        display={{ xs: 'block', md: 'flex' }}
+                        alignItems="flex-start"
+                    >
+                        <Box
+                            sx={{
+                                p: { xs: 1, md: 2 }
+                            }}
+                        >
+                            <Typography variant="h4" textAlign="center">
+                                Share Anonymously
+                            </Typography>
+                            <Typography
+                                sx={{
+                                    pt: 1
+                                }}
+                                variant="subtitle2"
+                            >
+                               Share your ShareLeaf link with anyone and they can view the content without an account
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Card>
+            </Grid>
+            <Grid item xs={12} md={3} sx={{mb: {xs: 4, md: 2}}}>
+                <Card
+                    sx={{
+                        height: '16rem',
+                        padding: 0,
+                        paddingLeft: '0px',
+                        overflow: 'visible'
+                    }}
+                >
+                    <AvatarSuccess
+                        sx={{
+                            width: 60,
+                            height: 60,
+                            mx: 'auto',
+                            position: 'relative',
+                            top: -28
+                        }}
+                    >
+                        <TimerIcon fontSize="large" />
+                    </AvatarSuccess>
+                    <Box
+                        px={1}
+                        pb={4}
+                        display={{ xs: 'block', md: 'flex' }}
+                        alignItems="flex-start"
+                    >
+                        <Box
+                            sx={{
+                                p: { xs: 1, md: 2 }
+                            }}
+                        >
+                            <Typography variant="h4" textAlign="center">
+                                ShareLeaf is Forever
+                            </Typography>
+                            <Typography
+                                sx={{
+                                    pt: 1
+                                }}
+                                variant="subtitle2"
+                            >
+                               Your shared content will live on ShareLeaf even if it disappears from the original source
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Card>
+            </Grid>
         </Grid>
       </Container>
     </BoxHighlights>
