@@ -1,6 +1,7 @@
 module.exports = {
     env: {
         REACT_APP_SERVER_BASE_URL: process.env.REACT_APP_SERVER_BASE_URL,
-        REACT_APP_CLIENT_BASE_URL: process.env.REACT_APP_CLIENT_BASE_URL
+        REACT_APP_CLIENT_BASE_URL: process.env.REACT_APP_CLIENT_BASE_URL,
+        NEXT_PUBLIC_GOOGLE_ANALYTICS: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS
     }
 };

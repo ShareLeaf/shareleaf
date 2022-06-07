@@ -1,5 +1,6 @@
 import type { ReactElement, ReactNode } from 'react';
 
+import Script from 'next/script'
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -52,6 +53,21 @@ function MyApp(props: MyAppProps) {
 
   return (
     <CacheProvider value={emotionCache}>
+        <Script
+            strategy="lazyOnload"
+            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
+        />
+
+        <Script id="google-analytics" strategy="lazyOnload">
+            {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
+              page_path: window.location.pathname,
+            });
+                `}
+        </Script>
       <Head>
         <title>{props.title}</title>
           <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
