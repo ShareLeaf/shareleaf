@@ -9,8 +9,9 @@ import {
 } from '@mui/material';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import AddLinkIcon from '@mui/icons-material/AddLink';
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import TimerIcon from '@mui/icons-material/Timer';
+import React from "react";
+import Image from 'next/image'
 
 const AvatarError = styled(Avatar)(
   ({ theme }) => `
@@ -28,14 +29,6 @@ const AvatarPrimary = styled(Avatar)(
 `
 );
 
-const AvatarWarning = styled(Avatar)(
-    ({ theme }) => `
-    background: ${theme.colors.warning.main};
-    width: ${theme.spacing(4)};
-    height: ${theme.spacing(4)};
-`
-);
-
 const AvatarSuccess = styled(Avatar)(
     ({ theme }) => `
     background: ${theme.colors.success.main};
@@ -43,8 +36,6 @@ const AvatarSuccess = styled(Avatar)(
     height: ${theme.spacing(4)};
 `
 );
-
-
 
 const TypographyH1Primary = styled(Typography)(
   ({ theme }) => `
@@ -68,14 +59,30 @@ function Highlights() {
         <TypographyH1Primary
           textAlign="center"
           sx={{
-            mb: 4, paddingBottom: '4rem'
+              mb: 2,
+              paddingBottom: '2rem'
           }}
           variant="h5"
         >
          How does ShareLeaf work?
         </TypographyH1Primary>
+          <Grid justifyContent="center"
+                alignItems="center"
+                container
+                sx={{paddingBottom: '4.5rem'}}>
+              <Grid item xs={12} md={6}>
+
+                  <Image
+                      src="/static/images/status/404.svg"
+                      alt="How ShareLeaf Works"
+                      width="400px"
+                      height="600px"
+                  />
+              </Grid>
+          </Grid>
         <Grid container spacing={2}>
-            <Grid item xs={12} md={3} sx={{mb: {xs: 4, md: 2}}}>
+
+            <Grid item xs={12} md={4} sx={{mb: {xs: 4, md: 2}}}>
                 <Card
                     sx={{
                         overflow: 'visible',
@@ -120,53 +127,7 @@ function Highlights() {
                     </Box>
                 </Card>
             </Grid>
-            <Grid item xs={12} md={3} sx={{mb: {xs: 4, md: 2}}}>
-                <Card
-                    sx={{
-                        height: '16rem',
-                        padding: 0,
-                        paddingLeft: '0px',
-                        overflow: 'visible'
-                    }}
-                >
-                    <AvatarWarning
-                        sx={{
-                            width: 60,
-                            height: 60,
-                            mx: 'auto',
-                            position: 'relative',
-                            top: -28
-                        }}
-                    >
-                        <CloudDownloadIcon fontSize="large" />
-                    </AvatarWarning>
-                    <Box
-                        px={1}
-                        pb={4}
-                        display={{ xs: 'block', md: 'flex' }}
-                        alignItems="flex-start"
-                    >
-                        <Box
-                            sx={{
-                                p: { xs: 1, md: 2 }
-                            }}
-                        >
-                            <Typography variant="h4" textAlign="center">
-                                Content Download
-                            </Typography>
-                            <Typography
-                                sx={{
-                                    pt: 1
-                                }}
-                                variant="subtitle2"
-                            >
-                                We will download the content immediately and make it available for viewing
-                            </Typography>
-                        </Box>
-                    </Box>
-                </Card>
-            </Grid>
-            <Grid item xs={12} md={3} sx={{mb: {xs: 4, md: 2}}}>
+            <Grid item xs={12} md={4} sx={{mb: {xs: 4, md: 2}}}>
                 <Card
                     sx={{
                         height: '16rem',
@@ -212,7 +173,7 @@ function Highlights() {
                     </Box>
                 </Card>
             </Grid>
-            <Grid item xs={12} md={3} sx={{mb: {xs: 4, md: 2}}}>
+            <Grid item xs={12} md={4} sx={{mb: {xs: 4, md: 2}}}>
                 <Card
                     sx={{
                         height: '16rem',
