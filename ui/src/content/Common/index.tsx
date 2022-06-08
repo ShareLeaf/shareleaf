@@ -16,7 +16,7 @@ const Common: FC<CommonProps> = (props) => {
             <Head>
                 <title>{props.title}</title>
             </Head>
-            <Container sx={{height: '100%'}}>
+            <Container>
             <Container maxWidth="lg">
                 <Box display="flex" alignItems="center" sx={{marginTop: '10px'}}>
                     <FullLogo />
