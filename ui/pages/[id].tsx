@@ -14,10 +14,8 @@ import Head from "next/head";
 
 const OverviewWrapper = styled(Box)(
     ({ theme }) => `
-    overflow: auto;
     background: ${theme.palette.common.white};
     flex: 1;
-    overflow-x: hidden;
 `
 );
 
