@@ -52,16 +52,16 @@ const colors = {
   },
   layout: {
     general: {
-      bodyBg: '#f2f5f9'
+      bodyBg: '#ffffff'
     },
     sidebar: {
       background: themeColors.white,
       textColor: themeColors.secondary,
-      dividerBg: '#f2f5f9',
+      dividerBg: '#ffffff',
       menuItemColor: '#242E6F',
       menuItemColorActive: themeColors.primary,
       menuItemBg: themeColors.white,
-      menuItemBgActive: '#f2f5f9',
+      menuItemBgActive: '#ffffff',
       menuItemIconColor: lighten(themeColors.secondary, 0.3),
       menuItemIconColorActive: themeColors.primary,
       menuItemHeadingColor: darken(themeColors.secondary, 0.3)

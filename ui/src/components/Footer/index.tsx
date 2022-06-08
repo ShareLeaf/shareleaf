@@ -3,9 +3,8 @@ import Link from 'src/components/Link';
 import TwitterIcon from '@mui/icons-material/Twitter';
 
 const FooterWrapper = styled(Card)(
-  ({ theme }) => `
+  () => `
         border-radius: 0;
-        margin-top: ${theme.spacing(4)};
 `
 );
 

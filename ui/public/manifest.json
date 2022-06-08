@@ -1,6 +1,6 @@
 {
   "theme_color": "#1975ff",
-  "background_color": "#f2f5f9",
+  "background_color": "#ffffff",
   "display": "standalone",
   "start_url": ".",
   "short_name": "ShareLeaf",

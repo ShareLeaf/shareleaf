@@ -114,7 +114,7 @@ const ColorSchemeWrapper = styled(Box)(
         }
     
         .secondary {
-            background: #f2f5f9;
+            background: #ffffff;
         }
     }
 
