@@ -11,7 +11,7 @@ import PersonOffIcon from '@mui/icons-material/PersonOff';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import TimerIcon from '@mui/icons-material/Timer';
 import React from "react";
-import Image from 'next/image'
+// import Image from 'next/image'
 
 const AvatarError = styled(Avatar)(
   ({ theme }) => `
@@ -66,20 +66,20 @@ function Highlights() {
         >
          How does ShareLeaf work?
         </TypographyH1Primary>
-          <Grid justifyContent="center"
-                alignItems="center"
-                container
-                sx={{paddingBottom: '4.5rem'}}>
-              <Grid item xs={12} md={6}>
+          {/*<Grid justifyContent="center"*/}
+          {/*      alignItems="center"*/}
+          {/*      container*/}
+          {/*      sx={{paddingBottom: '4.5rem'}}>*/}
+          {/*    <Grid item xs={12} md={6}>*/}
 
-                  <Image
-                      src="/static/images/status/404.svg"
-                      alt="How ShareLeaf Works"
-                      width="400px"
-                      height="600px"
-                  />
-              </Grid>
-          </Grid>
+          {/*        <Image*/}
+          {/*            src="/static/images/status/404.svg"*/}
+          {/*            alt="How ShareLeaf Works"*/}
+          {/*            width="400px"*/}
+          {/*            height="600px"*/}
+          {/*        />*/}
+          {/*    </Grid>*/}
+          {/*</Grid>*/}
         <Grid container spacing={2}>
 
             <Grid item xs={12} md={4} sx={{mb: {xs: 4, md: 2}}}>
