@@ -134,7 +134,7 @@ const Media: FC<MediaMetadataProps> = (props) => {
             </Alert>
         }  else if (showInvalidUrlError) {
             component = <Alert severity="warning">
-                Sorry, we were not able to process the original URL associated with the ShareLeaf URL :(
+                Sorry, we were not able to process that URL. It may not be supported at the moment but rest assured we are working on it.
             </Alert>
         } else {
             component = <Loader/>

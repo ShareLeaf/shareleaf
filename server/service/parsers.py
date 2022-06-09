@@ -57,7 +57,6 @@ class Reddit(S3):
         post_id = self.url[self.url.find('comments/') + 9:]
         post_id = f"t3_{post_id[:post_id.find('/')]}"
         required_js = self.soup.find('script', id='data')
-        print("post id: ", post_id)
         json_data = json.loads(required_js.text.replace('window.___r = ', '')[:-1])
         media_type = self._get_media_type(json_data, post_id)
         title = json_data['posts']['models'][post_id]['title']
@@ -77,13 +76,13 @@ class Reddit(S3):
             image_url = json_data['posts']['models'][post_id]['media'].get('content')
         elif media_type.get("is_gif") or media_type.get("is_video") or media_type.get("is_video_preview"):
             dash_url = json_data['posts']['models'][post_id]['media'].get('dashUrl')
+            dash_url = dash_url[:int(dash_url.find('DASH')) + 4]
             height = json_data['posts']['models'][post_id]['media'].get('height')
-            audio_url = f'{dash_url}_audio.mp4'
+            audio_url = f'{dash_url}_audio.mp4'  # Yes, it is mp4 and not mp3
             if media_type.get("is_video_preview"):
                 audio_url = ''
                 dash_url = json_data['posts']['models'][post_id]['media'].get('videoPreview').get('dashUrl')
                 height = json_data['posts']['models'][post_id]['media'].get('videoPreview').get('height')
-            dash_url = dash_url[:int(dash_url.find('DASH')) + 4]
             video_url = f'{dash_url}_{height}.mp4'
             records_to_update["encoding"] = "video/mp4"
             if media_type.get("is_gif"):
@@ -123,13 +122,12 @@ class Reddit(S3):
         print("Processing Reddit soup")
         try:
             metadata = self._parse_media_urls()
-            print("metadata: ", metadata)
             filename = str(uuid.uuid4())
             merged_video_filename = str(uuid.uuid4()) + ".mp4"
             thumbnail_filename = str(uuid.uuid4()) + ".jpg"
             image_filename = str(uuid.uuid4()) + ".jpg"
             v_filename = filename + ".mp4"
-            a_filename = filename + ".mp3"
+            a_filename = filename + ".mp4"
             if metadata.get("video_url"):
                 self._download_media(metadata.get("video_url"), v_filename)
             if metadata.get("audio_url"):
@@ -143,10 +141,13 @@ class Reddit(S3):
                 video_stream = ffmpeg.input(v_filename)
                 audio_stream = ffmpeg.input(a_filename)
                 start = int(time.time() * 1000)
-                print("ffmpeg Processing has started...")
-                ffmpeg.output(audio_stream, video_stream, merged_video_filename, vcodec='copy').run()
-                end = int(time.time() * 1000)
-                print("ffmpeg Processing has ended...Time(ms): ", end - start)
+                try:
+                    print("ffmpeg Processing has started...")
+                    ffmpeg.output(audio_stream, video_stream, merged_video_filename, vcodec='copy').run()
+                    end = int(time.time() * 1000)
+                    print("ffmpeg Processing has ended...Time(ms): ", end - start)
+                except Exception as e:
+                    print("Encountered an error while processing video")
             else:
                 # this is the case if it's a GIF
                 merged_video_filename = v_filename
@@ -164,7 +165,7 @@ class Reddit(S3):
                 self.upload_file(image_filename, self.uid + ".jpg")
 
             # Delete the files
-            subprocess.call(['rm',
+            subprocess.call(['rm', '-rf',
                              v_filename,
                              a_filename,
                              merged_video_filename,
@@ -185,8 +186,7 @@ class Reddit(S3):
             print("Encountered an error: ", e)
 
     def _get_media_type(self, json_data, post_id):
-        with open(str(uuid.uuid4()) + ".json", "w") as f:
-            json.dump(json_data, f)
+
         try:
             return {
                 "is_gif": json_data['posts']['models'][post_id]['media'].get('isGif'),

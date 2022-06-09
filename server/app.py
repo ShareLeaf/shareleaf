@@ -57,7 +57,7 @@ def process_url():
     data = request.get_json()
     src = data.get("src")
     uid = data.get("uid")
-    if src and uid and validators.url(src):
+    if src and uid and validators.url(src) and "shareleaf" not in src:
         src = data.get("src")
         uid = data.get("uid")
         cs.download_media(src, uid, app, db)
