@@ -73,6 +73,7 @@ const Media: FC<MediaMetadataProps> = (props) => {
             setShowInvalidUrlError(true);
         } else {
             if (props.processed) {
+                console.log("prps: ", props)
                 setMetadata(props);
             } else {
                 setShowInProgress(true);
@@ -100,7 +101,7 @@ const Media: FC<MediaMetadataProps> = (props) => {
                                 }}
                             >
                                 <Grid item md={8} xs={12}>
-                                    {metadata.type === "video" &&
+                                    {(metadata.type === "video" || metadata.type === "gif") &&
                                         <VideoElement
                                             thumbnail={metadata.thumbnail}
                                             encoding={metadata.encoding}

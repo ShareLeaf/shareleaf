@@ -75,17 +75,22 @@ class Reddit(S3):
             records_to_update["media_type"] = "image"
             records_to_update["encoding"] = "jpg"
             image_url = json_data['posts']['models'][post_id]['media'].get('content')
-        elif media_type.get("is_gif") or media_type.get("is_video"):
+        elif media_type.get("is_gif") or media_type.get("is_video") or media_type.get("is_video_preview"):
             dash_url = json_data['posts']['models'][post_id]['media'].get('dashUrl')
-            height = json_data['posts']['models'][post_id]['media']['height']
+            height = json_data['posts']['models'][post_id]['media'].get('height')
+            audio_url = f'{dash_url}_audio.mp4'
+            if media_type.get("is_video_preview"):
+                audio_url = ''
+                dash_url = json_data['posts']['models'][post_id]['media'].get('videoPreview').get('dashUrl')
+                height = json_data['posts']['models'][post_id]['media'].get('videoPreview').get('height')
             dash_url = dash_url[:int(dash_url.find('DASH')) + 4]
             video_url = f'{dash_url}_{height}.mp4'
             records_to_update["encoding"] = "video/mp4"
             if media_type.get("is_gif"):
+                audio_url = ''
                 records_to_update["media_type"] = "gif"
             else:
                 records_to_update["media_type"] = "video"
-                audio_url = f'{dash_url}_audio.mp4'
 
         with self.app.app_context():
             self.db.session.bulk_update_mappings(Metadata, [records_to_update])
@@ -186,6 +191,7 @@ class Reddit(S3):
             return {
                 "is_gif": json_data['posts']['models'][post_id]['media'].get('isGif'),
                 "is_video": json_data['posts']['models'][post_id]['media'].get('type') == "video",
+                "is_video_preview": json_data['posts']['models'][post_id]['media'].get('videoPreview') is not None,
                 "is_image": json_data['posts']['models'][post_id]['media'].get('type') == "image",
             }
         except Exception as e:
