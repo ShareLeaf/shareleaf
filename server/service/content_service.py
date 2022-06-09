@@ -61,7 +61,6 @@ def generate_content_id(src: str, app: Flask, db: SQLAlchemy) -> str:
 
 
 def download_media(src, uid, app, db):
-    # TODO use content metadata to check if it should be downloaded again or not
     record = get_content_id(src, app, db)
     if not record.processed:
         response = requests.get(src, headers=headers)
@@ -83,9 +82,12 @@ def get_metadata(uid: str, app: Flask, db: SQLAlchemy) -> {}:
         records = query.all()
         if records:
             if records[0].processed:
+                url = f'{AWSProps().cdn}/{records[0].id}.mp4',
+                if records[0].media_type == "image":
+                    url = f'{AWSProps().cdn}/{records[0].id}.jpg',
                 return {
-                    "url": f'{AWSProps().cdn}/{records[0].id}.mp4',
-                    "thumbnail": f'{AWSProps().cdn}/{records[0].id}.jpeg',
+                    "url": url,
+                    "thumbnail": f'{AWSProps().cdn}/{records[0].id}.jpg',
                     "media_type": records[0].media_type,
                     "processed": records[0].processed,
                     "encoding": records[0].encoding,
