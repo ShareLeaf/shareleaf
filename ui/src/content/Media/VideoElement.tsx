@@ -25,7 +25,7 @@ const VideoElement: FC<VideoElementProps> = (props) => {
                 muted
                 width={"100%"}>
                 preload="metadata"
-                <source src={props.src + "#t=0.1"} type={props.encoding}/>
+                <source src={props.src + "#t=0.1"} type="video/mp4"/>
             </video>
             <Box sx={{
                 marginTop: '0.5rem',

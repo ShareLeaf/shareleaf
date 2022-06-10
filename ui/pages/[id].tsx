@@ -73,7 +73,7 @@ const Media: FC<MediaMetadataProps> = (props) => {
             setShowInvalidUrlError(true);
         } else {
             if (props.processed) {
-                console.log("prps: ", props)
+                // console.log("prps: ", props)
                 setMetadata(props);
             } else {
                 setShowInProgress(true);
@@ -134,7 +134,8 @@ const Media: FC<MediaMetadataProps> = (props) => {
             </Alert>
         }  else if (showInvalidUrlError) {
             component = <Alert severity="warning">
-                Sorry, we were not able to process that URL. It may not be supported at the moment but rest assured we are working on it.
+                Sorry, we were not able to process that URL. It may not be supported at the moment. Please DM us the link here
+                https://twitter.com/share_leaf and we'll investigate.
             </Alert>
         } else {
             component = <Loader/>

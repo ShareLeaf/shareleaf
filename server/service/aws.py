@@ -19,7 +19,10 @@ class S3:
         # self.key
 
     def upload_file(self, filename, uid):
-        _object = self.s3.Object(self.props.bucket_name, uid)
-        with open(filename, "rb") as f:
-            _object.put(Body=f.read())
-            print("Successfully uploaded ", filename)
+        try:
+            _object = self.s3.Object(self.props.bucket_name, uid)
+            with open(filename, "rb") as f:
+                _object.put(Body=f.read())
+                print("Successfully uploaded ", filename)
+        except Exception as e:
+            print("Failed to upload file: ", e)
