@@ -14,10 +14,8 @@ import Head from "next/head";
 
 const OverviewWrapper = styled(Box)(
     ({ theme }) => `
-    overflow: auto;
     background: ${theme.palette.common.white};
     flex: 1;
-    overflow-x: hidden;
 `
 );
 
@@ -75,6 +73,7 @@ const Media: FC<MediaMetadataProps> = (props) => {
             setShowInvalidUrlError(true);
         } else {
             if (props.processed) {
+                // console.log("prps: ", props)
                 setMetadata(props);
             } else {
                 setShowInProgress(true);
@@ -102,7 +101,7 @@ const Media: FC<MediaMetadataProps> = (props) => {
                                 }}
                             >
                                 <Grid item md={8} xs={12}>
-                                    {metadata.type === "video" &&
+                                    {(metadata.type === "video" || metadata.type === "gif") &&
                                         <VideoElement
                                             thumbnail={metadata.thumbnail}
                                             encoding={metadata.encoding}
@@ -135,7 +134,8 @@ const Media: FC<MediaMetadataProps> = (props) => {
             </Alert>
         }  else if (showInvalidUrlError) {
             component = <Alert severity="warning">
-                Sorry, we were not able to process the original URL associated with the ShareLeaf URL :(
+                Sorry, we were not able to process that URL. It may not be supported at the moment. Please DM us the link here
+                https://twitter.com/share_leaf and we'll investigate.
             </Alert>
         } else {
             component = <Loader/>
