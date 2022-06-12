@@ -1,0 +1,16 @@
+mainClassName = 'co.shareleaf.Application'
+
+dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-config-server' // Embed the config server in the main application
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'com.amazonaws:aws-java-sdk-s3'
+}
+sourceSets {
+    getByName("main") {
+        java {
+            srcDir("$buildDir/$project.generatedDirSpring/src/main/java")
+        }
+    }
+}
