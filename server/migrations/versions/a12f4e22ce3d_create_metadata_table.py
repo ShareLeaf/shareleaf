@@ -29,6 +29,7 @@ def upgrade():
         sa.Column('category', sa.String()),
         sa.Column('canonical_url', sa.String(), index=True),
         sa.Column('view_count', sa.BigInteger()),
+        sa.Column('share_count', sa.BigInteger()),
         sa.Column('like_count', sa.BigInteger()),
         sa.Column('dislike_count', sa.BigInteger()),
         sa.Column('created_dt', sa.DateTime(), default=sa.func.now()),
