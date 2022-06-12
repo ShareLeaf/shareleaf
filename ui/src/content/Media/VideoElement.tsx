@@ -28,19 +28,19 @@ const VideoElement: FC<VideoElementProps> = (props) => {
                 <source src={props.src + "#t=0.1"} type="video/mp4"/>
             </video>
             <Box sx={{
-                marginTop: '0.5rem',
                 pl: 1,
                 pr: 1
             }}>
             <Typography
                 sx={{
-                    pt: 1,
+                    pt: 2,
+                    pb: 2,
                     textAlign: 'left',
-                    color: '#223354b3'
+                    color: '#000',
                 }}
-                variant="h3"
+                variant="h4"
             >
-                {props.title}
+                {props.title + "Organizing Your Remote Office for Maximum Productivity  Organizing Your Remote Office for Maximum Productivity"}
             </Typography>
             </Box>
         </Box>

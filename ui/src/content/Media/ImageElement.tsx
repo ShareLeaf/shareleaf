@@ -1,22 +1,32 @@
-import React, { FC } from "react";
+import React, {FC} from "react";
 import 'react-html5video/dist/styles.css';
 import {Box, Typography} from "@mui/material";
 
 interface ImageElementProps {
     src: string,
-    title?: string
+    title?: string,
+    handleOpen?: () => void
 }
 const ImageElement: FC<ImageElementProps> = (props) => {
+    const handleOpen = () => {
+        props.handleOpen();
+    }
     return (
         <>
             <Box sx={{marginTop: '2rem', textAlign: 'center'}}>
-        <img
-            width="100%"
-            alt={props.title}
-            src={props.src} />
+                <img
+                    onClick={handleOpen}
+                    width="100%"
+                    alt={props.title}
+                    src={props.src} />
     </Box>
-            <Box sx={{marginTop: '0.5rem', pl: 1, pr: 1}}>
-                <Typography variant="h3" sx={{textAlign: 'left', color: '#223354b3'}}>
+            <Box sx={{ pl: 1, pr: 1}}>
+                <Typography variant="h4" sx={{
+                    pt: 2,
+                    pb: 2,
+                    textAlign: 'left',
+                    color: '#000'
+                }}>
                     {props.title}
                 </Typography>
             </Box>
