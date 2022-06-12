@@ -9,7 +9,7 @@ import datetime
 
 sys.path.append(dirname(__file__).split("/server")[0])
 
-from server.service.parsers import Reddit
+from server.service.reddit import Reddit
 from server.models.models import Metadata
 from server.utils import utils
 from server.props.aws import  AWSProps
