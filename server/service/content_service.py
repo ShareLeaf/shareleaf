@@ -51,6 +51,7 @@ def generate_content_id(src: str, app: Flask, db: SQLAlchemy) -> str:
         processed=False,
         canonical_url=src,
         view_count=0,
+        share_count=0,
         like_count=0,
         dislike_count=0,
         created_dt=datetime.datetime.now(),
@@ -76,6 +77,26 @@ def download_media(src, uid, app, db):
             handler.process_soup()
 
 
+def update_share_count(uid: str, app: Flask, db: SQLAlchemy) -> {}:
+    with app.app_context():
+        query = db.session.query(Metadata).filter(Metadata.id.in_(tuple([uid])))
+        records = query.all()
+        if records:
+            if records[0].processed:
+                share_count = records[0].share_count + 1
+                records_to_update = [{
+                    "id": uid,
+                    "share_count": share_count,
+                    'updated_at': datetime.datetime.now()
+                }]
+                db.session.bulk_update_mappings(Metadata, records_to_update)
+                utils.save(db)
+                return {"status": "ok"}
+        return {
+            "error": True
+        }
+
+
 def get_metadata(uid: str, app: Flask, db: SQLAlchemy) -> {}:
     with app.app_context():
         query = db.session.query(Metadata).filter(Metadata.id.in_(tuple([uid])))
@@ -85,8 +106,12 @@ def get_metadata(uid: str, app: Flask, db: SQLAlchemy) -> {}:
                 url = f'{AWSProps().cdn}/{records[0].id}.mp4',
                 if records[0].media_type == "image":
                     url = f'{AWSProps().cdn}/{records[0].id}.jpg',
-                return {
+                view_count = records[0].view_count
+                if view_count == 0:
+                    view_count = 1
+                response = {
                     "url": url,
+                    "shareable_link": "https://shareleaf.co/" + uid,
                     "thumbnail": f'{AWSProps().cdn}/{records[0].id}.jpg',
                     "media_type": records[0].media_type,
                     "processed": records[0].processed,
@@ -94,11 +119,20 @@ def get_metadata(uid: str, app: Flask, db: SQLAlchemy) -> {}:
                     "title": records[0].title,
                     "description": records[0].description,
                     "category": records[0].category,
-                    "view_count": records[0].view_count,
+                    "view_count": view_count,
                     "like_count": records[0].like_count,
+                    "share_count": records[0].share_count,
                     "dislike_count": records[0].dislike_count,
                     "created_dt": records[0].created_dt
                 }
+                records_to_update = [{
+                    "id": uid,
+                    "view_count": records[0].view_count + 1,
+                    'updated_at': datetime.datetime.now()
+                }]
+                db.session.bulk_update_mappings(Metadata, records_to_update)
+                utils.save(db)
+                return response
             else:
                 return {
                     "invalid_url": records[0].invalid_url,

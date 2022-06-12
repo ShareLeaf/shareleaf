@@ -66,6 +66,15 @@ def process_url():
     return jsonify(status=200)
 
 
+@app.route("/update-share", methods=['POST'])
+def update_share_count():
+    data = request.get_json()
+    uid = data.get("uid")
+    if uid:
+        return jsonify(cs.update_share_count(uid, app, db)), 200
+    return jsonify(error=True), 200
+
+
 @app.route("/metadata", methods=['GET'])
 def get_metadata():
     key = request.args.get("key")
@@ -86,6 +95,7 @@ def health():
 
 def create_app():
     return app
+
 
 if __name__ == "__main__":
     app = create_app()

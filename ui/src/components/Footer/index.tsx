@@ -1,6 +1,7 @@
 import {Box, Card, Typography, styled, IconButton} from '@mui/material';
 import Link from 'src/components/Link';
 import TwitterIcon from '@mui/icons-material/Twitter';
+import React from "react";
 
 const FooterWrapper = styled(Card)(
   () => `
@@ -19,8 +20,10 @@ function Footer() {
         justifyContent="space-between"
       >
         <Box>
-          <Typography variant="subtitle1">
-            &copy; 2022 - ShareLeaf
+          <Typography variant="body2" color="text.primary" sx={{
+              fontSize: '12px'
+          }}>
+             &copy; 2022 - ShareLeaf
           </Typography>
         </Box>
         <Typography

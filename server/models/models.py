@@ -22,6 +22,7 @@ class Metadata(db.Model):
     category = db.Column(db.String)
     canonical_url = db.Column(db.String, unique=True)
     view_count = db.Column(db.BigInteger)
+    share_count = db.Column(db.BigInteger)
     like_count = db.Column(db.BigInteger)
     dislike_count = db.Column(db.BigInteger)
     created_dt = db.Column(db.DateTime, default=func.now())

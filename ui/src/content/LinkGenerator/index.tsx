@@ -3,6 +3,7 @@ import {Box, Button, Container, Grid, IconButton, InputBase, styled, Typography}
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import axios from "axios";
 import Typed from "react-typed";
+import {copyToClipBoard} from "@/content/utils/utils";
 
 const SearchInputWrapper = styled(InputBase)(
     ({ theme }) => `
@@ -67,15 +68,6 @@ const LinkGenerator: FC<any> = () => {
                 .catch(e => console.log(e));
         }
     };
-
-    const copyToClipBoard = async () : Promise<void> => {
-        const ta = document.createElement("textarea");
-        ta.innerText = generatedUrl;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        ta.remove();
-    }
 
     const handleSearchChange = async (event: ChangeEvent<{ value: unknown }>) => {
         event.preventDefault();
@@ -143,9 +135,6 @@ const LinkGenerator: FC<any> = () => {
                                         sx={{
 
                                             ml: 'auto',
-                                            // mr: 2,
-                                            // py: 0.5,
-                                            // px: 2,
                                         }}
                                     >
                                         <Button
@@ -198,7 +187,7 @@ const LinkGenerator: FC<any> = () => {
                                             pl: 2
                                         }}
                                     >
-                                        <IconButton sx={{ mx: 1 }} onClick={copyToClipBoard}>
+                                        <IconButton sx={{ mx: 1 }} onClick={() => copyToClipBoard(generatedUrl)}>
                                             <ContentCopyIcon fontSize="medium" />
                                         </IconButton>
                                     </Box>
