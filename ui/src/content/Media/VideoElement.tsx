@@ -40,7 +40,7 @@ const VideoElement: FC<VideoElementProps> = (props) => {
                 }}
                 variant="h4"
             >
-                {props.title + "Organizing Your Remote Office for Maximum Productivity  Organizing Your Remote Office for Maximum Productivity"}
+                {props.title}
             </Typography>
             </Box>
         </Box>
