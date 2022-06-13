@@ -1,32 +1,43 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Resume Repo API",
-    "description": "REST API for Resume Repo backend services",
+    "title": "ShareLeaf API Service",
+    "description": "REST API for ShareLeaf backend services",
     "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "https://resumerepo.co/repo-api",
+      "url": "https://shareleaf.co",
       "description": "Prod"
     }
   ],
   "paths": {
-    "/user/create": {
+    "/content/generate-uid": {
       "post": {
         "tags": [
-          "User"
+          "content"
         ],
-        "summary": "Create a user",
-        "description": "Create a user",
-        "operationId": "createUser",
+        "summary": "Generate content id",
+        "description": "Generate a unique content id",
+        "operationId": "generateContentId",
+        "requestBody": {
+          "required": true,
+          "description": "Content URL",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SLContentUrl"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "Create user response",
+            "description": "Generate id response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RRGenericResponse"
+                  "$ref": "#/components/schemas/SLContentId"
                 }
               }
             }
@@ -34,17 +45,17 @@
         }
       }
     },
-    "/object/{object_key}": {
+    "/content/metadata": {
       "get": {
         "tags": [
-          "RepoObject"
+          "content"
         ],
-        "description": "Get object by object id",
-        "operationId": "getObjectData",
+        "description": "Get content metadata",
+        "operationId": "getMetadata",
         "parameters": [
           {
-            "in": "path",
-            "name": "object_key",
+            "in": "query",
+            "name": "uid",
             "required": true,
             "schema": {
               "type": "string"
@@ -53,11 +64,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Object response",
+            "description": "Metadata response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RRObjectDataResponse"
+                  "$ref": "#/components/schemas/SLContentMetadata"
                 }
               }
             }
@@ -65,606 +76,32 @@
         }
       }
     },
-    "/object/lock": {
-      "put": {
-        "tags": [
-          "RepoObject"
-        ],
-        "summary": "Mark object as read-only",
-        "description": "Mark object as read-only",
-        "operationId": "lockObject",
-        "requestBody": {
-          "required": true,
-          "description": "Lock object request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRObjectByKeyRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Object lock response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRGenericResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/object/copy": {
+    "/content/shares": {
       "post": {
         "tags": [
-          "RepoObject"
+          "content"
         ],
-        "summary": "Make a copy of a Object object",
-        "description": "Make a copy of a Object object",
-        "operationId": "copyObject",
+        "summary": "Increment share count",
+        "description": "Increment share count",
+        "operationId": "incrementShareCount",
         "requestBody": {
           "required": true,
-          "description": "Copy request",
+          "description": "Content URL",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RRObjectByKeyRequest"
+                "$ref": "#/components/schemas/SLContentId"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Object copy response",
+            "description": "Generic response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RRCopyResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/object/create": {
-      "post": {
-        "tags": [
-          "RepoObject"
-        ],
-        "summary": "Create a Object object",
-        "description": "Create a Object object",
-        "operationId": "createObject",
-        "requestBody": {
-          "required": true,
-          "description": "Create request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRCreateObjectRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Object create response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRKeyResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/object/save": {
-      "put": {
-        "tags": [
-          "RepoObject"
-        ],
-        "summary": "Update object",
-        "description": "Update object",
-        "operationId": "updateObject",
-        "requestBody": {
-          "required": true,
-          "description": "Update object request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRUpdateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Object update response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRGenericResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/object/delete": {
-      "delete": {
-        "tags": [
-          "RepoObject"
-        ],
-        "summary": "Delete object",
-        "description": "Delete object",
-        "operationId": "deleteObject",
-        "requestBody": {
-          "required": true,
-          "description": "Delete object request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRObjectByKeyRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Object delete response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRGenericResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/object/metadata/update": {
-      "post": {
-        "tags": [
-          "RepoObject"
-        ],
-        "summary": "Update object metadata",
-        "description": "Update object metadata",
-        "operationId": "updateMetadata",
-        "requestBody": {
-          "required": true,
-          "description": "Update metadata request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRUpdateObjectMetadataRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Update object metadata response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRGenericResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/object/all": {
-      "post": {
-        "tags": [
-          "RepoObject"
-        ],
-        "description": "Get all user objects",
-        "operationId": "getAllPaginatedObjectMetadata",
-        "requestBody": {
-          "required": true,
-          "description": "Paginated object request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRPaginatedRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Paginated response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRPaginatedResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/object/all/byKey": {
-      "post": {
-        "tags": [
-          "RepoObject"
-        ],
-        "description": "Get all object metadata by object id",
-        "operationId": "getAllObjectMetadataByKey",
-        "requestBody": {
-          "required": true,
-          "description": "Object Id list",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRObjectByKeyRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "All object response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRObjectMetadataResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/object/diff": {
-      "post": {
-        "tags": [
-          "RepoObject"
-        ],
-        "description": "Get the diff between two objects",
-        "operationId": "getDiff",
-        "requestBody": {
-          "required": true,
-          "description": "Objects to compare",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRObjectDiffRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Diff response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRDiffResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/object/dependency/{object_key}": {
-      "get": {
-        "tags": [
-          "RepoObject"
-        ],
-        "description": "Get complete object tree",
-        "operationId": "getObjectDependencyTree",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "object_key",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Object tree response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRObjectMetadataResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-
-    "/cv/create/resume/from-template": {
-      "post": {
-        "tags": [
-          "CV"
-        ],
-        "summary": "Create a resume",
-        "description": "Create a resume from a template",
-        "operationId": "createResumeFromTemplate",
-        "requestBody": {
-          "required": true,
-          "description": "Create request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRCreateFromTemplateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Resume creation response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRKeyResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cv/create/resume": {
-      "post": {
-        "tags": [
-          "CV"
-        ],
-        "summary": "Create a resume",
-        "description": "Create a resume",
-        "operationId": "createResume",
-        "requestBody": {
-          "required": true,
-          "description": "Create resume request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRResume"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Resume creation response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRKeyResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cv/fetch/metadata/all": {
-      "post": {
-        "tags": [
-          "CV"
-        ],
-        "description": "Get all user CVs by type",
-        "operationId": "getAllPaginatedCVMetadata",
-        "requestBody": {
-          "required": true,
-          "description": "Paginated cv request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRPaginatedRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Paginated response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRPaginatedCVResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cv/fetch/metadata/byKeyList": {
-      "post": {
-        "tags": [
-          "CV"
-        ],
-        "description": "Get all CVs  by id",
-        "operationId": "getAllCVMetadataByKey",
-        "requestBody": {
-          "required": true,
-          "description": "CV Id list",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRCVByKeyRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "All CV metadata response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRCVMetadataResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cv/fetch/data//byKey/{key}": {
-      "get": {
-        "tags": [
-          "CV"
-        ],
-        "description": "Get CV full data by key",
-        "operationId": "getCVData",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "key",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "CV response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRCVDataResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cv/fetch/data/demo": {
-      "get": {
-        "tags": [
-          "CV"
-        ],
-        "description": "Get demo CV data",
-        "operationId": "getDemoCvData",
-        "responses": {
-          "200": {
-            "description": "CV response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRCVDataResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cv/metadata/update": {
-      "post": {
-        "tags": [
-          "CV"
-        ],
-        "summary": "Update CV metadata",
-        "description": "Update CV metadata",
-        "operationId": "updateCVMetadata",
-        "requestBody": {
-          "required": true,
-          "description": "Update metadata request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRCVMetadata"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Update CV metadata response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRGenericResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cv/data/update": {
-      "post": {
-        "tags": [
-          "CV"
-        ],
-        "summary": "Update CV data",
-        "description": "Update CV data",
-        "operationId": "updateCVData",
-        "requestBody": {
-          "required": true,
-          "description": "Update metadata request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRResume"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Update CV metadata response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRGenericResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cv/copy": {
-      "post": {
-        "tags": [
-          "CV"
-        ],
-        "summary": "Make a copy of a CV",
-        "description": "Make a copy of a CV",
-        "operationId": "copyCV",
-        "requestBody": {
-          "required": true,
-          "description": "Copy request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RRCVKey"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Object copy response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RRCVMetadataResponse"
+                  "$ref": "#/components/schemas/SLGenericResponse"
                 }
               }
             }
@@ -682,7 +119,7 @@
       }
     },
     "schemas": {
-      "RRGenericResponse": {
+      "SLGenericResponse": {
         "type": "object",
         "properties": {
           "status": {
@@ -695,823 +132,113 @@
           }
         }
       },
-      "RRCVByKeyRequest": {
+      "SLContentId": {
         "type": "object",
         "required": [
-          "object_keys"
+          "uid"
         ],
         "properties": {
-          "object_keys": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "uid": {
+            "type": "string"
           }
         }
       },
-      "RRCVKey": {
+      "SLContentUrl": {
         "type": "object",
         "required": [
-          "object_key"
+          "url"
         ],
         "properties": {
-          "object_key": {
+          "url": {
             "type": "string"
           }
         }
       },
-      "RRCVMetadataResponse": {
+      "SLContentMetadata": {
         "type": "object",
         "required": [
-          "records"
+          "url",
+          "shareable_link",
+          "thumbnail",
+          "media_type",
+          "processed",
+          "encoding",
+          "title",
+          "description",
+          "category",
+          "view_count",
+          "like_count",
+          "share_count",
+          "dislike_count",
+          "created_dt"
         ],
         "properties": {
-          "records": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RRCVMetadata"
-            }
-          }
-        }
-      },
-      "RRCVMetadata": {
-        "type": "object",
-        "required": [
-          "cv_key",
-          "cv_type",
-          "cv_title",
-          "read_only",
-          "created_at",
-          "updated_at",
-          "children",
-          "is_default_profile",
-          "is_public",
-          "template_name"
-        ],
-        "properties": {
-          "cv_key": {
+          "uid": {
             "type": "string"
-          },
-          "cv_type": {
-            "$ref": "#/components/schemas/RRObjectType"
-          },
-          "cv_title": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "read_only": {
-            "type": "boolean"
-          },
-          "is_deleted": {
-            "type": "boolean"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "yyyy-MM-dd HH:mm:ss.SSS"
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "yyyy-MM-dd HH:mm:ss.SSS"
-          },
-          "children": {
-            "type": "array",
-            "items": {
-              "type": "object"
-            },
-            "nullable": true
-          },
-          "is_default_profile": {
-            "type": "boolean"
-          },
-          "is_public": {
-            "type": "boolean"
-          },
-          "public_url": {
-            "type": "string"
-          },
-          "template_name": {
-            "$ref": "#/components/schemas/RRCVTemplate"
-          }
-        }
-      },
-      "RRCVDataResponse":  {
-        "type": "object",
-        "properties": {
-          "cv_key": {
-            "type": "string"
-          },
-          "template_type": {
-            "$ref": "#/components/schemas/RRCVTemplate"
-          },
-          "resume": {
-            "$ref": "#/components/schemas/RRResume"
-          },
-          "cover_letter": {
-            "$ref": "#/components/schemas/RRResume"
-          }
-        }
-      },
-      "RRResume": {
-        "type": "object",
-        "required": [
-          "cv_title",
-          "cv_type",
-          "is_default_profile",
-          "read_only",
-          "is_public"
-        ],
-        "properties": {
-          "cv_key": {
-            "type": "string",
-            "nullable": true
-          },
-          "is_default_profile": {
-            "type": "boolean"
-          },
-          "read_only": {
-            "type": "boolean"
-          },
-          "is_public": {
-            "type": "boolean"
-          },
-          "cv_title": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "cv_type": {
-            "$ref": "#/components/schemas/RRObjectType"
-          },
-          "profile": {
-            "$ref": "#/components/schemas/RRUserProfile"
-          },
-          "education": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RREducation"
-            }
-          },
-          "work_experience": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RRWorkExperience"
-            }
-          },
-          "extracurriculars": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RRExtracurricular"
-            }
-          },
-          "projects": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RRProject"
-            }
-          },
-          "skills": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RRSkills"
-            }
-          },
-          "socials": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RRSocial"
-            }
-          }
-        }
-      },
-      "RRUserProfile": {
-        "type": "object",
-        "properties": {
-          "first_name": {
-            "type": "string",
-            "nullable": true
-          },
-          "last_name": {
-            "type": "string",
-            "nullable": true
-          },
-          "location": {
-            "type": "string",
-            "nullable": true
-          },
-          "mobile": {
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "position": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "RREducation": {
-        "type": "object",
-        "properties": {
-          "institution": {
-            "type": "string",
-            "nullable": true
-          },
-          "location": {
-            "type": "string",
-            "nullable": true
-          },
-          "major": {
-            "type": "string",
-            "nullable": true
-          },
-          "minor": {
-            "type": "string",
-            "nullable": true
-          },
-          "gpa": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "is_current": {
-            "type": "boolean"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
           },
           "url": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
-          "start_date": {
-            "type": "string",
-            "format": "yyyy-MM-dd HH:mm:ss.SSS",
-            "nullable": true
+          "shareable_link": {
+            "type": "string"
           },
-          "end_date": {
-            "type": "string",
-            "format": "yyyy-MM-dd HH:mm:ss.SSS",
-            "nullable": true
-          }
-        }
-      },
-      "RRWorkExperience": {
-        "type": "object",
-        "properties": {
-          "position": {
-            "type": "string",
-            "nullable": true
+          "thumbnail": {
+            "type": "string"
           },
-          "institution": {
-            "type": "string",
-            "nullable": true
+          "media_type": {
+            "$ref": "#/components/schemas/SLMediaType"
           },
-          "location": {
-            "type": "string",
-            "nullable": true
-          },
-          "is_current": {
+          "processed": {
             "type": "boolean"
           },
-          "items": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
+          "encoding": {
+            "type": "string"
           },
-          "url": {
-            "type": "string",
-            "nullable": true
-          },
-          "start_date": {
-            "type": "string",
-            "format": "yyyy-MM-dd HH:mm:ss.SSS",
-            "nullable": true
-          },
-          "end_date": {
-            "type": "string",
-            "format": "yyyy-MM-dd HH:mm:ss.SSS",
-            "nullable": true
-          }
-        }
-      },
-      "RRExtracurricular": {
-        "type": "object",
-        "properties": {
-          "position": {
-            "type": "string",
-            "nullable": true
-          },
-          "institution": {
-            "type": "string",
-            "nullable": true
-          },
-          "location": {
-            "type": "string",
-            "nullable": true
-          },
-          "is_current": {
-            "type": "boolean"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "url": {
-            "type": "string",
-            "nullable": true
-          },
-          "start_date": {
-            "type": "string",
-            "format": "yyyy-MM-dd HH:mm:ss.SSS",
-            "nullable": true
-          },
-          "end_date": {
-            "type": "string",
-            "format": "yyyy-MM-dd HH:mm:ss.SSS",
-            "nullable": true
-          }
-        }
-      },
-      "RRProject": {
-        "type": "object",
-        "properties": {
           "title": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "description": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
-          "is_current": {
-            "type": "boolean"
+          "category": {
+            "type": "string"
           },
-          "items": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "url": {
-            "type": "string",
-            "nullable": true
-          },
-          "start_date": {
-            "type": "string",
-            "format": "yyyy-MM-dd HH:mm:ss.SSS",
-            "nullable": true
-          },
-          "end_date": {
-            "type": "string",
-            "format": "yyyy-MM-dd HH:mm:ss.SSS",
-            "nullable": true
-          }
-        }
-      },
-      "RRSkills": {
-        "type": "object",
-        "properties": {
-          "heading": {
-            "type": "string",
-            "nullable": true
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        }
-      },
-      "RRSocial": {
-        "type": "object",
-        "properties": {
-          "handle": {
-            "type": "string",
-            "nullable": true
-          },
-          "url": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "RRPaginatedCVResponse": {
-        "type": "object",
-        "required": [
-          "total_records",
-          "num_pages",
-          "records"
-        ],
-        "properties": {
-          "total_records": {
+          "view_count": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
-          "num_pages": {
+          "like_count": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
-          "records": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RRCVMetadata"
-            }
+          "share_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "dislike_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created_dt": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
 
-      "RRUpdateObjectMetadataRequest": {
-        "type": "object",
-        "required": [
-          "object_key",
-          "object_name",
-          "tags",
-          "object_type"
-        ],
-        "properties": {
-          "object_key": {
-            "type": "string"
-          },
-          "object_name": {
-            "type": "string"
-          },
-          "object_type": {
-            "$ref": "#/components/schemas/RRObjectType"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "RRObjectByKeyRequest": {
-        "type": "object",
-        "required": [
-          "object_keys"
-        ],
-        "properties": {
-          "object_keys": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "RRObjectDiffRequest": {
-        "type": "object",
-        "required": [
-          "source_id",
-          "target_id"
-        ],
-        "properties": {
-          "source_id": {
-            "type": "string"
-          },
-          "target_id": {
-            "type": "string"
-          }
-        }
-      },
-      "RRKeyResponse": {
-        "type": "object",
-        "required": [
-          "object_key"
-        ],
-        "properties": {
-          "object_key": {
-            "type": "string"
-          }
-        }
-      },
-      "RRCreateFromTemplateRequest": {
-        "type": "object",
-        "required": [
-          "template_name"
-        ],
-        "properties": {
-          "template_name": {
-            "$ref": "#/components/schemas/RRCVTemplate"
-          }
-        }
-      },
-      "RRCreateObjectRequest": {
-        "type": "object",
-        "required": [
-          "object_name",
-          "tags",
-          "content",
-          "object_type"
-        ],
-        "properties": {
-          "object_name": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "content": {
-            "type": "string"
-          },
-          "object_type": {
-            "$ref": "#/components/schemas/RRObjectType"
-          }
-        }
-      },
-      "RRCopyResponse": {
-        "type": "object",
-        "required": [
-          "object_metadata"
-        ],
-        "properties": {
-          "object_metadata": {
-            "$ref": "#/components/schemas/RRObjectMetadata"
-          }
-        }
-      },
-      "RRUpdateRequest":  {
-        "type": "object",
-        "required": [
-          "object_key",
-          "content"
-        ],
-        "properties": {
-          "content": {
-            "type": "string"
-          },
-          "object_key": {
-            "type": "string"
-          }
-        }
-      },
-      "RRDiffResponse":  {
-        "type": "object",
-        "required": [
-          "content_1",
-          "content_2"
-        ],
-        "properties": {
-          "content_1": {
-            "type": "string"
-          },
-          "content_2": {
-            "type": "string"
-          }
-        }
-      },
-      "RRObjectDataResponse":  {
-        "type": "object",
-        "required": [
-          "object_key",
-          "content"
-        ],
-        "properties": {
-          "content": {
-            "type": "string"
-          },
-          "object_key": {
-            "type": "string"
-          }
-        }
-      },
-      "RRUserPrincipal":  {
-        "type": "object",
-        "required": [
-          "firebase_id",
-          "name",
-          "email",
-          "email_verified",
-          "picture",
-          "roles"
-        ],
-        "properties": {
-          "firebase_id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "email_verified": {
-            "type": "boolean"
-          },
-          "picture": {
-            "type": "string"
-          },
-          "roles": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "boolean"
-            }
-          }
-        }
-      },
-      "RRObjectMetadataResponse": {
-        "type": "object",
-        "required": [
-          "records"
-        ],
-        "properties": {
-          "records": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RRObjectMetadata"
-            }
-          }
-        }
-      },
-      "RRPaginatedRequest": {
-        "type": "object",
-        "required": [
-          "limit",
-          "next_page_num",
-          "object_type"
-        ],
-        "properties": {
-          "limit": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "next_page_num": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "sort_by": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RRSortColumns"
-            }
-          },
-          "sort_dir": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RRSortDirection"
-            }
-          },
-          "object_type": {
-            "$ref": "#/components/schemas/RRObjectType"
-          },
-          "query": {
-            "type": "string"
-          }
-        }
-      },
-      "RRPaginatedResponse": {
-        "type": "object",
-        "required": [
-          "total_records",
-          "num_pages",
-          "records"
-        ],
-        "properties": {
-          "total_records": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "num_pages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "records": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RRObjectMetadata"
-            }
-          }
-        }
-      },
-      "RRObjectMetadata": {
-        "type": "object",
-        "required": [
-          "object_key",
-          "object_type",
-          "object_name",
-          "tags",
-          "read_only",
-          "created_at",
-          "updated_at",
-          "children"
-        ],
-        "properties": {
-          "object_key": {
-            "type": "string"
-          },
-          "object_type": {
-            "$ref": "#/components/schemas/RRObjectType"
-          },
-          "object_name": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "read_only": {
-            "type": "boolean"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "yyyy-MM-dd HH:mm:ss.SSS"
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "yyyy-MM-dd HH:mm:ss.SSS"
-          },
-          "children": {
-            "type": "array",
-            "items": {
-              "type": "object"
-            }
-          }
-        }
-      },
-      "RRCVTemplate": {
+      "SLMediaType": {
         "type": "string",
         "enum": [
-          "professional",
-          "modern",
-          "classic"
+          "video",
+          "image",
+          "gif",
+          "audio"
         ],
         "x-enum-varnames": [
-          "PROFESSIONAL",
-          "MODERN",
-          "CLASSIC"
-        ]
-      },
-      "RRObjectType": {
-        "type": "string",
-        "enum": [
-          "resume",
-          "cover_letter"
-        ],
-        "x-enum-varnames": [
-          "TYPE_R",
-          "TYPE_CL"
-        ]
-      },
-      "RRSortDirection": {
-        "type": "string",
-        "enum": [
-          "asc",
-          "desc"
-        ],
-        "x-enum-varnames": [
-          "ASC",
-          "DESC"
-        ]
-      },
-      "RRSortColumns": {
-        "type": "string",
-        "enum": [
-          "object_name",
-          "created_dt"
-        ],
-        "x-enum-varnames": [
-          "NAME",
-          "CREATED_DT"
+          "VIDEO",
+          "IMAGE",
+          "GIF",
+          "AUDIO"
         ]
       }
     }
