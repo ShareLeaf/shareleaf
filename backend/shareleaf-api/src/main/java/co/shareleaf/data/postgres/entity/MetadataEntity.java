@@ -7,6 +7,8 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.UUID;
 
 /**
  * @author Bizuwork Melesse
@@ -14,18 +16,21 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-//@Table(schema = "public", name = "metadata")
+@Table("public.metadata")
 public class MetadataEntity {
 
     @Id
     @Column("id")
-    private String id;
+    private Long id;
+
+    @Column("content_id")
+    private String contentId;
 
     @Column("invalid_url")
-    private Boolean invalidUrl;
+    private Boolean invalidUrl = false;
 
     @Column("processed")
-    private Boolean processed;
+    private Boolean processed = false;
 
     @Column("media_type")
     private String mediaType;
@@ -46,20 +51,20 @@ public class MetadataEntity {
     private String description;
 
     @Column("like_count")
-    private Long likeCount;
+    private Long likeCount = 0L;
 
     @Column("share_count")
-    private Long shareCount;
+    private Long shareCount = 0L;
 
     @Column("view_count")
-    private Long viewCount;
+    private Long viewCount = 0L;
 
     @Column("dislike_count")
-    private Long dislikeCount;
+    private Long dislikeCount = 0L;
 
     @Column("created_dt")
-    private LocalDateTime createdDt;
+    private LocalDateTime createdDt = LocalDateTime.now(ZoneId.of("UTC"));
     
     @Column("updated_dt")
-    private LocalDateTime updatedDt;
+    private LocalDateTime updatedDt = LocalDateTime.now(ZoneId.of("UTC"));
 }
