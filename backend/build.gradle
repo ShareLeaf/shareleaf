@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.0'
+    id 'org.springframework.boot' version '2.5.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id "io.swagger.core.v3.swagger-gradle-plugin" version "2.1.10"
     id 'org.openapi.generator' version '5.1.1'
@@ -54,22 +54,17 @@ configure(subprojects.findAll(it ->
     apply plugin: 'io.swagger.core.v3.swagger-gradle-plugin'
 
     dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-undertow:2.7.0'
         implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
         implementation 'org.springframework.boot:spring-boot-starter-webflux'
         testImplementation 'io.projectreactor:reactor-test'
-//        implementation 'com.vladmihalcea:hibernate-types-52:1.0.0'
-        implementation 'io.springfox:springfox-boot-starter:3.0.0'
         implementation 'javax.validation:validation-api:2.0.1.Final'
         implementation 'org.openapitools:jackson-databind-nullable:0.2.1'
-//        implementation 'org.springframework.boot:spring-boot-starter'
-        implementation 'org.springframework.boot:spring-boot-starter-security'
-        implementation 'org.springframework.boot:spring-boot-starter-actuator'
         implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
-//        implementation('org.springframework.cloud:spring-cloud-gateway:3.0.4')
         implementation 'io.springfox:springfox-swagger2:3.0.0'
         implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0'
-//        implementation 'org.postgresql:postgresql:42.2.23'
-//        implementation 'com.google.firebase:firebase-admin:8.0.1'
+        implementation 'io.r2dbc:r2dbc-postgresql:0.8.12.RELEASE'
+        implementation 'org.postgresql:postgresql:42.2.23'
         implementation platform("com.amazonaws:aws-java-sdk-bom:${awsSDKVersion}")
         implementation 'javax.servlet:javax.servlet-api:4.0.1'
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
@@ -78,10 +73,7 @@ configure(subprojects.findAll(it ->
         testCompileOnly 'org.projectlombok:lombok:1.18.22'
         testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
         testImplementation 'org.testng:testng:7.4.0'
-        testImplementation('org.springframework.boot:spring-boot-starter-test') {
-            exclude module: "org.junit.vintage:junit-vintage-engine"
-        }
-
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
     }
 
     dependencyManagement {

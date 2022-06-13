@@ -15,7 +15,7 @@ spring:
       server:
         bootstrap: true
         git:
-          uri: https://github.com/resume-repo/external-configs.git
+          uri: https://github.com/ShareLeaf/external-configs.git
           default-label: main
           clone-on-start: true
           username: ${RR_GH_USERNAME}
