@@ -43,7 +43,7 @@ public class RootConfiguration {
 
     @PostConstruct
     public void onApplicationStart() {
-        Mono.fromCallable(() -> flywayMigration.migrate(false))
+        flywayMigration.migrate(false)
                 .subscribeOn(Schedulers.boundedElastic())
                 .subscribe();
     }

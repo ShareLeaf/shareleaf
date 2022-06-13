@@ -26,8 +26,8 @@ bootJar {
 ext {
     set('springCloudVersion', "2020.0.3")
     set('awsSDKVersion', '1.12.65')
-    set("apiPackageName", "com.resumerepo.api")
-    set("modelPackageName", "com.resumerepo.model")
+    set("apiPackageName", "co.shareleaf.api")
+    set("modelPackageName", "co.shareleaf.model")
     set("openApiSpecPath", "src/main/resources/openapi/openapi.json")
     set("generatedDirSpring", "generated/openapi/spring")
     set("generatedDirTypeScript", "generated/openapi/typescript")
