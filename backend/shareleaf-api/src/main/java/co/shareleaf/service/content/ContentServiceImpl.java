@@ -51,12 +51,36 @@ public class ContentServiceImpl implements ContentService {
 
     @Override
     public Mono<SLContentMetadata> getMetadata(String uid) {
-        return null;
+        if (!ObjectUtils.isEmpty(uid)) {
+            // todo: update view count
+            return metadataRepo
+                    .findByContentId(uid)
+                    .map(it ->
+                            new SLContentMetadata()
+                                    .uid(it.getContentId())
+                                    .category(it.getCategory())
+                                    .shareCount(it.getShareCount())
+                    ).switchIfEmpty(Mono.defer(() -> Mono.just(new SLContentMetadata())));
+        }
+        return Mono.just(new SLContentMetadata());
     }
 
     @Override
     public Mono<SLGenericResponse> incrementShareCount(SLContentId contentId) {
-        return null;
+        if (!ObjectUtils.isEmpty(contentId) && !ObjectUtils.isEmpty(contentId.getUid())) {
+            return metadataRepo
+                    .findByContentId(contentId.getUid())
+                    .flatMap(it -> {
+                        it.setShareCount(it.getShareCount()+1);
+                        return metadataRepo.save(it)
+                                .map(res -> new SLGenericResponse().status("OK"));
+                    })
+                    .switchIfEmpty(Mono.defer(() ->
+                            Mono.just(new SLGenericResponse()
+                                    .status("Failed to update share count"))));
+        }
+        return Mono.just(new SLGenericResponse()
+                .error("Content ID not provided"));
     }
 
     public String generateUid() {
