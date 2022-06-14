@@ -1,3 +1,140 @@
+GET http://localhost:8080/content/metadata?uid=bzFCYS0
+Content-Type: application/json
+
+<> 2022-06-14T075920.200.json
+
+###
+
+GET http://localhost:8080/content/metadata?uid=bzFCYS03
+Content-Type: application/json
+
+<> 2022-06-14T075910.200.json
+
+###
+
+GET http://localhost:8080/content/metadata?uid=bzFCYS03
+Content-Type: application/json
+
+###
+
+GET http://localhost:8080/content/metadata?uid=bzFCYS0
+Content-Type: application/json
+
+<> 2022-06-14T075808.200.json
+
+###
+
+POST http://localhost:8080/content/shares
+Content-Type: application/json
+
+{
+  "uid": "bzFCYS0"
+}
+
+<> 2022-06-14T075806.200.json
+
+###
+
+POST http://localhost:8080/content/shares
+Content-Type: application/json
+
+{
+  "uid": "bzFCYS0"
+}
+
+<> 2022-06-14T075804.200.json
+
+###
+
+GET http://localhost:8080/content/metadata?uid=bzFCYS0
+Content-Type: application/json
+
+<> 2022-06-14T075758.200.json
+
+###
+
+GET http://localhost:8080/content/metadata?uid=bzFCYS02
+Content-Type: application/json
+
+###
+
+POST http://localhost:8080/content/shares
+Content-Type: application/json
+
+{
+  "uid": "bzFCYS0"
+}
+
+<> 2022-06-14T075234.200.json
+
+###
+
+POST http://localhost:8080/content/shares
+Content-Type: application/json
+
+{
+  "uid": "bzFCYS0"
+}
+
+<> 2022-06-14T075229.200.json
+
+###
+
+POST http://localhost:8080/content/shares
+Content-Type: application/json
+
+{
+  "uid": "https://reddit6.com"
+}
+
+<> 2022-06-14T075211.200.json
+
+###
+
+POST http://localhost:8080/content/shares
+Content-Type: application/json
+
+{
+  "url": "https://reddit6.com"
+}
+
+<> 2022-06-14T075159.400.json
+
+###
+
+POST http://localhost:8080/content/generate-uid
+Content-Type: application/json
+
+{
+  "url": "https://reddit6.com"
+}
+
+<> 2022-06-14T075123.200.json
+
+###
+
+POST http://localhost:8080/content/generate-uid
+Content-Type: application/json
+
+{
+  "url": "https://reddit6.com"
+}
+
+<> 2022-06-14T075115.200.json
+
+###
+
+POST http://localhost:8080/content/generate-uid
+Content-Type: application/json
+
+{
+  "url": "https://reddit6.com"
+}
+
+<> 2022-06-14T075105.200.json
+
+###
+
 POST http://localhost:8080/content/generate-uid
 Content-Type: application/json
 
@@ -380,167 +517,6 @@ Content-Type: application/json
 }
 
 <> 2022-06-12T214451.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
-
-<> 2022-06-12T213830.500.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
-
-<> 2022-06-12T213528.500.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
-
-<> 2022-06-12T212846.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
-
-<> 2022-06-12T212839.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
-
-<> 2022-06-12T212524.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
-
-<> 2022-06-12T212453.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
-
-<> 2022-06-12T212119.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
-
-<> 2022-06-12T211910.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
-
-<> 2022-06-12T211738.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
-
-<> 2022-06-12T210743.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
-
-<> 2022-06-12T210521.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
-
-<> 2022-06-12T210243.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
-
-<> 2022-06-12T210219.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://reddit.com"
-}
 
 ###
 

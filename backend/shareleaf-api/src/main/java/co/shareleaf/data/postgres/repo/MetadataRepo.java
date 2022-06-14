@@ -17,4 +17,7 @@ public interface MetadataRepo extends ReactiveCrudRepository<MetadataEntity, Lon
 
     @Query("select * from metadata where canonical_url = $1")
     Mono<MetadataEntity> findByCanonicalUrl(String url);
+
+    @Query("select * from metadata where content_id = $1")
+    Mono<MetadataEntity> findByContentId(String uid);
 }
