@@ -18,7 +18,8 @@ import org.springframework.context.annotation.Configuration;
         PostgresDataSourceProps.class,
         FlywayMigrationProps.class,
         SourceProps.class,
-        SwaggerUIProps.class
+        SwaggerUIProps.class,
+        WebsiteProps.class
 })
 public class PropConfiguration {
 }
