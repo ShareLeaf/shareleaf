@@ -2,16 +2,17 @@ package co.shareleaf.service.content;
 
 import co.shareleaf.data.postgres.entity.MetadataEntity;
 import co.shareleaf.data.postgres.repo.MetadataRepo;
-import co.shareleaf.model.SLContentId;
-import co.shareleaf.model.SLContentMetadata;
-import co.shareleaf.model.SLContentUrl;
-import co.shareleaf.model.SLGenericResponse;
+import co.shareleaf.model.*;
+import co.shareleaf.props.AWSProps;
+import co.shareleaf.props.WebsiteProps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
+import java.time.ZoneOffset;
 import java.util.Random;
 import java.util.UUID;
 
@@ -24,6 +25,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ContentServiceImpl implements ContentService {
     private final MetadataRepo metadataRepo;
+    private final AWSProps awsProps;
+    private final WebsiteProps websiteProps;
 
     @Override
     public Mono<SLContentId> generateContentId(SLContentUrl url) {
@@ -52,17 +55,42 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public Mono<SLContentMetadata> getMetadata(String uid) {
         if (!ObjectUtils.isEmpty(uid)) {
-            // todo: update view count
-            return metadataRepo
-                    .findByContentId(uid)
+            // Update view count when fetching the metadata for this uid in parallel
+            Mono<MetadataEntity> metadataEntityMono = metadataRepo.findByContentId(uid);
+            metadataEntityMono
+                    .flatMap(it -> {
+                        it.setViewCount(it.getViewCount()+1);
+                        return metadataRepo.save(it);
+                    }).subscribeOn(Schedulers.boundedElastic())
+                    .subscribe();
+            return metadataEntityMono
                     .map(it ->
                             new SLContentMetadata()
                                     .uid(it.getContentId())
+                                    .url(getContentUrl(uid, it.getMediaType()))
+                                    .thumbnail(String.format("%s/%s.jpg", awsProps.getCdn(), it.getContentId()))
+                                    .shareableLink(String.format("%s/%s", websiteProps.getBaseUrl(), it.getContentId()))
+                                    .mediaType(it.getMediaType() != null ? SLMediaType.fromValue(it.getMediaType()) : null)
+                                    .processed(it.getProcessed())
+                                    .encoding(it.getEncoding())
+                                    .title(it.getTitle())
+                                    .description(it.getDescription())
                                     .category(it.getCategory())
                                     .shareCount(it.getShareCount())
+                                    .viewCount(it.getViewCount())
+                                    .likeCount(it.getLikeCount())
+                                    .dislikeCount(it.getDislikeCount())
+                                    .createdDt(it.getCreatedDt().toEpochSecond(ZoneOffset.UTC))
                     ).switchIfEmpty(Mono.defer(() -> Mono.just(new SLContentMetadata())));
         }
         return Mono.just(new SLContentMetadata());
+    }
+
+    private String getContentUrl(String uid, String mediaType) {
+        if (mediaType != null && mediaType.equals("image")) {
+            return String.format("%s/%s.jpg", awsProps.getCdn(), uid);
+        }
+        return String.format("%s/%s.mp4", awsProps.getCdn(), uid);
     }
 
     @Override

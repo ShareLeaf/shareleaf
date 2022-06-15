@@ -12,11 +12,7 @@ import org.springframework.context.annotation.Primary;
 @Primary
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "aws")
-public class AWSProps {
-    private String accessKey;
-    private String secretKey;
-    private String region;
-    private String bucket;
-    private String cdn;
+@ConfigurationProperties(prefix = "website")
+public class WebsiteProps {
+    private String baseUrl;
 }
