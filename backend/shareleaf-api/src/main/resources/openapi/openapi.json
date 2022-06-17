@@ -158,6 +158,7 @@
         "type": "object",
         "required": [
           "url",
+          "invalid_url",
           "shareable_link",
           "thumbnail",
           "media_type",
@@ -189,6 +190,9 @@
             "$ref": "#/components/schemas/SLMediaType"
           },
           "processed": {
+            "type": "boolean"
+          },
+          "invalid_url": {
             "type": "boolean"
           },
           "encoding": {
