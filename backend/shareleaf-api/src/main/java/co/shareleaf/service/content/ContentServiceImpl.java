@@ -71,6 +71,7 @@ public class ContentServiceImpl implements ContentService {
                                     .thumbnail(String.format("%s/%s.jpg", awsProps.getCdn(), it.getContentId()))
                                     .shareableLink(String.format("%s/%s", websiteProps.getBaseUrl(), it.getContentId()))
                                     .mediaType(it.getMediaType() != null ? SLMediaType.fromValue(it.getMediaType()) : null)
+                                    .invalidUrl(it.getInvalidUrl())
                                     .processed(it.getProcessed())
                                     .encoding(it.getEncoding())
                                     .title(it.getTitle())
