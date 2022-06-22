@@ -54,6 +54,9 @@ configure(subprojects.findAll(it ->
     apply plugin: 'io.swagger.core.v3.swagger-gradle-plugin'
 
     dependencies {
+        implementation 'org.jsoup:jsoup:1.15.1'
+        implementation 'net.sourceforge.htmlunit:htmlunit:2.62.0'
+        implementation 'org.seleniumhq.selenium:selenium-java:4.2.2'
         implementation 'org.springframework.boot:spring-boot-starter-undertow:2.7.0'
         implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
         implementation 'org.springframework.boot:spring-boot-starter-webflux'

@@ -5,6 +5,7 @@ import co.shareleaf.data.postgres.repo.MetadataRepo;
 import co.shareleaf.model.*;
 import co.shareleaf.props.AWSProps;
 import co.shareleaf.props.WebsiteProps;
+import co.shareleaf.service.scraper.ScraperService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,18 +28,24 @@ public class ContentServiceImpl implements ContentService {
     private final MetadataRepo metadataRepo;
     private final AWSProps awsProps;
     private final WebsiteProps websiteProps;
+    private final ScraperService scraperService;
 
     @Override
     public Mono<SLContentId> generateContentId(SLContentUrl url) {
-        if (!ObjectUtils.isEmpty(url.getUrl())) {
-            // If a record exist, return its content id. Otherwise,
-            // create a new record and kick off the crawling
-            // process
-            return metadataRepo
-                    .findByCanonicalUrl(url.getUrl())
-                    .map(it -> new SLContentId().uid(it.getContentId()))
-                    .switchIfEmpty(Mono.defer(() -> processUrl(url.getUrl())));
-        }
+        // TODO: delete after testing
+        processUrl(url.getUrl()).map(it -> true);
+        // TODO: end delete
+
+
+//        if (!ObjectUtils.isEmpty(url.getUrl())) {
+//            // If a record exist, return its content id. Otherwise,
+//            // create a new record and kick off the crawling
+//            // process
+//            return metadataRepo
+//                    .findByCanonicalUrl(url.getUrl())
+//                    .map(it -> new SLContentId().uid(it.getContentId()))
+//                    .switchIfEmpty(Mono.defer(() -> processUrl(url.getUrl())));
+//        }
         return Mono.just(new SLContentId());
     }
 
@@ -47,6 +54,10 @@ public class ContentServiceImpl implements ContentService {
         String uid = generateUid();
         record.setContentId(uid);
         record.setCanonicalUrl(url);
+        Mono.fromCallable(() -> scraperService.getContent(uid, url))
+                .subscribeOn(Schedulers.boundedElastic())
+                .doOnError(Throwable::printStackTrace)
+                .subscribe();
         return metadataRepo
                 .save(record)
                 .map(it -> new SLContentId().uid(uid));
