@@ -1,0 +1,80 @@
+package co.shareleaf.service.scraper;
+
+import co.shareleaf.service.parser.RedditParserService;
+import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+/**
+ * @author Bizuwork Melesse
+ * created on 6/17/22
+ */
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class ScraperServiceImpl implements ScraperService {
+    private final ErrorListener errorListener;
+    private final RedditParserService redditParser;
+
+    @Override
+    public boolean getContent(String contentId, String url) {
+        try { // TODO: check that the content can be processed before scraping
+            HtmlPage page = getWebClient().getPage(url);
+            int statusCode = page.getWebResponse().getStatusCode();
+            if (statusCode >= 200 && statusCode < 400 ) {
+                Platform platform = getPlatform(url);
+                switch (platform) {
+                    case REDDIT:
+                        redditParser.processSoup(page.getWebResponse().getContentAsString(), url, contentId);
+                        break;
+                    case INSTAGRAM:
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private Platform getPlatform(String url) {
+        URL parsedUrl = null;
+        try {
+            parsedUrl = new URL(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        if (parsedUrl != null) {
+            if (parsedUrl.getHost().toLowerCase().contains("reddit.com")) {
+                return Platform.REDDIT;
+            }
+        }
+        return Platform.INSTAGRAM;
+    }
+
+    WebClient getWebClient() {
+        WebClient webClient = new WebClient();
+        webClient.getOptions().setCssEnabled(false);
+        webClient.getOptions().setJavaScriptEnabled(false);
+        webClient.getOptions().setThrowExceptionOnScriptError(false);
+        webClient.setAjaxController(new NicelyResynchronizingAjaxController());
+        webClient.getOptions().setTimeout(5000);
+        webClient.setJavaScriptErrorListener(errorListener.javaScriptErrorListener());
+        return webClient;
+    }
+
+    public enum Platform {
+        REDDIT,
+        INSTAGRAM;
+    }
+}

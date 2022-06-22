@@ -8,6 +8,9 @@ configurations {
 }
 
 dependencies {
+    implementation 'org.jsoup:jsoup'
+    implementation 'net.sourceforge.htmlunit:htmlunit'
+    implementation 'org.seleniumhq.selenium:selenium-java'
     implementation 'org.springframework.cloud:spring-cloud-config-server' // Embed the config server in the main application
     implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
