@@ -1,0 +1,94 @@
+#**********************************************************************
+# Build and Deploy ShareLeaf
+#**********************************************************************
+
+name: ShareLeaf Server | Prod
+on:
+  push:
+    branches:
+      - 'bm/SL-8_spring_boot_reactive'
+  pull_request:
+    branches: [ release ]
+    types: [closed]
+    paths:
+      - "backend/**"
+env:
+  AWS_REGION_US: 'us-east-2'
+  AWS_ECR_REGISTRY: '537408061242.dkr.ecr.us-east-2.amazonaws.com'
+  AWS_ECR_REPO: 'shareleaf'
+  IMAGE_TAG: 'shareleaf-prod-server-latest'
+  PROJECT_NAME: 'backend'
+  AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  RR_GH_USERNAME: ${{ secrets.RR_GH_USERNAME }}
+  RR_GH_TOKEN: ${{ secrets.RR_GH_TOKEN }}
+  SPRING_APPLICATION_NAME: 'shareleaf'
+  SPRING_PROFILES_ACTIVE: 'prod'
+  ARTIFACT_PATH: 'covalent/build'
+jobs:
+  build:
+    if: ${{ github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_KEY }}
+          aws-region: ${{ env.AWS_REGION_US }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'gradle'
+          
+      - name: Build project and generate artifact
+        run: |
+          cd ${{ env.WORKING_DIR }}
+          
+          ./gradlew :${{ env.PROJECT_NAME }}:build -x test
+
+      - name: Create a Dockerfile
+        run: |
+          cd ${{ env.WORKING_DIR }}
+          
+          rm -rf Dockerfile
+          touch Dockerfile
+
+          echo FROM openjdk >> Dockerfile
+          echo ENV SPRING_APPLICATION_NAME=${{ env.SPRING_APPLICATION_NAME }} >> Dockerfile
+          echo ENV SPRING_PROFILES_ACTIVE=${{ env.SPRING_PROFILES_ACTIVE }} >> Dockerfile
+          echo ENV RR_GH_USERNAME=${{ env.RR_GH_USERNAME }} >> Dockerfile
+          echo ENV RR_GH_TOKEN=${{ env.RR_GH_TOKEN }} >> Dockerfile
+          echo EXPOSE 8080 >> Dockerfile
+          echo COPY ${{ env.PROJECT_NAME }}/build/libs/app.jar /app.jar >> Dockerfile
+          echo ENTRYPOINT ["\"java\"","\"-jar\"","\"/app.jar\""] >> Dockerfile
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ env.AWS_ECR_REGISTRY }}
+          ECR_REPOSITORY: ${{ env.AWS_ECR_REPO }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+        run: |
+          cd ${{ env.WORKING_DIR }}
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - run: mkdir -p ${{ env.ARTIFACT_PATH }}
+      - run: echo ${{ steps.build-image.outputs.image }} > ${{ env.ARTIFACT_PATH }}/${{ env.IMAGE_TAG }}.txt
+      - uses: actions/upload-artifact@v2
+        with:
+          name: image-tag
+          path: ${{ env.ARTIFACT_PATH }}/${{ env.IMAGE_TAG }}.txt
