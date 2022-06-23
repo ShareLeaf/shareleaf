@@ -1,0 +1,28 @@
+mainClassName = 'co.shareleaf.Application'
+
+
+configurations {
+    all*.exclude group: 'io.springfox', module: 'springfox-spring-webmvc'
+    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    all*.exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+}
+
+dependencies {
+    implementation 'org.jsoup:jsoup'
+    implementation 'net.sourceforge.htmlunit:htmlunit'
+    implementation 'org.seleniumhq.selenium:selenium-java'
+    implementation 'org.springframework.cloud:spring-cloud-config-server' // Embed the config server in the main application
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'com.amazonaws:aws-java-sdk-s3'
+    implementation 'io.r2dbc:r2dbc-postgresql'
+    implementation 'org.postgresql:postgresql'
+}
+sourceSets {
+    getByName("main") {
+        java {
+            srcDir("$buildDir/$project.generatedDirSpring/src/main/java")
+        }
+    }
+}

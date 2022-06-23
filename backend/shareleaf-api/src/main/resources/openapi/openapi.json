@@ -1,0 +1,250 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ShareLeaf API Service",
+    "description": "REST API for ShareLeaf backend services",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://shareleaf.co",
+      "description": "Prod"
+    }
+  ],
+  "paths": {
+    "/content/generate-uid": {
+      "post": {
+        "tags": [
+          "content"
+        ],
+        "summary": "Generate content id",
+        "description": "Generate a unique content id",
+        "operationId": "generateContentId",
+        "requestBody": {
+          "required": true,
+          "description": "Content URL",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SLContentUrl"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generate id response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SLContentId"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/content/metadata": {
+      "get": {
+        "tags": [
+          "content"
+        ],
+        "description": "Get content metadata",
+        "operationId": "getMetadata",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "uid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Metadata response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SLContentMetadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/content/shares": {
+      "post": {
+        "tags": [
+          "content"
+        ],
+        "summary": "Increment share count",
+        "description": "Increment share count",
+        "operationId": "incrementShareCount",
+        "requestBody": {
+          "required": true,
+          "description": "Content URL",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SLContentId"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generic response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SLGenericResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "SLGenericResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "SLContentId": {
+        "type": "object",
+        "required": [
+          "uid"
+        ],
+        "properties": {
+          "uid": {
+            "type": "string"
+          }
+        }
+      },
+      "SLContentUrl": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "SLContentMetadata": {
+        "type": "object",
+        "required": [
+          "url",
+          "invalid_url",
+          "shareable_link",
+          "thumbnail",
+          "media_type",
+          "processed",
+          "encoding",
+          "title",
+          "description",
+          "category",
+          "view_count",
+          "like_count",
+          "share_count",
+          "dislike_count",
+          "created_dt"
+        ],
+        "properties": {
+          "uid": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "shareable_link": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "media_type": {
+            "$ref": "#/components/schemas/SLMediaType"
+          },
+          "processed": {
+            "type": "boolean"
+          },
+          "invalid_url": {
+            "type": "boolean"
+          },
+          "encoding": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "view_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "like_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "share_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "dislike_count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created_dt": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+
+      "SLMediaType": {
+        "type": "string",
+        "enum": [
+          "video",
+          "image",
+          "gif",
+          "audio"
+        ],
+        "x-enum-varnames": [
+          "VIDEO",
+          "IMAGE",
+          "GIF",
+          "AUDIO"
+        ]
+      }
+    }
+  }
+}
