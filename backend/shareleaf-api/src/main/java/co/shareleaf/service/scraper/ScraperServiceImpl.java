@@ -20,21 +20,20 @@ import java.net.URL;
 @Service
 @RequiredArgsConstructor
 public class ScraperServiceImpl implements ScraperService {
-    private final ErrorListener errorListener;
     private final RedditParserService redditParser;
+    private final ScraperUtils scraperUtils;
 
     @Override
     public boolean getContent(String contentId, String url) {
         try { // TODO: check that the content can be processed before scraping
-            HtmlPage page = getWebClient().getPage(url);
+            WebClient client = scraperUtils.getWebClient(Platform.REDDIT);
+            HtmlPage page = client.getPage(url);
             int statusCode = page.getWebResponse().getStatusCode();
             if (statusCode >= 200 && statusCode < 400 ) {
                 Platform platform = getPlatform(url);
                 switch (platform) {
                     case REDDIT:
-                        redditParser.processSoup(page.getWebResponse().getContentAsString(), url, contentId);
-                        break;
-                    case INSTAGRAM:
+                        redditParser.processSoup(page.getWebResponse().getContentAsString(), url, contentId, client);
                         break;
                     default:
                         break;
@@ -60,21 +59,5 @@ public class ScraperServiceImpl implements ScraperService {
             }
         }
         return Platform.INSTAGRAM;
-    }
-
-    WebClient getWebClient() {
-        WebClient webClient = new WebClient();
-        webClient.getOptions().setCssEnabled(false);
-        webClient.getOptions().setJavaScriptEnabled(false);
-        webClient.getOptions().setThrowExceptionOnScriptError(false);
-        webClient.setAjaxController(new NicelyResynchronizingAjaxController());
-        webClient.getOptions().setTimeout(5000);
-        webClient.setJavaScriptErrorListener(errorListener.javaScriptErrorListener());
-        return webClient;
-    }
-
-    public enum Platform {
-        REDDIT,
-        INSTAGRAM;
     }
 }
