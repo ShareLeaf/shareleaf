@@ -32,20 +32,15 @@ public class ContentServiceImpl implements ContentService {
 
     @Override
     public Mono<SLContentId> generateContentId(SLContentUrl url) {
-        // TODO: delete after testing
-        processUrl(url.getUrl()).map(it -> true);
-        // TODO: end delete
-
-
-//        if (!ObjectUtils.isEmpty(url.getUrl())) {
-//            // If a record exist, return its content id. Otherwise,
-//            // create a new record and kick off the crawling
-//            // process
-//            return metadataRepo
-//                    .findByCanonicalUrl(url.getUrl())
-//                    .map(it -> new SLContentId().uid(it.getContentId()))
-//                    .switchIfEmpty(Mono.defer(() -> processUrl(url.getUrl())));
-//        }
+        if (!ObjectUtils.isEmpty(url.getUrl())) {
+            // If a record exist, return its content id. Otherwise,
+            // create a new record and kick off the crawling
+            // process
+            return metadataRepo
+                    .findByCanonicalUrl(url.getUrl())
+                    .map(it -> new SLContentId().uid(it.getContentId()))
+                    .switchIfEmpty(Mono.defer(() -> processUrl(url.getUrl())));
+        }
         return Mono.just(new SLContentId());
     }
 
@@ -79,7 +74,7 @@ public class ContentServiceImpl implements ContentService {
                             new SLContentMetadata()
                                     .uid(it.getContentId())
                                     .url(getContentUrl(uid, it.getMediaType()))
-                                    .thumbnail(String.format("%s/%s.jpg", awsProps.getCdn(), it.getContentId()))
+                                    .thumbnail(String.format("%s/%s_i", awsProps.getCdn(), it.getContentId()))
                                     .shareableLink(String.format("%s/%s", websiteProps.getBaseUrl(), it.getContentId()))
                                     .mediaType(it.getMediaType() != null ? SLMediaType.fromValue(it.getMediaType()) : null)
                                     .invalidUrl(it.getInvalidUrl())
@@ -100,9 +95,11 @@ public class ContentServiceImpl implements ContentService {
 
     private String getContentUrl(String uid, String mediaType) {
         if (mediaType != null && mediaType.equals("image")) {
-            return String.format("%s/%s.jpg", awsProps.getCdn(), uid);
+            return String.format("%s/%s_i", awsProps.getCdn(), uid);
+        } else if (mediaType != null && mediaType.equals("gif")) {
+            return String.format("%s/%s_g", awsProps.getCdn(), uid);
         }
-        return String.format("%s/%s.mp4", awsProps.getCdn(), uid);
+        return String.format("%s/%s_v", awsProps.getCdn(), uid);
     }
 
     @Override
