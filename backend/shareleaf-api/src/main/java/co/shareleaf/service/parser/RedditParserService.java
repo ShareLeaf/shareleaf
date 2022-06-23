@@ -110,6 +110,7 @@ public class RedditParserService implements ParserService{
             }
             try (InputStream in = page.getInputStream()) {
                 s3Service.uploadImage(awsProps.getBucket(), file, in, contentType);
+                updateProgress(contentId, true);
             }
             return Mono.just(true);
         } catch (Exception e) {
@@ -122,6 +123,17 @@ public class RedditParserService implements ParserService{
             }
         }
         return Mono.just(false);
+    }
+
+    private void updateProgress(String contentId, boolean completed) {
+        Mono<MetadataEntity> metadataEntityMono = metadataRepo.findByContentId(contentId);
+        metadataEntityMono
+                .flatMap(it -> {
+                    it.setProcessed(completed);
+                    it.setUpdatedDt(LocalDateTime.now());
+                    return metadataRepo.save(it);
+                }).subscribeOn(Schedulers.boundedElastic())
+                .subscribe();
     }
 
     private MediaUrl parseUrls(JsonNode postNode) {
@@ -157,13 +169,19 @@ public class RedditParserService implements ParserService{
                 height =  mediaNode.get("videoPreview").get("height").asInt();
             } else if (parsedMediaType.equals("video")) {
                 dashUrl = mediaNode.get("dashUrl").asText();
-                audioUrl = dashUrl + "_audio.mp4";
+            }
+            // Get thumbnail URL
+            JsonNode posterUrlNode = mediaNode.get("posterUrl");
+            if (posterUrlNode != null) {
+                imageUrl = posterUrlNode.asText();
             }
             dashUrl = dashUrl.substring(0, dashUrl.indexOf("DASH") + 4);
             videoUrl = dashUrl + "_" + height + ".mp4";
+            audioUrl = dashUrl + "_audio.mp4";
             if (dbMediaType.equals(GIF)) {
                 gifUrl = videoUrl;
                 videoUrl = "";
+                audioUrl = "";
             }
         }
         return new MediaUrl(imageUrl, gifUrl, videoUrl, audioUrl, dbMediaType, encoding);

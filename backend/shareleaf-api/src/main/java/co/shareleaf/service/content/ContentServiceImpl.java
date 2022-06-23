@@ -32,6 +32,9 @@ public class ContentServiceImpl implements ContentService {
 
     @Override
     public Mono<SLContentId> generateContentId(SLContentUrl url) {
+        // TODO: delete after testing
+//        processUrl(url.getUrl()).map(it -> true);
+        // TODO: end delete
         if (!ObjectUtils.isEmpty(url.getUrl())) {
             // If a record exist, return its content id. Otherwise,
             // create a new record and kick off the crawling
