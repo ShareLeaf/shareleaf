@@ -18,8 +18,8 @@ spring:
           uri: https://github.com/ShareLeaf/external-configs.git
           default-label: main
           clone-on-start: true
-          username: ${RR_GH_USERNAME}
-          password: ${RR_GH_TOKEN}
+          username: ${SL_GH_USERNAME}
+          password: ${SL_GH_TOKEN}
         prefix: /config-api
 management:
   endpoint:
