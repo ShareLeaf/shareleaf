@@ -53,9 +53,7 @@ jobs:
 #          cache: 'gradle'
           
       - name: Build project and generate artifact
-        run: |
-          cd ${{ env.PROJECT_NAME }}
-          
+        run: |          
           ./gradlew :${{ env.PROJECT_NAME }}:build -x test
 
       - name: Create a Dockerfile
