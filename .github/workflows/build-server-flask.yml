@@ -8,7 +8,7 @@ on:
     branches: [ release ]
     types: [closed]
     paths:
-      - "server/**"
+      - "**DEPRECATED**"
 env:
   SHARELEAF_DATASOURCE_USERNAME: shareleaf
   SHARELEAF_DATASOURCE_PASSWORD: shareleaf
