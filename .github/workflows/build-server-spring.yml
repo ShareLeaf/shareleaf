@@ -54,13 +54,13 @@ jobs:
           
       - name: Build project and generate artifact
         run: |
-          cd ${{ env.WORKING_DIR }}
+          cd ${{ env.PROJECT_NAME }}
           
           ./gradlew :${{ env.PROJECT_NAME }}:build -x test
 
       - name: Create a Dockerfile
         run: |
-          cd ${{ env.WORKING_DIR }}
+          cd ${{ env.PROJECT_NAME }}
           
           rm -rf Dockerfile
           touch Dockerfile
