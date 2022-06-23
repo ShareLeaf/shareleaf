@@ -4,6 +4,9 @@
 
 name: ShareLeaf Server | Prod
 on:
+  push:
+    branches:
+      - "bm/SL-8_spring_boot_reactive"
   pull_request:
     branches: [ release ]
     types: [closed]
@@ -18,14 +21,14 @@ env:
   PROJECT_ROOT: 'backend'
   AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  RR_GH_USERNAME: ${{ secrets.RR_GH_USERNAME }}
-  RR_GH_TOKEN: ${{ secrets.RR_GH_TOKEN }}
+  SL_GH_USERNAME: ${{ secrets.SL_GH_USERNAME }}
+  SL_GH_TOKEN: ${{ secrets.SL_GH_TOKEN }}
   SPRING_APPLICATION_NAME: 'shareleaf'
   SPRING_PROFILES_ACTIVE: 'prod'
   ARTIFACT_PATH: 'covalent/build'
 jobs:
   build:
-    if: ${{ github.event.pull_request.merged }}
+#    if: ${{ github.event.pull_request.merged }}
     runs-on: ubuntu-latest
     steps:
 
@@ -64,8 +67,8 @@ jobs:
           echo FROM openjdk >> Dockerfile
           echo ENV SPRING_APPLICATION_NAME=${{ env.SPRING_APPLICATION_NAME }} >> Dockerfile
           echo ENV SPRING_PROFILES_ACTIVE=${{ env.SPRING_PROFILES_ACTIVE }} >> Dockerfile
-          echo ENV RR_GH_USERNAME=${{ env.RR_GH_USERNAME }} >> Dockerfile
-          echo ENV RR_GH_TOKEN=${{ env.RR_GH_TOKEN }} >> Dockerfile
+          echo ENV SL_GH_USERNAME=${{ env.SL_GH_USERNAME }} >> Dockerfile
+          echo ENV SL_GH_TOKEN=${{ env.SL_GH_TOKEN }} >> Dockerfile
           echo EXPOSE 8080 >> Dockerfile
           echo COPY ${{ env.PROJECT_NAME }}/build/libs/app.jar /app.jar >> Dockerfile
           echo ENTRYPOINT ["\"java\"","\"-jar\"","\"/app.jar\""] >> Dockerfile
