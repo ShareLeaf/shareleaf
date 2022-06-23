@@ -51,7 +51,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '16'
-#          cache: 'gradle'
+          cache: 'gradle'
           
       - name: Build project and generate artifact
         run: |
@@ -63,6 +63,7 @@ jobs:
         run: |
           pwd
           ls
+          cd ${{ env.PROJECT_ROOT }}
           rm -rf Dockerfile
           touch Dockerfile
 
