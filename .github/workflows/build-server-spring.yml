@@ -60,8 +60,6 @@ jobs:
 
       - name: Create a Dockerfile
         run: |
-#          cd ${{ env.PROJECT_NAME }}
-          
           rm -rf Dockerfile
           touch Dockerfile
 
