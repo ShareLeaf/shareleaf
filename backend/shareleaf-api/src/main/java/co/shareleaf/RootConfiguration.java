@@ -61,6 +61,3 @@ public class RootConfiguration {
         return mapper;
     }
 }
-
-
-
