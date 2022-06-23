@@ -4,9 +4,6 @@
 
 name: ShareLeaf Server | Prod
 on:
-  push:
-    branches:
-      - "bm/SL-8_spring_boot_reactive"
   pull_request:
     branches: [ release ]
     types: [closed]
@@ -28,7 +25,7 @@ env:
   ARTIFACT_PATH: 'covalent/build'
 jobs:
   build:
-#    if: ${{ github.event.pull_request.merged }}
+    if: ${{ github.event.pull_request.merged }}
     runs-on: ubuntu-latest
     steps:
 
