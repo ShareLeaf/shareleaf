@@ -43,10 +43,10 @@ public class RedditParserService implements ParserService{
     @Override
     public void processSoup(String soup, String url, String contentId, WebClient client) {
         log.info("Processing soup for Reddit with content ID {}: {}", contentId, url);
-        String postId = url.substring(url.indexOf("comments/") + 9);
-        postId = "t3_" + postId.substring(0, postId.indexOf("/"));
-        Document doc = Jsoup.parse(soup);
         try {
+            String postId = url.substring(url.indexOf("comments/") + 9);
+            postId = "t3_" + postId.substring(0, postId.indexOf("/"));
+            Document doc = Jsoup.parse(soup);
             String json = null;
             List<DataNode> dataNodes = doc.select("script").dataNodes();
             for (DataNode dataNode : dataNodes) {
@@ -86,6 +86,7 @@ public class RedditParserService implements ParserService{
                 }
             }
         } catch (Exception e) {
+            updateInvalidUrl(contentId, url);
             e.printStackTrace();
         }
     }
@@ -208,6 +209,7 @@ public class RedditParserService implements ParserService{
         Mono<MetadataEntity> metadataEntityMono = metadataRepo.findByContentId(contentId);
         metadataEntityMono
                 .flatMap(it -> {
+                    it.setProcessed(false);
                     it.setInvalidUrl(true);
                     it.setCanonicalUrl(permalink);
                     it.setUpdatedDt(LocalDateTime.now());

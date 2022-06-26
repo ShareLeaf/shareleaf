@@ -61,10 +61,11 @@ public class ContentServiceImpl implements ContentService {
         record.setCanonicalUrl(url);
         Mono.fromCallable(() -> scraperService.getContent(contentId, url))
                 .subscribeOn(Schedulers.boundedElastic())
-                .doOnError(Throwable::printStackTrace)
+                .doOnError(it -> log.error(it.getLocalizedMessage()))
                 .subscribe();
         return metadataRepo
                 .save(record)
+                .doOnError(it -> log.error(it.getLocalizedMessage()))
                 .map(it -> new SLContentMetadata()
                         .shareableLink(ParserService.getShareableLink(it, websiteProps.getBaseUrl()))
                         .contentId(contentId));

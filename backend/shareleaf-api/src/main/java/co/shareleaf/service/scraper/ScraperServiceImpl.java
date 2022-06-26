@@ -41,8 +41,8 @@ public class ScraperServiceImpl implements ScraperService {
                 }
             }
             return true;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage());
         }
         return false;
     }
