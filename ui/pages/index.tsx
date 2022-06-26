@@ -3,7 +3,7 @@ import type { ReactElement } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
 import React from 'react';
 import LinkGenerator from "@/content/LinkGenerator";
-import Common from "@/content/Common";
+import Common from "src/content/Common";
 import Head from "next/head";
 
 const OverviewWrapper = styled(Box)(

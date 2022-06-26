@@ -13,6 +13,8 @@ import org.springframework.util.ObjectUtils;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.ZoneOffset;
 import java.util.Random;
 import java.util.UUID;
@@ -31,23 +33,25 @@ public class ContentServiceImpl implements ContentService {
     private final ScraperService scraperService;
 
     @Override
-    public Mono<SLContentId> generateContentId(SLContentUrl url) {
+    public Mono<SLContentMetadata> generateContentId(SLContentUrl url) {
         // TODO: delete after testing
 //        processUrl(url.getUrl()).map(it -> true);
         // TODO: end delete
-        if (!ObjectUtils.isEmpty(url.getUrl())) {
+        if (isValidUrl(url)) {
             // If a record exist, return its content id. Otherwise,
             // create a new record and kick off the crawling
             // process
             return metadataRepo
                     .findByCanonicalUrl(url.getUrl())
-                    .map(it -> new SLContentId().uid(it.getContentId()))
+                    .map(it -> new SLContentMetadata()
+                            .shareableLink(String.format("%s/%s", websiteProps.getBaseUrl(), it.getContentId()))
+                            .uid(it.getContentId()))
                     .switchIfEmpty(Mono.defer(() -> processUrl(url.getUrl())));
         }
-        return Mono.just(new SLContentId());
+        return Mono.just(new SLContentMetadata().error(true));
     }
 
-    private Mono<SLContentId> processUrl(String url) {
+    private Mono<SLContentMetadata> processUrl(String url) {
         MetadataEntity record = new MetadataEntity();
         String uid = generateUid();
         record.setContentId(uid);
@@ -58,7 +62,9 @@ public class ContentServiceImpl implements ContentService {
                 .subscribe();
         return metadataRepo
                 .save(record)
-                .map(it -> new SLContentId().uid(uid));
+                .map(it -> new SLContentMetadata()
+                        .shareableLink(String.format("%s/%s", websiteProps.getBaseUrl(), uid))
+                        .uid(uid));
     }
 
     @Override
@@ -91,9 +97,9 @@ public class ContentServiceImpl implements ContentService {
                                     .likeCount(it.getLikeCount())
                                     .dislikeCount(it.getDislikeCount())
                                     .createdDt(it.getCreatedDt().toEpochSecond(ZoneOffset.UTC))
-                    ).switchIfEmpty(Mono.defer(() -> Mono.just(new SLContentMetadata())));
+                    ).switchIfEmpty(Mono.defer(() -> Mono.just(new SLContentMetadata().error(true))));
         }
-        return Mono.just(new SLContentMetadata());
+        return Mono.just(new SLContentMetadata().error(true));
     }
 
     private String getContentUrl(String uid, String mediaType) {
@@ -138,5 +144,19 @@ public class ContentServiceImpl implements ContentService {
         String uidAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnoqprstuvwxyz0123456789";
         int index = random.nextInt(uidAlphabet.length());
         return uidAlphabet.charAt(index);
+    }
+
+    private boolean isValidUrl(SLContentUrl url) {
+        if (!ObjectUtils.isEmpty(url.getUrl())) {
+            try {
+                URI uri = new URI(url.getUrl());
+                if (!ObjectUtils.isEmpty(uri.getHost())) {
+                    return true;
+                }
+            } catch (URISyntaxException e) {
+                return false;
+            }
+        }
+        return false;
     }
 }

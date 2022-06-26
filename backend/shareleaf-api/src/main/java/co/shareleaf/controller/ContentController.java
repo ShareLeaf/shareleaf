@@ -24,6 +24,7 @@ import javax.validation.constraints.NotNull;
  * created on 6/12/22
  */
 @Slf4j
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
@@ -45,10 +46,9 @@ public class ContentController {
             produces = { "application/json" },
             consumes = { "application/json" }
     )
-    public Mono<ResponseEntity<SLContentId>> generateContentId(
+    public Mono<ResponseEntity<SLContentMetadata>> generateContentId(
             @ApiParam(value = "Content URL" ,required=true )  @Valid @RequestBody SLContentUrl slContentUrl) {
         return contentService.generateContentId(slContentUrl).map(ResponseEntity::ok);
-
     }
 
 

@@ -17,7 +17,7 @@ public interface ContentService {
      * @param url
      * @return
      */
-    Mono<SLContentId> generateContentId(SLContentUrl url);
+    Mono<SLContentMetadata> generateContentId(SLContentUrl url);
 
     /**
      * Fetch full content metadata

@@ -5,6 +5,7 @@ configurations {
     all*.exclude group: 'io.springfox', module: 'springfox-spring-webmvc'
     all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     all*.exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-security'
 }
 
 dependencies {

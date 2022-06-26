@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://shareleaf.co",
+      "url": "https://api.shareleaf.co",
       "description": "Prod"
     }
   ],
@@ -35,9 +35,9 @@
           "200": {
             "description": "Generate id response",
             "content": {
-              "application/json": {
+              "text/event-stream": {
                 "schema": {
-                  "$ref": "#/components/schemas/SLContentId"
+                  "$ref": "#/components/schemas/SLContentMetadata"
                 }
               }
             }
@@ -66,7 +66,7 @@
           "200": {
             "description": "Metadata response",
             "content": {
-              "application/json": {
+              "text/event-stream": {
                 "schema": {
                   "$ref": "#/components/schemas/SLContentMetadata"
                 }
@@ -99,7 +99,7 @@
           "200": {
             "description": "Generic response",
             "content": {
-              "application/json": {
+              "text/event-stream": {
                 "schema": {
                   "$ref": "#/components/schemas/SLGenericResponse"
                 }
@@ -171,7 +171,8 @@
           "like_count",
           "share_count",
           "dislike_count",
-          "created_dt"
+          "created_dt",
+          "error"
         ],
         "properties": {
           "uid": {
@@ -226,6 +227,9 @@
           "created_dt": {
             "type": "integer",
             "format": "int64"
+          },
+          "error": {
+            "type": "boolean"
           }
         }
       },
