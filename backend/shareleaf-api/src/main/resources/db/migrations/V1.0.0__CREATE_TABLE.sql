@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS public.metadata (
     content_id varchar(12) NOT NULL,
     invalid_url boolean NOT NULL,
     processed boolean NOT NULL,
+    has_audio boolean NOT NULL,
     encoding varchar(16),
     media_type varchar(16),
     description varchar,

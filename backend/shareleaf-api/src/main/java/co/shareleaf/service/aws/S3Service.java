@@ -26,7 +26,7 @@ public interface S3Service {
      * @param contentType
      * @return
      */
-    void uploadImage(String bucket, String key, InputStream stream, String contentType);
+    void uploadContent(String bucket, String key, InputStream stream, String contentType);
 
     /**
      * Get any object specified by the bucket and key

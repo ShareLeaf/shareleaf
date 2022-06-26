@@ -157,10 +157,12 @@
       "SLContentMetadata": {
         "type": "object",
         "required": [
-          "url",
+          "content_id",
+          "video_url",
+          "audio_url",
+          "image_url",
           "invalid_url",
           "shareable_link",
-          "thumbnail",
           "media_type",
           "processed",
           "encoding",
@@ -175,16 +177,19 @@
           "error"
         ],
         "properties": {
-          "uid": {
+          "content_id": {
             "type": "string"
           },
-          "url": {
+          "video_url": {
+            "type": "string"
+          },
+          "audio_url": {
+            "type": "string"
+          },
+          "image_url": {
             "type": "string"
           },
           "shareable_link": {
-            "type": "string"
-          },
-          "thumbnail": {
             "type": "string"
           },
           "media_type": {

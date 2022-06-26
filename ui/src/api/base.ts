@@ -20,6 +20,7 @@ import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 
 // export const BASE_PATH = "https://api.shareleaf.co".replace(/\/+$/, "");
 export const BASE_PATH = "http://localhost:8080"
+
 /**
  *
  * @export

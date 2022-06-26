@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
  * created on 6/12/22
  */
 @Slf4j
-@CrossOrigin(origins = "*")
+@CrossOrigin
 @RestController
 @RequestMapping
 @RequiredArgsConstructor

@@ -1,3 +1,10 @@
+GET http://localhost:8080/content/metadata?uid=Jr2evuS
+Content-Type: application/json
+
+<> 2022-06-26T093446.200.json
+
+###
+
 GET http://localhost:8080/content/metadata?uid=1nx8e02
 Content-Type: application/json
 
@@ -498,17 +505,6 @@ Content-Type: application/json
 }
 
 <> 2022-06-22T220825.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://www.reddit.com/r/DnD/comments/vihvzy/to_celebrate_the_success_of_my_musical_dice/"
-}
-
-<> 2022-06-22T220513.200.json
 
 ###
 

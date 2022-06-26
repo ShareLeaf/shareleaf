@@ -45,25 +45,37 @@ export interface SLContentMetadata {
      * @type {string}
      * @memberof SLContentMetadata
      */
-    uid?: string;
+    content_id: string;
     /**
      * 
      * @type {string}
      * @memberof SLContentMetadata
      */
-    url: string;
+    video_url: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SLContentMetadata
+     */
+    audio_url: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SLContentMetadata
+     */
+    image_url: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SLContentMetadata
+     */
+    gif_url: string;
     /**
      * 
      * @type {string}
      * @memberof SLContentMetadata
      */
     shareable_link: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SLContentMetadata
-     */
-    thumbnail: string;
     /**
      * 
      * @type {SLMediaType}

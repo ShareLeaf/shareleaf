@@ -81,13 +81,14 @@ const Media: FC<SLContentMetadata> = (props) => {
     }
 
     const handleShare = async () : Promise<void> => {
-         new ContentApi(headerConfig()).incrementShareCount({uid: props.uid})
+         new ContentApi(headerConfig()).incrementShareCount({uid: props.content_id})
              .then()
              .catch(e => console.log(e));
         await copyToClipBoard(props.shareable_link)
     }
 
     useEffect(() => {
+        console.log("Debug: ", props);
         setShowInProgress(false);
         setShowError(false);
         setShowInvalidUrlError(false);
@@ -143,18 +144,19 @@ const Media: FC<SLContentMetadata> = (props) => {
                                             </Tooltip>
                                         </Box>
                                     </CardActionsWrapper>
-                                    {(metadata.media_type=== "video" || metadata.media_type=== "gif") &&
+                                    {metadata.media_type=== "video" &&
                                         <VideoElement
-                                            thumbnail={metadata.thumbnail}
+                                            thumbnail={metadata.image_url}
                                             encoding={metadata.encoding}
-                                            src={metadata.url}
+                                            videoSrc={metadata.video_url}
+                                            audioSrc={metadata.audio_url}
                                             title={metadata.title}
                                         />
                                     }
                                     {metadata.media_type=== "image" &&
                                             <ImageElement
                                                 handleOpen={handleOpen}
-                                                src={metadata.url}
+                                                imageSrc={metadata.image_url}
                                                 title={metadata.title}
                                             />
                                     }
@@ -219,7 +221,7 @@ const Media: FC<SLContentMetadata> = (props) => {
                 >
                     <img
                         style={{margin: 0, padding: 0}}
-                        src={metadata.url}
+                        src={metadata.image_url}
                         onClick={handleOpen}
                         alt={metadata.title}
                     />
@@ -251,7 +253,7 @@ const Media: FC<SLContentMetadata> = (props) => {
             <title>{props.title}</title>
             <meta property="og:title" content={props.title} key="title"/>
             <meta property="og:description" content={props.description} key="description"/>
-            <meta property="og:image" content={props.thumbnail} key="image"/>
+            <meta property="og:image" content={props.image_url} key="image"/>
         </Head>
         {component}
     </>

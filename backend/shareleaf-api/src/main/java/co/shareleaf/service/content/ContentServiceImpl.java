@@ -5,6 +5,8 @@ import co.shareleaf.data.postgres.repo.MetadataRepo;
 import co.shareleaf.model.*;
 import co.shareleaf.props.AWSProps;
 import co.shareleaf.props.WebsiteProps;
+import co.shareleaf.service.aws.S3Service;
+import co.shareleaf.service.parser.ParserService;
 import co.shareleaf.service.scraper.ScraperService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,8 +46,8 @@ public class ContentServiceImpl implements ContentService {
             return metadataRepo
                     .findByCanonicalUrl(url.getUrl())
                     .map(it -> new SLContentMetadata()
-                            .shareableLink(String.format("%s/%s", websiteProps.getBaseUrl(), it.getContentId()))
-                            .uid(it.getContentId()))
+                            .shareableLink(ParserService.getShareableLink(it, websiteProps.getBaseUrl()))
+                            .contentId(it.getContentId()))
                     .switchIfEmpty(Mono.defer(() -> processUrl(url.getUrl())));
         }
         return Mono.just(new SLContentMetadata().error(true));
@@ -54,18 +56,18 @@ public class ContentServiceImpl implements ContentService {
     private Mono<SLContentMetadata> processUrl(String url) {
         log.info("Processing new url: {}", url);
         MetadataEntity record = new MetadataEntity();
-        String uid = generateUid();
-        record.setContentId(uid);
+        String contentId = generateUid();
+        record.setContentId(contentId);
         record.setCanonicalUrl(url);
-        Mono.fromCallable(() -> scraperService.getContent(uid, url))
+        Mono.fromCallable(() -> scraperService.getContent(contentId, url))
                 .subscribeOn(Schedulers.boundedElastic())
                 .doOnError(Throwable::printStackTrace)
                 .subscribe();
         return metadataRepo
                 .save(record)
                 .map(it -> new SLContentMetadata()
-                        .shareableLink(String.format("%s/%s", websiteProps.getBaseUrl(), uid))
-                        .uid(uid));
+                        .shareableLink(ParserService.getShareableLink(it, websiteProps.getBaseUrl()))
+                        .contentId(contentId));
     }
 
     @Override
@@ -82,10 +84,11 @@ public class ContentServiceImpl implements ContentService {
             return metadataEntityMono
                     .map(it ->
                             new SLContentMetadata()
-                                    .uid(it.getContentId())
-                                    .url(getContentUrl(uid, it.getMediaType()))
-                                    .thumbnail(String.format("%s/%s_i", awsProps.getCdn(), it.getContentId()))
-                                    .shareableLink(String.format("%s/%s", websiteProps.getBaseUrl(), it.getContentId()))
+                                    .contentId(it.getContentId())
+                                    .videoUrl(ParserService.getContentUrl(it, ParserService.VIDEO, awsProps.getCdn()))
+                                    .audioUrl(ParserService.getContentUrl(it, ParserService.AUDIO, awsProps.getCdn()))
+                                    .imageUrl(ParserService.getContentUrl(it, ParserService.IMAGE, awsProps.getCdn()))
+                                    .shareableLink(ParserService.getShareableLink(it, websiteProps.getBaseUrl()))
                                     .mediaType(it.getMediaType() != null ? SLMediaType.fromValue(it.getMediaType()) : null)
                                     .invalidUrl(it.getInvalidUrl())
                                     .processed(it.getProcessed())
@@ -97,19 +100,11 @@ public class ContentServiceImpl implements ContentService {
                                     .viewCount(it.getViewCount())
                                     .likeCount(it.getLikeCount())
                                     .dislikeCount(it.getDislikeCount())
+                                    .error(false)
                                     .createdDt(it.getCreatedDt().toEpochSecond(ZoneOffset.UTC))
                     ).switchIfEmpty(Mono.defer(() -> Mono.just(new SLContentMetadata().error(true))));
         }
         return Mono.just(new SLContentMetadata().error(true));
-    }
-
-    private String getContentUrl(String uid, String mediaType) {
-        if (mediaType != null && mediaType.equals("image")) {
-            return String.format("%s/%s_i", awsProps.getCdn(), uid);
-        } else if (mediaType != null && mediaType.equals("gif")) {
-            return String.format("%s/%s_g", awsProps.getCdn(), uid);
-        }
-        return String.format("%s/%s_v", awsProps.getCdn(), uid);
     }
 
     @Override
