@@ -88,7 +88,6 @@ const Media: FC<SLContentMetadata> = (props) => {
     }
 
     useEffect(() => {
-        console.log("Debug: ", props);
         setShowInProgress(false);
         setShowError(false);
         setShowInvalidUrlError(false);
@@ -123,7 +122,7 @@ const Media: FC<SLContentMetadata> = (props) => {
                                     p: 0
                                 }}
                             >
-                                <Grid item md={6} xs={12}>
+                                <Grid item md={8} xs={12}>
                                 <Card>
                                     <CardActionsWrapper
                                         sx={{
