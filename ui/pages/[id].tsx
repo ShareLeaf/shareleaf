@@ -91,7 +91,6 @@ const Media: FC<SLContentMetadata> = (props) => {
         setShowInProgress(false);
         setShowError(false);
         setShowInvalidUrlError(false);
-        console.log("props: ", props)
         if (props && props.error) {
             setShowError(true);
         }

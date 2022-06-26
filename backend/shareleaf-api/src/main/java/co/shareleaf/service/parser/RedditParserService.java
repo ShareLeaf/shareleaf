@@ -46,6 +46,7 @@ public class RedditParserService implements ParserService{
 
     @Override
     public void processSoup(String soup, String url, String contentId, WebClient client) {
+        log.info("Processing soup for Reddit with content ID {}: {}", contentId, url);
         String postId = url.substring(url.indexOf("comments/") + 9);
         postId = "t3_" + postId.substring(0, postId.indexOf("/"));
         Document doc = Jsoup.parse(soup);
@@ -95,6 +96,8 @@ public class RedditParserService implements ParserService{
 
     private Mono<Boolean> downloadContent(String contentId, String permalink, String mediaUrl, String mediaType) {
         try {
+            log.info("Downloading content for content ID {}: permalink={} mediaUrl={} mediaType={}",
+                    contentId, permalink, mediaUrl, mediaType);
             UnexpectedPage page = scraperUtils.getWebClient(Platform.REDDIT).getPage(mediaUrl);
             String file = contentId + "_i";
             String contentType = S3Service.IMAGE_TYPE;
@@ -188,6 +191,8 @@ public class RedditParserService implements ParserService{
     }
 
     private void updateMetadata(String contentId, String title, String permalink, MediaUrl mediaUrl) {
+        log.info("Updating metadata for content ID {}: title={} mediaType={} encoding={} permalink={}",
+                contentId, title, mediaUrl.getMediaType(), mediaUrl.getEncoding(), permalink);
         Mono<MetadataEntity> metadataEntityMono = metadataRepo.findByContentId(contentId);
         metadataEntityMono
                 .flatMap(it -> {

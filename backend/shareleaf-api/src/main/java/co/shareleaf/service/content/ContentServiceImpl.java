@@ -52,6 +52,7 @@ public class ContentServiceImpl implements ContentService {
     }
 
     private Mono<SLContentMetadata> processUrl(String url) {
+        log.info("Processing new url: {}", url);
         MetadataEntity record = new MetadataEntity();
         String uid = generateUid();
         record.setContentId(uid);
