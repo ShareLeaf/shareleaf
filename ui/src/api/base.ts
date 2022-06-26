@@ -18,8 +18,12 @@ import { Configuration } from "./configuration";
 // @ts-ignore
 import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 
-// export const BASE_PATH = "https://api.shareleaf.co".replace(/\/+$/, "");
-export const BASE_PATH = "http://localhost:8080"
+let basePath = "http://localhost:8080";
+if (process.env.NODE_ENV == "production") {
+    basePath = "https://api.shareleaf.co"
+}
+
+export const BASE_PATH = basePath;
 
 /**
  *
