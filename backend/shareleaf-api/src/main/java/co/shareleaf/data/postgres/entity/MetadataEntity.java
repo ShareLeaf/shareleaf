@@ -32,6 +32,12 @@ public class MetadataEntity {
     @Column("processed")
     private Boolean processed = false;
 
+    @Column("has_audio")
+    private Boolean hasAudio = false;
+
+    @Column("title")
+    private String title = "";
+
     @Column("media_type")
     private String mediaType;
 
@@ -40,9 +46,6 @@ public class MetadataEntity {
 
     @Column("canonical_url")
     private String canonicalUrl;
-
-    @Column("title")
-    private String title;
 
     @Column("category")
     private String category;

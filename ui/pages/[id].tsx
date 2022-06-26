@@ -11,7 +11,6 @@ import {
     styled, Tooltip
 } from '@mui/material';
 import React, {FC, useEffect, useState} from "react";
-import axios from "axios";
 import VideoElement from "src/content/Media/VideoElement";
 import Loader from 'src/components/Loader';
 import Common from "@/content/Common";
@@ -19,6 +18,8 @@ import ImageElement from "src/content/Media/ImageElement";
 import Head from "next/head";
 import ShareTwoToneIcon from '@mui/icons-material/ShareTwoTone';
 import {copyToClipBoard} from "@/content/utils/utils";
+import { headerConfig } from '@/api/headerConfig';
+import { ContentApi, SLContentMetadata } from '@/api/api';
 
 const OverviewWrapper = styled(Box)(
     ({ theme }) => `
@@ -62,91 +63,46 @@ const BoxWrapper = styled(Box)(
     background: ${theme.colors.alpha.black[10]};
 `
 );
-interface MediaMetadataProps {
-    id?: string,
-    encoding?: string,
-    description?: string,
-    title?: string,
-    type?: string
-    url?: string,
-    error?: boolean,
-    invalidUrl?: boolean,
-    inProgress?: boolean,
-    processed?: boolean,
-    mediaType?: string,
-    thumbnail?: string,
-    shareableLink?: string,
-    viewCount?: number,
-    shareCount?: number
-}
-
 export async function getServerSideProps(context) {
-    const response = await axios.get(`${process.env.REACT_APP_SERVER_BASE_URL}/metadata?key=` + context.query.id)
-    let props = {};
-    if (response.data.error) {
-        props = {error: true}
-    } else if (response.data.invalid_url) {
-        props= {invalidUrl: true}
-    } else {
-        if (response.data.processed) {
-            props = {
-                id: context.query.id,
-                encoding: response.data.encoding,
-                title: response.data.title,
-                description: response.data.description,
-                type: response.data.media_type,
-                url: response.data.url,
-                viewCount: response.data.view_count,
-                shareCount: response.data.share_count,
-                shareableLink: response.data.shareable_link,
-                processed: true,
-                thumbnail: response.data.thumbnail
-            };
-        } else {
-            props = {inProgress: true}
-        }
-    }
-    return {props: props}
+    return {props: (await new ContentApi().getMetadata(context.query.id)).data};
 }
 
-const Media: FC<MediaMetadataProps> = (props) => {
-    const [metadata, setMetadata] = useState<MediaMetadataProps | undefined>(undefined);
+const Media: FC<SLContentMetadata> = (props) => {
+    const [metadata, setMetadata] = useState<SLContentMetadata | undefined>(undefined);
     const [showError, setShowError] = useState<boolean>(false);
     const [showInvalidUrlError, setShowInvalidUrlError] = useState<boolean>(false);
     const [showInProgress, setShowInProgress] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
 
     const handleOpen = () => {
-        if (metadata.type === "image") {
+        if (metadata.media_type === "image") {
             setOpen(!open);
         }
     }
 
     const handleShare = async () : Promise<void> => {
-        const data = { uid: props.id};
-        axios.post(`${process.env.REACT_APP_SERVER_BASE_URL}/update-share`, {...data})
-            .then(() => {})
-            .catch(e => console.log(e));
-        await copyToClipBoard(props.shareableLink)
+         new ContentApi(headerConfig()).incrementShareCount({uid: props.content_id})
+             .then()
+             .catch(e => console.log(e));
+        await copyToClipBoard(props.shareable_link)
     }
 
     useEffect(() => {
         setShowInProgress(false);
         setShowError(false);
         setShowInvalidUrlError(false);
-        if (props.error) {
+        if (props && props.error) {
             setShowError(true);
-        } else if (props.invalidUrl) {
+        }
+        else if (props.invalid_url) {
             setShowInvalidUrlError(true);
         } else {
             if (props.processed) {
-                // console.log("prps: ", props)
                 setMetadata(props);
             } else {
                 setShowInProgress(true);
             }
         }
-
     }, [])
 
     let component = undefined;
@@ -166,7 +122,7 @@ const Media: FC<MediaMetadataProps> = (props) => {
                                     p: 0
                                 }}
                             >
-                                <Grid item md={6} xs={12}>
+                                <Grid item md={8} xs={12}>
                                 <Card>
                                     <CardActionsWrapper
                                         sx={{
@@ -187,18 +143,19 @@ const Media: FC<MediaMetadataProps> = (props) => {
                                             </Tooltip>
                                         </Box>
                                     </CardActionsWrapper>
-                                    {(metadata.type === "video" || metadata.type === "gif") &&
+                                    {metadata.media_type=== "video" &&
                                         <VideoElement
-                                            thumbnail={metadata.thumbnail}
+                                            thumbnail={metadata.image_url}
                                             encoding={metadata.encoding}
-                                            src={metadata.url}
+                                            videoSrc={metadata.video_url}
+                                            audioSrc={metadata.audio_url}
                                             title={metadata.title}
                                         />
                                     }
-                                    {metadata.type === "image" &&
+                                    {metadata.media_type=== "image" &&
                                             <ImageElement
                                                 handleOpen={handleOpen}
-                                                src={metadata.url}
+                                                imageSrc={metadata.image_url}
                                                 title={metadata.title}
                                             />
                                     }
@@ -225,7 +182,7 @@ const Media: FC<MediaMetadataProps> = (props) => {
                                                     color="secondary"
                                                     variant="text"
                                                 >
-                                                    <b>{metadata.shareCount}</b>&nbsp;{('shares')}
+                                                    <b>{metadata.share_count}</b>&nbsp;{('shares')}
                                                 </ButtonWrapper>
                                                 <DividerWrapper
                                                     sx={{
@@ -235,7 +192,7 @@ const Media: FC<MediaMetadataProps> = (props) => {
                                                     flexItem
                                                 />
                                                 <Typography variant="body2" color="text.primary">
-                                                    <b>{metadata.viewCount}</b> {('views')}
+                                                    <b>{metadata.view_count}</b> {('views')}
                                                 </Typography>
                                             </Box>
                                         </BoxWrapper>
@@ -263,7 +220,7 @@ const Media: FC<MediaMetadataProps> = (props) => {
                 >
                     <img
                         style={{margin: 0, padding: 0}}
-                        src={metadata.url}
+                        src={metadata.image_url}
                         onClick={handleOpen}
                         alt={metadata.title}
                     />
@@ -295,7 +252,7 @@ const Media: FC<MediaMetadataProps> = (props) => {
             <title>{props.title}</title>
             <meta property="og:title" content={props.title} key="title"/>
             <meta property="og:description" content={props.description} key="description"/>
-            <meta property="og:image" content={props.thumbnail} key="image"/>
+            <meta property="og:image" content={props.image_url} key="image"/>
         </Head>
         {component}
     </>

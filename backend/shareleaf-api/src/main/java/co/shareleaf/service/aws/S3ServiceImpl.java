@@ -25,7 +25,7 @@ public class S3ServiceImpl implements S3Service {
     private final AWSProps awsProps;
 
     @Override
-    public void uploadImage(String bucket, String key, InputStream stream, String contentType) {
+    public void uploadContent(String bucket, String key, InputStream stream, String contentType) {
         try {
             ObjectMetadata meta = new ObjectMetadata();
             meta.setContentLength(stream.available());
@@ -33,7 +33,7 @@ public class S3ServiceImpl implements S3Service {
             s3Client.putObject(new PutObjectRequest(
                     bucket, key, stream, meta)
                     .withCannedAcl(CannedAccessControlList.Private));
-            log.info("S3ServiceImpl.uploadImage Uploaded image with filename {}/{} to S3", awsProps.getCdn(), key);
+            log.info("S3ServiceImpl.uploadContent Uploaded content with filename {}/{} to S3", awsProps.getCdn(), key);
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();

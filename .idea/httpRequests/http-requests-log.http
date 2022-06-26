@@ -1,3 +1,108 @@
+GET http://localhost:8080/content/metadata?uid=Jr2evuS
+Content-Type: application/json
+
+<> 2022-06-26T093446.200.json
+
+###
+
+GET http://localhost:8080/content/metadata?uid=1nx8e02
+Content-Type: application/json
+
+<> 2022-06-25T233821.200.json
+
+###
+
+POST http://localhost:8080/content/shares
+Content-Type: application/json
+
+{
+  "uid": "1nx8e02"
+}
+
+<> 2022-06-25T233737.200.json
+
+###
+
+POST http://localhost:8080/content/generate-uid
+Content-Type: application/json
+
+{
+  "url": "https://www.reddit.com/r/AnimalsBeingDerps/comments/vida8i/cat_derping_about_with_dog/"
+}
+
+<> 2022-06-25T232514.200.json
+
+###
+
+POST http://localhost:8080/content/generate-uid
+Content-Type: application/json
+
+{
+  "url": "https://www.reddit.com/r/AnimalsBeingDerps/comments/vida8i/cat_derping_about_with_dog/"
+}
+
+<> 2022-06-25T193740.200.json
+
+###
+
+POST http://localhost:8080/content/shares
+Content-Type: application/json
+
+{
+  "uid": "h0AAEnw"
+}
+
+<> 2022-06-25T193732.200.json
+
+###
+
+POST http://localhost:8080/content/generate-uid
+Content-Type: application/json
+
+{
+  "url": "https://www.reddit.com/r/AnimalsBeingDerps/comments/vida8i/cat_derping_about_with_dog/"
+}
+
+<> 2022-06-25T193603.500.json
+
+###
+
+POST http://localhost:8080/content/generate-uid
+Content-Type: application/json
+
+{
+  "url": "https://www.reddit.com/r/AnimalsBeingDerps/comments/vida8i/cat_derping_about_with_dog/"
+}
+
+<> 2022-06-25T193523.500.json
+
+###
+
+POST http://localhost:8080/content/shares
+Content-Type: application/json
+
+{
+  "uid": "h0AAEnw"
+}
+
+<> 2022-06-25T193510.200.json
+
+###
+
+GET http://localhost:8080/content/metadata?uid=h0AAEnw
+Content-Type: text/event-stream
+
+<> 2022-06-25T193503.500.json
+
+###
+
+GET http://localhost:8080/content/metadata?uid=h0AAEnw
+Content-Type: application/json
+
+<> 2022-06-25T193442.500.json
+
+###
+
 POST http://localhost:8080/content/generate-uid
 Content-Type: application/json
 
@@ -400,127 +505,6 @@ Content-Type: application/json
 }
 
 <> 2022-06-22T220825.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://www.reddit.com/r/DnD/comments/vihvzy/to_celebrate_the_success_of_my_musical_dice/"
-}
-
-<> 2022-06-22T220513.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://www.reddit.com/r/DnD/comments/vihvzy/to_celebrate_the_success_of_my_musical_dice/"
-}
-
-<> 2022-06-22T215027.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://www.reddit.com/r/cats/comments/v7ybxx/and_thats_how_you_end_up_with_18_cats/"
-}
-
-<> 2022-06-22T214618.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://www.reddit.com/r/cats/comments/v7ybxx/and_thats_how_you_end_up_with_18_cats/"
-}
-
-<> 2022-06-22T214406.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://www.reddit.com/r/cats/comments/v7ybxx/and_thats_how_you_end_up_with_18_cats/"
-}
-
-<> 2022-06-22T214108.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://www.reddit.com/r/cats/comments/v7ybxx/and_thats_how_you_end_up_with_18_cats/"
-}
-
-<> 2022-06-22T213934.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://www.reddit.com/r/cats/comments/v7ybxx/and_thats_how_you_end_up_with_18_cats/"
-}
-
-<> 2022-06-22T212426.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://www.reddit.com/r/CozyPlaces/comments/v82wc7/my_cozy_library_space_with_my_pup/"
-}
-
-<> 2022-06-22T212345.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://www.reddit.com/r/gif/comments/v40xxs/different_ideas_for_a_loose_screw/"
-}
-
-<> 2022-06-22T212314.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://www.reddit.com/r/gif/comments/v40xxs/different_ideas_for_a_loose_screw/"
-}
-
-<> 2022-06-22T212150.200.json
-
-###
-
-POST http://localhost:8080/content/generate-uid
-Content-Type: application/json
-
-{
-  "url": "https://www.reddit.com/r/gif/comments/v40xxs/different_ideas_for_a_loose_screw/"
-}
-
-<> 2022-06-22T212130.200.json
 
 ###
 

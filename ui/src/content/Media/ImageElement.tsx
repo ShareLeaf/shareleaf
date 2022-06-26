@@ -3,7 +3,7 @@ import 'react-html5video/dist/styles.css';
 import {Box, Typography} from "@mui/material";
 
 interface ImageElementProps {
-    src: string,
+    imageSrc?: string,
     title?: string,
     handleOpen?: () => void
 }
@@ -18,7 +18,7 @@ const ImageElement: FC<ImageElementProps> = (props) => {
                     onClick={handleOpen}
                     width="100%"
                     alt={props.title}
-                    src={props.src} />
+                    src={props.imageSrc} />
     </Box>
             <Box sx={{ pl: 1, pr: 1}}>
                 <Typography variant="h4" sx={{

@@ -39,13 +39,10 @@ public class RedditParserService implements ParserService{
     private final S3Service s3Service;
     private final AWSProps awsProps;
     private final ScraperUtils scraperUtils;
-    private final String GIF = "gif";
-    private final String VIDEO = "video";
-    private final String IMAGE = "image";
-    private final String AUDIO = "audio";
 
     @Override
     public void processSoup(String soup, String url, String contentId, WebClient client) {
+        log.info("Processing soup for Reddit with content ID {}: {}", contentId, url);
         String postId = url.substring(url.indexOf("comments/") + 9);
         postId = "t3_" + postId.substring(0, postId.indexOf("/"));
         Document doc = Jsoup.parse(soup);
@@ -80,7 +77,7 @@ public class RedditParserService implements ParserService{
                         tasks.add(downloadContent(contentId, permalink, mediaUrl.getVideoUrl(), VIDEO));
                     }
                     if (!ObjectUtils.isEmpty(mediaUrl.getGifUrl())) {
-                        tasks.add(downloadContent(contentId, permalink, mediaUrl.getGifUrl(), GIF));
+                        tasks.add(downloadContent(contentId, permalink, mediaUrl.getGifUrl(), VIDEO));
                     }
                     if (!tasks.isEmpty()) {
                         // Run all tasks asynchronously
@@ -94,33 +91,32 @@ public class RedditParserService implements ParserService{
     }
 
     private Mono<Boolean> downloadContent(String contentId, String permalink, String mediaUrl, String mediaType) {
+        String contentType = S3Service.IMAGE_TYPE;
         try {
+            log.info("Downloading content for content ID {}: permalink={} mediaUrl={} mediaType={}",
+                    contentId, permalink, mediaUrl, mediaType);
             UnexpectedPage page = scraperUtils.getWebClient(Platform.REDDIT).getPage(mediaUrl);
-            String file = contentId + "_i";
-            String contentType = S3Service.IMAGE_TYPE;
+            String file = ParserService.getS3FileName(IMAGE, contentId);
             if (mediaType.equals(VIDEO)) {
-                file = contentId + "_v";
+                file = ParserService.getS3FileName(VIDEO, contentId);
                 contentType = S3Service.VIDEO_TYPE;
             } else if (mediaType.equals(AUDIO)) {
-                file = contentId + "_a";
+                file = ParserService.getS3FileName(AUDIO, contentId);
                 contentType = S3Service.AUDIO_TYPE;
-            } else if (mediaType.equals(GIF)) {
-                file = contentId + "_g";
-                contentType = S3Service.GIF_TYPE;
             }
             try (InputStream in = page.getInputStream()) {
-                s3Service.uploadImage(awsProps.getBucket(), file, in, contentType);
+                s3Service.uploadContent(awsProps.getBucket(), file, in, contentType);
                 updateProgress(contentId, true);
             }
             return Mono.just(true);
         } catch (Exception e) {
             e.printStackTrace();
-            // If not an exception is raised on a video download attempt, then
-            // assume it's an invalid URL. It's okay if an audio download fails
-            // because not all videos (and certainly not GIFs) would have videos
-            if (mediaUrl.contains("_v.mp4") || mediaUrl.contains("_i.jpg")) {
+            // An audio download may fail because it may not be available. But a video or
+            // image download should never fail
+            if (!contentType.equals(S3Service.AUDIO_TYPE)) {
                 updateInvalidUrl(contentId, permalink);
             }
+            updateProgress(contentId, false);
         }
         return Mono.just(false);
     }
@@ -139,6 +135,7 @@ public class RedditParserService implements ParserService{
     private MediaUrl parseUrls(JsonNode postNode) {
         String parsedMediaType = getMediaType(postNode);
         JsonNode mediaNode = postNode.get("media");
+        boolean isGif = false;
         String encoding, dbMediaType, imageUrl = "", audioUrl = "", videoUrl = "", gifUrl = "";
         if (parsedMediaType == null || parsedMediaType.equals("embed")) {
             return null;
@@ -148,9 +145,10 @@ public class RedditParserService implements ParserService{
             encoding = "jpg";
             imageUrl = mediaNode.get("content").asText();
         } else if (parsedMediaType.equals("gifvideo")) {
-            dbMediaType = GIF;
-            encoding = "gif";
+            dbMediaType = VIDEO;
+            encoding = "video/mp4";
             gifUrl = mediaNode.get("content").asText();
+            isGif = true;
         } else {
             String dashUrl = "";
             dbMediaType = VIDEO;
@@ -161,9 +159,10 @@ public class RedditParserService implements ParserService{
                 height = heightNode.asInt();
             }
             if (parsedMediaType.equals("gif")) {
-                dbMediaType = GIF;
-                encoding = "gif";
+                dbMediaType = VIDEO;
+                encoding = "video/mp4";
                 dashUrl = mediaNode.get("dashUrl").asText();
+                isGif = true;
             } else if (parsedMediaType.equals("videoPreview")) {
                 dashUrl = mediaNode.get("videoPreview").get("dashUrl").asText();
                 height =  mediaNode.get("videoPreview").get("height").asInt();
@@ -178,7 +177,7 @@ public class RedditParserService implements ParserService{
             dashUrl = dashUrl.substring(0, dashUrl.indexOf("DASH") + 4);
             videoUrl = dashUrl + "_" + height + ".mp4";
             audioUrl = dashUrl + "_audio.mp4";
-            if (dbMediaType.equals(GIF)) {
+            if (isGif) {
                 gifUrl = videoUrl;
                 videoUrl = "";
                 audioUrl = "";
@@ -188,11 +187,14 @@ public class RedditParserService implements ParserService{
     }
 
     private void updateMetadata(String contentId, String title, String permalink, MediaUrl mediaUrl) {
+        log.info("Updating metadata for content ID {}: title={} mediaType={} encoding={} permalink={}",
+                contentId, title, mediaUrl.getMediaType(), mediaUrl.getEncoding(), permalink);
         Mono<MetadataEntity> metadataEntityMono = metadataRepo.findByContentId(contentId);
         metadataEntityMono
                 .flatMap(it -> {
                     it.setEncoding(mediaUrl.getEncoding());
                     it.setMediaType(mediaUrl.getMediaType());
+                    it.setHasAudio(!ObjectUtils.isEmpty(mediaUrl.getAudioUrl()));
                     it.setTitle(title);
                     it.setCanonicalUrl(permalink);
                     it.setUpdatedDt(LocalDateTime.now());

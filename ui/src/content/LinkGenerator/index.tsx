@@ -1,9 +1,10 @@
 import React, {ChangeEvent, FC, useState} from "react";
 import {Box, Button, Container, Grid, IconButton, InputBase, styled, Typography} from "@mui/material";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import axios from "axios";
 import Typed from "react-typed";
-import {copyToClipBoard} from "@/content/utils/utils";
+import { ContentApi } from "src/api";
+import { headerConfig } from "src/api/headerConfig";
+import { copyToClipBoard } from "../utils/utils";
 
 const SearchInputWrapper = styled(InputBase)(
     ({ theme }) => `
@@ -54,18 +55,9 @@ const LinkGenerator: FC<any> = () => {
     const submitSearch = async (event): Promise<void> => {
         event.preventDefault();
         if (searchValue) {
-            const data = { src: searchValue};
-            axios.post(`${process.env.REACT_APP_SERVER_BASE_URL}/generate-content-id`, data)
-                .then((result) => {
-                    const uid = result.data.uid;
-                    if (uid && uid.length > 0) {
-                        setGeneratedUrl(`${process.env.REACT_APP_CLIENT_BASE_URL}/${uid}`);
-                        axios.post(`${process.env.REACT_APP_SERVER_BASE_URL}/process-url`, {...data, uid})
-                            .then(() => {})
-                            .catch(e => console.log(e));
-                    }
-                })
-                .catch(e => console.log(e));
+            new ContentApi(headerConfig()).generateContentId({url: searchValue}).then(response => {
+                setGeneratedUrl(response.data.shareable_link);
+            }).catch(e => console.log(e))
         }
     };
 
