@@ -19,7 +19,16 @@ interface OverViewProps {
     siteImage: string;
 }
 
-export async function getServerSideProps() {
+// @ts-ignore
+export async function getServerSideProps({ req, res }) {
+    // Allow caching of the home page for 259200 seconds (3 days)
+    // and allow using the stale page for up to 86400 (1 day) until
+    // the cache is refreshed
+    res.setHeader(
+        'Cache-Control',
+        'public, s-maxage=259200, stale-while-revalidate=86400'
+    )
+
     return {
         props: {
             title: "ShareLeaf",
