@@ -12,7 +12,6 @@ interface VideoElementProps {
 }
 const VideoElement: FC<VideoElementProps> = (props) => {
     const playerRef = useRef<VideoJsPlayer>(null);
-    const enableVolumeControl = props.audioSrc && props.audioSrc.length > 0 ? true : false; // do not simplify
     const videoJsOptions = {
         loop: true,
         autoplay: true,
@@ -21,68 +20,30 @@ const VideoElement: FC<VideoElementProps> = (props) => {
         fluid: true,
         muted: true,
         preload: "metadata",
+
+        // disable default iOS and Android native controls so we can bind the audio sync
+        // actions
+        // nativeControlsForTouch: true,
         sources: [{
-            src: props.videoSrc + "#t=0.1",
-            type: 'video/mp4'
+            src: props.videoSrc,
+            type: 'application/x-mpegURL'
         }],
         controlBar: {
             playToggle: true,
             pictureInPictureToggle: false,
             progressControl: true,
             fullscreenToggle: true,
-            volumePanel: enableVolumeControl,
+            volumePanel: true,
             remainingTimeDisplay: true,
-        }
+        },
+        overrideNative: true,
+        nativeAudioTracks: false,
+        nativeTextTracks: false
     };
 
     const handlePlayerReady = (player: VideoJsPlayer) => {
         playerRef.current = player;
-
-        player.on('seeked', () => {
-            handleAudioSync(player);
-        });
-
-        player.on('pause', () => {
-            handleAudioSync(player);
-        });
-
-        player.on('playing', () => {
-            handleAudioSync(player);
-        });
-
-        player.on('play', () => {
-            handleAudioSync(player);
-        });
-
-        player.on('volumechange', () => {
-            handleAudioSync(player);
-        });
     };
-
-    const handleAudioSync = (player: VideoJsPlayer) => {
-        const audio: HTMLAudioElement = getAudioComponent();
-        try {
-            audio.currentTime = player.currentTime();
-            audio.volume = player.volume();
-            if (player.muted()) {
-                audio.volume = 0;
-            }
-            if (player.paused()) {
-                audio.pause();
-            } else {
-                audio.play()
-                    .then(_ => {
-                    })
-                    .catch(_ => {
-                    });
-            }
-        } catch (_) {}
-    }
-
-    const getAudioComponent = (): HTMLAudioElement => {
-        // @ts-ignore
-        return document.getElementById("audio-track");
-    }
 
     return (
         <Box sx={{marginTop: '4.8rem', width: '100%'}}>

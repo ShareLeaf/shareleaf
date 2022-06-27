@@ -1,14 +1,12 @@
 package co.shareleaf.service.scraper;
 
-import co.shareleaf.service.parser.RedditParserService;
-import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
+import co.shareleaf.service.parser.RedditIBaseParserService;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -20,7 +18,7 @@ import java.net.URL;
 @Service
 @RequiredArgsConstructor
 public class ScraperServiceImpl implements ScraperService {
-    private final RedditParserService redditParser;
+    private final RedditIBaseParserService redditParser;
     private final ScraperUtils scraperUtils;
 
     @Override

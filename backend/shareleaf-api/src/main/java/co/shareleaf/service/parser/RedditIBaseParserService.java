@@ -22,6 +22,8 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RedditParserService implements ParserService{
+public class RedditIBaseParserService extends BaseParserService implements ParserService {
     private final ObjectMapper objectMapper;
     private final MetadataRepo metadataRepo;
     private final S3Service s3Service;
@@ -81,7 +83,13 @@ public class RedditParserService implements ParserService{
                     }
                     if (!tasks.isEmpty()) {
                         // Run all tasks asynchronously
-                        Flux.merge(tasks).subscribe();
+                        Flux.merge(tasks).doOnComplete(() -> {
+                            if (!ObjectUtils.isEmpty(mediaUrl.getGifUrl()) ||
+                                    !ObjectUtils.isEmpty(mediaUrl.getVideoUrl())) {
+                                generateHlsManifest(contentId);
+                                s3Service.uploadHlsData(awsProps.getBucket(), contentId);
+                            }
+                        }).subscribe();
                     }
                 }
             }
@@ -97,16 +105,23 @@ public class RedditParserService implements ParserService{
             log.info("Downloading content for content ID {}: permalink={} mediaUrl={} mediaType={}",
                     contentId, permalink, mediaUrl, mediaType);
             UnexpectedPage page = scraperUtils.getWebClient(Platform.REDDIT).getPage(mediaUrl);
-            String file = ParserService.getS3FileName(IMAGE, contentId);
+            String file = getS3FileName(IMAGE, contentId);
             if (mediaType.equals(VIDEO)) {
-                file = ParserService.getS3FileName(VIDEO, contentId);
+                file = getS3FileName(VIDEO, contentId);
                 contentType = S3Service.VIDEO_TYPE;
             } else if (mediaType.equals(AUDIO)) {
-                file = ParserService.getS3FileName(AUDIO, contentId);
+                file = getS3FileName(AUDIO, contentId);
                 contentType = S3Service.AUDIO_TYPE;
             }
             try (InputStream in = page.getInputStream()) {
-                s3Service.uploadContent(awsProps.getBucket(), file, in, contentType);
+                // If the content is an image, upload it to S3 immediately
+                if (contentType.equals(S3Service.IMAGE_TYPE)) {
+                    s3Service.uploadImage(awsProps.getBucket(), file, in, contentType);
+                } else {
+                    // Save the file to disk for processing
+                    File output = new File(file);
+                    Files.copy(in, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                }
                 updateProgress(contentId, true);
             }
             return Mono.just(true);

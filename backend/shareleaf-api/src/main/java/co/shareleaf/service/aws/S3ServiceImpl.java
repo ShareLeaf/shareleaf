@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Bizuwork Melesse
@@ -25,7 +25,7 @@ public class S3ServiceImpl implements S3Service {
     private final AWSProps awsProps;
 
     @Override
-    public void uploadContent(String bucket, String key, InputStream stream, String contentType) {
+    public void uploadImage(String bucket, String key, InputStream stream, String contentType) {
         try {
             ObjectMetadata meta = new ObjectMetadata();
             meta.setContentLength(stream.available());
@@ -37,6 +37,50 @@ public class S3ServiceImpl implements S3Service {
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void uploadHlsData(String bucket, String contentId) {
+        File f = new File(".");
+        String[] pathnames = f.list();
+        List<String> hlsFiles = new ArrayList<>();
+        List<String> toDelete = new ArrayList<>();
+        if (pathnames != null) {
+            for (String p : pathnames) {
+                if (p.contains(contentId) && (p.contains(".ts") || p.contains(".m3u8"))) {
+                    hlsFiles.add(p);
+                }
+                if (p.contains(contentId)) {
+                    // Add all files (HLS and MP4) for deletion
+                    toDelete.add(p);
+                }
+            }
+        }
+        String folder = contentId + "/";
+        log.info("Uploading HLS files to S3 for content ID {}", contentId);
+        for (String hlsFile : hlsFiles) {
+            File file = new File(hlsFile);
+            try (InputStream in = new FileInputStream(file)) {
+                ObjectMetadata meta = new ObjectMetadata();
+                meta.setContentLength(in.available());
+                meta.setContentType("application/octet-stream");
+                String key = folder + hlsFile;
+                s3Client.putObject(new PutObjectRequest(
+                        bucket, key, in, meta)
+                        .withCannedAcl(CannedAccessControlList.Private));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        log.info("Done with uploading HLS files to S3 for content ID {}", contentId);
+        cleanup(toDelete);
+    }
+
+    private void cleanup(List<String> toDelete) {
+        for (String path : toDelete) {
+            File file = new File(path);
+            file.delete();
         }
     }
 

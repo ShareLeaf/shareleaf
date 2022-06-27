@@ -43,11 +43,7 @@ export const VideoJS = (props) => {
 
     return (
         <div data-vjs-player="">
-            <video id="video-js-player" ref={videoRef} className='video-js vjs-big-play-centered'>
-                <audio id="audio-track">
-                    <source src={props.audioSrc} type="audio/mpeg"/>
-                </audio>
-            </video>
+            <video id="video-js-player" ref={videoRef} className='video-js vjs-big-play-centered'/>
         </div>
     );
 }
