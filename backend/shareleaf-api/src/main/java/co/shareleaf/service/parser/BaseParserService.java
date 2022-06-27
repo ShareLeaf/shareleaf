@@ -32,6 +32,7 @@ public abstract class BaseParserService {
 
         // Merge the audio and video streams, if applicable
         String mergedFile = contentId + "_merged.mp4";
+        log.trace("Determining if should generate HLS files for {}", contentId);
         if (Files.exists(Path.of(audioFile)) && Files.exists(Path.of(videoFile))) {
             Runtime runtime = Runtime.getRuntime();
             try {
@@ -44,6 +45,7 @@ public abstract class BaseParserService {
             }
         } else {
             mergedFile = videoFile;
+            log.trace("No audio found so using video as merged file {}", mergedFile);
         }
         // Generate HLS segments
         String hlsOutput = contentId + ".m3u8";
@@ -53,6 +55,7 @@ public abstract class BaseParserService {
             runtime.exec(String.format("ffmpeg -i %s -codec: copy -start_number 0 -hls_time 2 -hls_list_size 0 -f hls %s",
                     mergedFile, hlsOutput))
                     .waitFor();
+            log.info("Done with generating HLS segments for content ID {}", contentId);
         } catch (IOException e) {
             e.printStackTrace();
         }

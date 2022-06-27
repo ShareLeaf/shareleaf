@@ -84,10 +84,13 @@ public class RedditIBaseParserService extends BaseParserService implements Parse
                     if (!tasks.isEmpty()) {
                         // Run all tasks asynchronously
                         Flux.merge(tasks).doOnComplete(() -> {
+                            log.trace("Determining if should run hls {} {}", mediaUrl.getGifUrl(), mediaUrl.getVideoUrl());
                             if (!ObjectUtils.isEmpty(mediaUrl.getGifUrl()) ||
                                     !ObjectUtils.isEmpty(mediaUrl.getVideoUrl())) {
                                 generateHlsManifest(contentId);
                                 s3Service.uploadHlsData(awsProps.getBucket(), contentId);
+                            } else {
+                                log.trace("Will not be running HLS on {}", contentId);
                             }
                         }).subscribe();
                     }
@@ -115,6 +118,7 @@ public class RedditIBaseParserService extends BaseParserService implements Parse
             }
             try (InputStream in = page.getInputStream()) {
                 // If the content is an image, upload it to S3 immediately
+                log.trace("About to upload or process {} {}", file, contentType);
                 if (contentType.equals(S3Service.IMAGE_TYPE)) {
                     s3Service.uploadImage(awsProps.getBucket(), file, in, contentType);
                 } else {

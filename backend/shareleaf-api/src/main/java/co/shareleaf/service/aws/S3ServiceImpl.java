@@ -8,10 +8,13 @@ import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Bizuwork Melesse
@@ -44,37 +47,79 @@ public class S3ServiceImpl implements S3Service {
     public void uploadHlsData(String bucket, String contentId) {
         File f = new File(".");
         String[] pathnames = f.list();
-        List<String> hlsFiles = new ArrayList<>();
-        List<String> toDelete = new ArrayList<>();
-        if (pathnames != null) {
-            for (String p : pathnames) {
-                if (p.contains(contentId) && (p.contains(".ts") || p.contains(".m3u8"))) {
-                    hlsFiles.add(p);
-                }
-                if (p.contains(contentId)) {
-                    // Add all files (HLS and MP4) for deletion
-                    toDelete.add(p);
-                }
-            }
-        }
+        List<String> hlsFiles = getSortedHlsFiles(pathnames, contentId);
+        List<String> toDelete = getFilesToDelete(pathnames, contentId);
+
         String folder = contentId + "/";
         log.info("Uploading HLS files to S3 for content ID {}", contentId);
+        List<Mono<Boolean>> uploadTasks = new ArrayList<>();
         for (String hlsFile : hlsFiles) {
-            File file = new File(hlsFile);
-            try (InputStream in = new FileInputStream(file)) {
-                ObjectMetadata meta = new ObjectMetadata();
-                meta.setContentLength(in.available());
-                meta.setContentType("application/octet-stream");
-                String key = folder + hlsFile;
-                s3Client.putObject(new PutObjectRequest(
-                        bucket, key, in, meta)
-                        .withCannedAcl(CannedAccessControlList.Private));
-            } catch (IOException e) {
-                e.printStackTrace();
+            uploadTasks.add(uploadTask(hlsFile, folder, bucket));
+        }
+        if (!uploadTasks.isEmpty()) {
+            Flux.merge(uploadTasks)
+                    .doOnError(e -> log.error(e.getLocalizedMessage()))
+                    .doOnComplete(() -> {
+                        log.info("Done with uploading HLS files to S3 for content ID {}", contentId);
+                        cleanup(toDelete);
+            }).subscribe();
+        }
+    }
+
+    private List<String> getFilesToDelete(String[] pathnames, String contentId) {
+        List<String> files = new ArrayList<>();
+        if (pathnames != null) {
+            for (String p : pathnames) {
+                if (p.contains(contentId)) {
+                    // Add all files (HLS and MP4) for deletion
+                    files.add(p);
+                }
             }
         }
-        log.info("Done with uploading HLS files to S3 for content ID {}", contentId);
-        cleanup(toDelete);
+        return files;
+    }
+
+    private List<String> getSortedHlsFiles(String[] pathnames, String contentId) {
+        // Sort the HLS files so that the index file gets uploaded first and the
+        // actual content gets uploaded in order. That way, a user may start streaming
+        // the content before the uploading is finished.
+        String indexFile = "";
+        List<String> files = new ArrayList<>();
+        if (pathnames != null) {
+            for (String p : pathnames) {
+                if (p.contains(contentId)) {
+                    if (p.contains(".ts")) {
+                        files.add(p);
+                    } else if (p.contains(".m3u8")) {
+                        indexFile = p;
+                    }
+                }
+            }
+        }
+        // Create a mutable list
+        ArrayList<String> sortedFiles = new ArrayList<>(files
+                .stream()
+                .sorted()
+                .toList());
+        sortedFiles.add(0, indexFile);
+        return sortedFiles;
+    }
+
+    private Mono<Boolean> uploadTask(String hlsFile, String folder, String bucket) {
+        File file = new File(hlsFile);
+        try (InputStream in = new FileInputStream(file)) {
+            ObjectMetadata meta = new ObjectMetadata();
+            meta.setContentLength(in.available());
+            meta.setContentType("application/octet-stream");
+            String key = folder + hlsFile;
+            log.info("Uploading HLS file to S3: {}", key);
+            s3Client.putObject(new PutObjectRequest(
+                    bucket, key, in, meta)
+                    .withCannedAcl(CannedAccessControlList.Private));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Mono.just(true);
     }
 
     private void cleanup(List<String> toDelete) {
