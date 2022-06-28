@@ -30,6 +30,8 @@ jobs:
   build:
 #    if: ${{ github.event.pull_request.merged }}
     runs-on: ubuntu-latest
+    container:
+      options: --user root
     steps:
 
       - name: Checkout repository
@@ -66,7 +68,6 @@ jobs:
           echo FROM azul/zulu-openjdk:16 > Dockerfile
           echo ENV LD_LIBRARY_PATH=/usr/local/lib >> Dockerfile
           echo COPY --from=jrottenberg/ffmpeg /usr/local /usr/local/ >> Dockerfile
-          echo USER root >> Dockerfile
           echo RUN apt update && apt -y install wget libgomp1 >> Dockerfile
           echo RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5.10_amd64.deb >> Dockerfile
           echo RUN apt install ./libssl1.0.0_1.0.2n-1ubuntu5.10_amd64.deb >> Dockerfile
