@@ -2,11 +2,19 @@ package co.shareleaf.service.parser;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @author Bizuwork Melesse
  * created on 6/20/22
  */
 public interface ParserService {
+
+    /**
+     * Keep track of unique content URLs that are being processed within the same request
+     * session.
+     */
+    ConcurrentHashMap<String, Boolean> uniquePermalinks = new ConcurrentHashMap<>();
 
     /**
      * Parse HTML soup and generate structured data for

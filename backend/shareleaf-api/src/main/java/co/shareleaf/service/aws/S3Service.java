@@ -30,11 +30,11 @@ public interface S3Service {
 
     /**
      * Upload HLS segments and remove any local copies
-     *
-     * @param bucket
+     *  @param bucket
      * @param contentId
+     * @param permalink
      */
-    void uploadHlsData(String bucket, String contentId);
+    void uploadHlsData(String bucket, String contentId, String permalink);
 
     /**
      * Get any object specified by the bucket and key

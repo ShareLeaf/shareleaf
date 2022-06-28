@@ -2,6 +2,7 @@ package co.shareleaf.service.aws;
 
 
 import co.shareleaf.props.AWSProps;
+import co.shareleaf.service.parser.ParserService;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
@@ -13,10 +14,8 @@ import reactor.core.publisher.Mono;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Bizuwork Melesse
@@ -46,25 +45,28 @@ public class S3ServiceImpl implements S3Service {
     }
 
     @Override
-    public void uploadHlsData(String bucket, String contentId) {
-        File f = new File(".");
-        String[] pathnames = f.list();
-        List<String> hlsFiles = getSortedHlsFiles(pathnames, contentId);
-        List<String> toDelete = getFilesToDelete(pathnames, contentId);
+    public void uploadHlsData(String bucket, String contentId, String permalink) {
+        if (ParserService.uniquePermalinks.containsKey(permalink)) {
+            File f = new File(".");
+            String[] pathnames = f.list();
+            List<String> hlsFiles = getSortedHlsFiles(pathnames, contentId);
+            List<String> toDelete = getFilesToDelete(pathnames, contentId);
 
-        String folder = contentId + "/";
-        log.info("Uploading HLS files to S3 for content ID {}", contentId);
-        List<Mono<Boolean>> uploadTasks = new ArrayList<>();
-        for (String hlsFile : hlsFiles) {
-            uploadTasks.add(uploadTask(hlsFile, folder, bucket));
-        }
-        if (!uploadTasks.isEmpty()) {
-            Flux.merge(uploadTasks)
-                    .doOnError(e -> log.error(e.getLocalizedMessage()))
-                    .doOnComplete(() -> {
-                        log.info("Done with uploading HLS files to S3 for content ID {}", contentId);
-                        cleanup(toDelete);
-            }).subscribe();
+            String folder = contentId + "/";
+            log.info("Uploading HLS files to S3 for content ID {}", contentId);
+            List<Mono<Boolean>> uploadTasks = new ArrayList<>();
+            for (String hlsFile : hlsFiles) {
+                uploadTasks.add(uploadTask(hlsFile, folder, bucket));
+            }
+            if (!uploadTasks.isEmpty()) {
+                Flux.merge(uploadTasks)
+                        .doOnError(e -> log.error(e.getLocalizedMessage()))
+                        .doOnComplete(() -> {
+                            log.info("Done with uploading HLS files to S3 for content ID {}", contentId);
+                            ParserService.uniquePermalinks.remove(permalink);
+                            cleanup(toDelete);
+                        }).subscribe();
+            }
         }
     }
 

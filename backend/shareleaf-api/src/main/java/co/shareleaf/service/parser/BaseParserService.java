@@ -24,40 +24,43 @@ public abstract class BaseParserService {
      * to stream the media content to the client.
      *
      * @param contentId
+     * @param permalink
      */
     @SneakyThrows
-    public void generateHlsManifest(String contentId) {
-        String videoFile = getS3FileName(VIDEO, contentId);
-        String audioFile = getS3FileName(AUDIO, contentId);
+    public void generateHlsManifest(String contentId, String permalink) {
+        if (ParserService.uniquePermalinks.containsKey(permalink)) {
+            String videoFile = getS3FileName(VIDEO, contentId);
+            String audioFile = getS3FileName(AUDIO, contentId);
 
-        // Merge the audio and video streams, if applicable
-        String mergedFile = contentId + "_merged.mp4";
-        log.trace("Determining if should generate HLS files for {}", contentId);
-        if (Files.exists(Path.of(audioFile)) && Files.exists(Path.of(videoFile))) {
+            // Merge the audio and video streams, if applicable
+            String mergedFile = contentId + "_merged.mp4";
+            log.trace("Determining if should generate HLS files for {}", contentId);
+            if (Files.exists(Path.of(audioFile)) && Files.exists(Path.of(videoFile))) {
+                Runtime runtime = Runtime.getRuntime();
+                try {
+                    log.info("Merging audio and video streams for content ID {}", contentId);
+                    runtime.exec(String.format("ffmpeg -i %s -i %s -acodec copy -vcodec copy %s",
+                                    videoFile, audioFile, mergedFile))
+                            .waitFor();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                mergedFile = videoFile;
+                log.trace("No audio found so using video as merged file {}", mergedFile);
+            }
+            // Generate HLS segments
+            String hlsOutput = contentId + ".m3u8";
             Runtime runtime = Runtime.getRuntime();
             try {
-                log.info("Merging audio and video streams for content ID {}", contentId);
-                runtime.exec(String.format("ffmpeg -i %s -i %s -acodec copy -vcodec copy %s",
-                        videoFile, audioFile, mergedFile))
+                log.info("Generating HLS segments for content ID {}", contentId);
+                runtime.exec(String.format("ffmpeg -i %s -codec: copy -start_number 0 -hls_time 2 -hls_list_size 0 -f hls %s",
+                                mergedFile, hlsOutput))
                         .waitFor();
+                log.info("Done with generating HLS segments for content ID {}", contentId);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            mergedFile = videoFile;
-            log.trace("No audio found so using video as merged file {}", mergedFile);
-        }
-        // Generate HLS segments
-        String hlsOutput = contentId + ".m3u8";
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            log.info("Generating HLS segments for content ID {}", contentId);
-            runtime.exec(String.format("ffmpeg -i %s -codec: copy -start_number 0 -hls_time 2 -hls_list_size 0 -f hls %s",
-                    mergedFile, hlsOutput))
-                    .waitFor();
-            log.info("Done with generating HLS segments for content ID {}", contentId);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

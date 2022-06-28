@@ -88,6 +88,7 @@ const Media: FC<SLContentMetadata> = (props) => {
     }
 
     useEffect(() => {
+        console.log("props: ", props);
         setShowInProgress(false);
         setShowError(false);
         setShowInvalidUrlError(false);
