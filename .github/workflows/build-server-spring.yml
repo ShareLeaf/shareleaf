@@ -67,9 +67,9 @@ jobs:
           echo FROM azul/zulu-openjdk:16 >> Dockerfile
           echo ENV LD_LIBRARY_PATH=/usr/local/lib >> Dockerfile
           echo COPY --from=jrottenberg/ffmpeg /usr/local /usr/local/ >> Dockerfile
-          echo RUN apt update && apt -y install wget libgomp1 >> Dockerfile
+          echo RUN sudo apt update && sudo apt -y install wget libgomp1 >> Dockerfile
           echo RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5.10_amd64.deb >> Dockerfile
-          echo RUN apt install ./libssl1.0.0_1.0.2n-1ubuntu5.10_amd64.deb >> Dockerfile
+          echo RUN sudo apt install ./libssl1.0.0_1.0.2n-1ubuntu5.10_amd64.deb >> Dockerfile
           echo ENV SPRING_APPLICATION_NAME=${{ env.SPRING_APPLICATION_NAME }} >> Dockerfile
           echo ENV SPRING_PROFILES_ACTIVE=${{ env.SPRING_PROFILES_ACTIVE }} >> Dockerfile
           echo ENV SL_GH_USERNAME=${{ env.SL_GH_USERNAME }} >> Dockerfile
