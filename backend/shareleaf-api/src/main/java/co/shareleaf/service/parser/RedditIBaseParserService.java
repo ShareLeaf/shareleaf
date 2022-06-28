@@ -223,7 +223,8 @@ public class RedditIBaseParserService extends BaseParserService implements Parse
                             // Update the entry only if there is no duplicate entity
                             MetadataEntity newEntity = data.getT1();
                             MetadataEntity duplicateEntity = data.getT2();
-                            if (!ObjectUtils.isEmpty(duplicateEntity.getContentId())) {
+                            if (!ObjectUtils.isEmpty(duplicateEntity.getContentId()) &&
+                                    !duplicateEntity.getContentId().equals(newEntity.getContentId())) {
                                 // This permalink has already been processed so we must
                                 // remove it. The content ID should be added as an alias
                                 // to the existing metadata
