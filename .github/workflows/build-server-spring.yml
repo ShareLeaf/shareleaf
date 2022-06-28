@@ -30,11 +30,7 @@ jobs:
   build:
 #    if: ${{ github.event.pull_request.merged }}
     runs-on: ubuntu-latest
-    container:
-      image: owasp/zap2docker-stable
-      options: --user root
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -64,6 +60,7 @@ jobs:
       - name: Create a Dockerfile
         run: |
           cd ${{ env.PROJECT_ROOT }}
+          rm -rf Dockerfile
           touch Dockerfile
 
           echo FROM azul/zulu-openjdk:16 > Dockerfile
