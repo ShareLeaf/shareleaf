@@ -26,7 +26,15 @@ public interface S3Service {
      * @param contentType
      * @return
      */
-    void uploadContent(String bucket, String key, InputStream stream, String contentType);
+    void uploadImage(String bucket, String key, InputStream stream, String contentType);
+
+    /**
+     * Upload HLS segments and remove any local copies
+     *
+     * @param bucket
+     * @param contentId
+     */
+    void uploadHlsData(String bucket, String contentId);
 
     /**
      * Get any object specified by the bucket and key

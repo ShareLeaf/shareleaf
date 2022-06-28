@@ -159,7 +159,6 @@
         "required": [
           "content_id",
           "video_url",
-          "audio_url",
           "image_url",
           "invalid_url",
           "shareable_link",
@@ -181,9 +180,6 @@
             "type": "string"
           },
           "video_url": {
-            "type": "string"
-          },
-          "audio_url": {
             "type": "string"
           },
           "image_url": {

@@ -6,12 +6,13 @@ import co.shareleaf.model.*;
 import co.shareleaf.props.AWSProps;
 import co.shareleaf.props.WebsiteProps;
 import co.shareleaf.service.aws.S3Service;
-import co.shareleaf.service.parser.ParserService;
+import co.shareleaf.service.parser.BaseParserService;
 import co.shareleaf.service.scraper.ScraperService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -19,7 +20,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.ZoneOffset;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * @author Bizuwork Melesse
@@ -28,13 +28,13 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ContentServiceImpl implements ContentService {
+public class ContentServiceImpl extends BaseParserService implements ContentService {
     private final MetadataRepo metadataRepo;
     private final AWSProps awsProps;
     private final WebsiteProps websiteProps;
     private final ScraperService scraperService;
-
-    @Override
+    private final S3Service s3Service;
+    
     public Mono<SLContentMetadata> generateContentId(SLContentUrl url) {
         // TODO: delete after testing
 //        processUrl(url.getUrl()).map(it -> true);
@@ -46,7 +46,7 @@ public class ContentServiceImpl implements ContentService {
             return metadataRepo
                     .findByCanonicalUrl(url.getUrl())
                     .map(it -> new SLContentMetadata()
-                            .shareableLink(ParserService.getShareableLink(it, websiteProps.getBaseUrl()))
+                            .shareableLink(getShareableLink(it, websiteProps.getBaseUrl()))
                             .contentId(it.getContentId()))
                     .switchIfEmpty(Mono.defer(() -> processUrl(url.getUrl())));
         }
@@ -54,19 +54,18 @@ public class ContentServiceImpl implements ContentService {
     }
 
     private Mono<SLContentMetadata> processUrl(String url) {
-        log.info("Processing new url: {}", url);
         MetadataEntity record = new MetadataEntity();
         String contentId = generateUid();
         record.setContentId(contentId);
         record.setCanonicalUrl(url);
-        Mono.fromCallable(() -> scraperService.getContent(contentId, url))
-                .subscribeOn(Schedulers.boundedElastic())
-                .doOnError(Throwable::printStackTrace)
-                .subscribe();
         return metadataRepo
                 .save(record)
+                .doOnError(e -> log.error(e.getLocalizedMessage()))
+                .doOnSuccess(it -> Mono.fromCallable(() -> scraperService.getContent(contentId, url))
+                            .subscribeOn(Schedulers.boundedElastic())
+                            .subscribe())
                 .map(it -> new SLContentMetadata()
-                        .shareableLink(ParserService.getShareableLink(it, websiteProps.getBaseUrl()))
+                        .shareableLink(getShareableLink(it, websiteProps.getBaseUrl()))
                         .contentId(contentId));
     }
 
@@ -85,10 +84,9 @@ public class ContentServiceImpl implements ContentService {
                     .map(it ->
                             new SLContentMetadata()
                                     .contentId(it.getContentId())
-                                    .videoUrl(ParserService.getContentUrl(it, ParserService.VIDEO, awsProps.getCdn()))
-                                    .audioUrl(ParserService.getContentUrl(it, ParserService.AUDIO, awsProps.getCdn()))
-                                    .imageUrl(ParserService.getContentUrl(it, ParserService.IMAGE, awsProps.getCdn()))
-                                    .shareableLink(ParserService.getShareableLink(it, websiteProps.getBaseUrl()))
+                                    .videoUrl(getContentUrl(it.getContentId(), VIDEO, awsProps.getCdn()))
+                                    .imageUrl(getContentUrl(it.getContentId(), IMAGE, awsProps.getCdn()))
+                                    .shareableLink(getShareableLink(it, websiteProps.getBaseUrl()))
                                     .mediaType(it.getMediaType() != null ? SLMediaType.fromValue(it.getMediaType()) : null)
                                     .invalidUrl(it.getInvalidUrl())
                                     .processed(it.getProcessed())
@@ -107,7 +105,7 @@ public class ContentServiceImpl implements ContentService {
         return Mono.just(new SLContentMetadata().error(true));
     }
 
-    @Override
+
     public Mono<SLGenericResponse> incrementShareCount(SLContentId contentId) {
         if (!ObjectUtils.isEmpty(contentId) && !ObjectUtils.isEmpty(contentId.getUid())) {
             return metadataRepo

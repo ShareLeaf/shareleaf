@@ -22,6 +22,8 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RedditParserService implements ParserService{
+public class RedditIBaseParserService extends BaseParserService implements ParserService {
     private final ObjectMapper objectMapper;
     private final MetadataRepo metadataRepo;
     private final S3Service s3Service;
@@ -43,10 +45,10 @@ public class RedditParserService implements ParserService{
     @Override
     public void processSoup(String soup, String url, String contentId, WebClient client) {
         log.info("Processing soup for Reddit with content ID {}: {}", contentId, url);
-        String postId = url.substring(url.indexOf("comments/") + 9);
-        postId = "t3_" + postId.substring(0, postId.indexOf("/"));
-        Document doc = Jsoup.parse(soup);
         try {
+            String postId = url.substring(url.indexOf("comments/") + 9);
+            postId = "t3_" + postId.substring(0, postId.indexOf("/"));
+            Document doc = Jsoup.parse(soup);
             String json = null;
             List<DataNode> dataNodes = doc.select("script").dataNodes();
             for (DataNode dataNode : dataNodes) {
@@ -65,7 +67,6 @@ public class RedditParserService implements ParserService{
                 if (mediaUrl == null) {
                     updateInvalidUrl(contentId, permalink);
                 } else {
-                    updateMetadata(contentId, title, permalink, mediaUrl);
                     List<Mono<Boolean>> tasks = new ArrayList<>();
                     if (!ObjectUtils.isEmpty(mediaUrl.getAudioUrl())) {
                         tasks.add(downloadContent(contentId, permalink, mediaUrl.getAudioUrl(), AUDIO));
@@ -79,13 +80,27 @@ public class RedditParserService implements ParserService{
                     if (!ObjectUtils.isEmpty(mediaUrl.getGifUrl())) {
                         tasks.add(downloadContent(contentId, permalink, mediaUrl.getGifUrl(), VIDEO));
                     }
-                    if (!tasks.isEmpty()) {
-                        // Run all tasks asynchronously
-                        Flux.merge(tasks).subscribe();
-                    }
+                    updateMetadata(contentId, title, permalink, mediaUrl)
+                            .onErrorStop()
+                            .doOnSuccess(it -> {
+                                if (!tasks.isEmpty()) {
+                                    // Run all tasks asynchronously
+                                    Flux.merge(tasks).doOnComplete(() -> {
+                                        log.trace("Determining if should run hls {} {}", mediaUrl.getGifUrl(), mediaUrl.getVideoUrl());
+                                        if (!ObjectUtils.isEmpty(mediaUrl.getGifUrl()) ||
+                                                !ObjectUtils.isEmpty(mediaUrl.getVideoUrl())) {
+                                            generateHlsManifest(contentId);
+                                            s3Service.uploadHlsData(awsProps.getBucket(), contentId);
+                                        } else {
+                                            log.trace("Will not be running HLS on {}", contentId);
+                                        }
+                                    }).subscribe();
+                                }
+                            }).subscribe();
                 }
             }
         } catch (Exception e) {
+            updateInvalidUrl(contentId, url);
             e.printStackTrace();
         }
     }
@@ -96,16 +111,24 @@ public class RedditParserService implements ParserService{
             log.info("Downloading content for content ID {}: permalink={} mediaUrl={} mediaType={}",
                     contentId, permalink, mediaUrl, mediaType);
             UnexpectedPage page = scraperUtils.getWebClient(Platform.REDDIT).getPage(mediaUrl);
-            String file = ParserService.getS3FileName(IMAGE, contentId);
+            String file = getS3FileName(IMAGE, contentId);
             if (mediaType.equals(VIDEO)) {
-                file = ParserService.getS3FileName(VIDEO, contentId);
+                file = getS3FileName(VIDEO, contentId);
                 contentType = S3Service.VIDEO_TYPE;
             } else if (mediaType.equals(AUDIO)) {
-                file = ParserService.getS3FileName(AUDIO, contentId);
+                file = getS3FileName(AUDIO, contentId);
                 contentType = S3Service.AUDIO_TYPE;
             }
             try (InputStream in = page.getInputStream()) {
-                s3Service.uploadContent(awsProps.getBucket(), file, in, contentType);
+                // If the content is an image, upload it to S3 immediately
+                log.trace("About to upload or process {} {}", file, contentType);
+                if (contentType.equals(S3Service.IMAGE_TYPE)) {
+                    s3Service.uploadImage(awsProps.getBucket(), file, in, contentType);
+                } else {
+                    // Save the file to disk for processing
+                    File output = new File(file);
+                    Files.copy(in, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                }
                 updateProgress(contentId, true);
             }
             return Mono.just(true);
@@ -186,21 +209,23 @@ public class RedditParserService implements ParserService{
         return new MediaUrl(imageUrl, gifUrl, videoUrl, audioUrl, dbMediaType, encoding);
     }
 
-    private void updateMetadata(String contentId, String title, String permalink, MediaUrl mediaUrl) {
+    private Mono<Object> updateMetadata(String contentId, String title, String permalink, MediaUrl mediaUrl) {
         log.info("Updating metadata for content ID {}: title={} mediaType={} encoding={} permalink={}",
                 contentId, title, mediaUrl.getMediaType(), mediaUrl.getEncoding(), permalink);
         Mono<MetadataEntity> metadataEntityMono = metadataRepo.findByContentId(contentId);
-        metadataEntityMono
-                .flatMap(it -> {
+        return metadataEntityMono
+                .map(it -> {
                     it.setEncoding(mediaUrl.getEncoding());
                     it.setMediaType(mediaUrl.getMediaType());
                     it.setHasAudio(!ObjectUtils.isEmpty(mediaUrl.getAudioUrl()));
                     it.setTitle(title);
                     it.setCanonicalUrl(permalink);
                     it.setUpdatedDt(LocalDateTime.now());
-                    return metadataRepo.save(it);
-                }).subscribeOn(Schedulers.boundedElastic())
-                .subscribe();
+                    return metadataRepo
+                            .save(it)
+                            .doOnError(e -> log.error(e.getLocalizedMessage()))
+                            .onErrorStop();
+                });
     }
 
     private void updateInvalidUrl(String contentId, String permalink) {
@@ -208,6 +233,7 @@ public class RedditParserService implements ParserService{
         Mono<MetadataEntity> metadataEntityMono = metadataRepo.findByContentId(contentId);
         metadataEntityMono
                 .flatMap(it -> {
+                    it.setProcessed(false);
                     it.setInvalidUrl(true);
                     it.setCanonicalUrl(permalink);
                     it.setUpdatedDt(LocalDateTime.now());
@@ -229,3 +255,4 @@ public class RedditParserService implements ParserService{
         return type;
     }
 }
+
