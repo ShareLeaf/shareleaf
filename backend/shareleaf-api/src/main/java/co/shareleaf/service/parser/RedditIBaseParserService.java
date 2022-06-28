@@ -255,3 +255,4 @@ public class RedditIBaseParserService extends BaseParserService implements Parse
         return type;
     }
 }
+

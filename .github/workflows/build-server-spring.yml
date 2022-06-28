@@ -61,10 +61,9 @@ jobs:
       - name: Create a Dockerfile
         run: |
           cd ${{ env.PROJECT_ROOT }}
-          rm -rf Dockerfile
           touch Dockerfile
 
-          echo FROM azul/zulu-openjdk:16 >> Dockerfile
+          echo FROM azul/zulu-openjdk:16 > Dockerfile
           echo ENV LD_LIBRARY_PATH=/usr/local/lib >> Dockerfile
           echo COPY --from=jrottenberg/ffmpeg /usr/local /usr/local/ >> Dockerfile
           echo USER root >> Dockerfile
