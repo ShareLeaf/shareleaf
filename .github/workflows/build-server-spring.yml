@@ -31,6 +31,7 @@ jobs:
 #    if: ${{ github.event.pull_request.merged }}
     runs-on: ubuntu-latest
     container:
+      image: owasp/zap2docker-stable
       options: --user root
     steps:
 

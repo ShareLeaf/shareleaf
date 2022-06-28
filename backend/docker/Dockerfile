@@ -12,4 +12,3 @@ ENV SL_GH_TOKEN=
 EXPOSE 8080
 COPY ../shareleaf-api/build/libs/app.jar /app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
-
