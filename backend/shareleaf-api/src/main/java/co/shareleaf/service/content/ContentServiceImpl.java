@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -53,18 +54,16 @@ public class ContentServiceImpl extends BaseParserService implements ContentServ
     }
 
     private Mono<SLContentMetadata> processUrl(String url) {
-        log.info("Processing new url: {}", url);
         MetadataEntity record = new MetadataEntity();
         String contentId = generateUid();
         record.setContentId(contentId);
         record.setCanonicalUrl(url);
-        Mono.fromCallable(() -> scraperService.getContent(contentId, url))
-                .subscribeOn(Schedulers.boundedElastic())
-                .doOnError(it -> log.error(it.getLocalizedMessage()))
-                .subscribe();
         return metadataRepo
                 .save(record)
-                .doOnError(it -> log.error(it.getLocalizedMessage()))
+                .doOnError(e -> log.error(e.getLocalizedMessage()))
+                .doOnSuccess(it -> Mono.fromCallable(() -> scraperService.getContent(contentId, url))
+                            .subscribeOn(Schedulers.boundedElastic())
+                            .subscribe())
                 .map(it -> new SLContentMetadata()
                         .shareableLink(getShareableLink(it, websiteProps.getBaseUrl()))
                         .contentId(contentId));

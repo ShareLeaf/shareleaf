@@ -67,7 +67,6 @@ public class RedditIBaseParserService extends BaseParserService implements Parse
                 if (mediaUrl == null) {
                     updateInvalidUrl(contentId, permalink);
                 } else {
-                    updateMetadata(contentId, title, permalink, mediaUrl);
                     List<Mono<Boolean>> tasks = new ArrayList<>();
                     if (!ObjectUtils.isEmpty(mediaUrl.getAudioUrl())) {
                         tasks.add(downloadContent(contentId, permalink, mediaUrl.getAudioUrl(), AUDIO));
@@ -81,19 +80,23 @@ public class RedditIBaseParserService extends BaseParserService implements Parse
                     if (!ObjectUtils.isEmpty(mediaUrl.getGifUrl())) {
                         tasks.add(downloadContent(contentId, permalink, mediaUrl.getGifUrl(), VIDEO));
                     }
-                    if (!tasks.isEmpty()) {
-                        // Run all tasks asynchronously
-                        Flux.merge(tasks).doOnComplete(() -> {
-                            log.trace("Determining if should run hls {} {}", mediaUrl.getGifUrl(), mediaUrl.getVideoUrl());
-                            if (!ObjectUtils.isEmpty(mediaUrl.getGifUrl()) ||
-                                    !ObjectUtils.isEmpty(mediaUrl.getVideoUrl())) {
-                                generateHlsManifest(contentId);
-                                s3Service.uploadHlsData(awsProps.getBucket(), contentId);
-                            } else {
-                                log.trace("Will not be running HLS on {}", contentId);
-                            }
-                        }).subscribe();
-                    }
+                    updateMetadata(contentId, title, permalink, mediaUrl)
+                            .onErrorStop()
+                            .doOnSuccess(it -> {
+                                if (!tasks.isEmpty()) {
+                                    // Run all tasks asynchronously
+                                    Flux.merge(tasks).doOnComplete(() -> {
+                                        log.trace("Determining if should run hls {} {}", mediaUrl.getGifUrl(), mediaUrl.getVideoUrl());
+                                        if (!ObjectUtils.isEmpty(mediaUrl.getGifUrl()) ||
+                                                !ObjectUtils.isEmpty(mediaUrl.getVideoUrl())) {
+                                            generateHlsManifest(contentId);
+                                            s3Service.uploadHlsData(awsProps.getBucket(), contentId);
+                                        } else {
+                                            log.trace("Will not be running HLS on {}", contentId);
+                                        }
+                                    }).subscribe();
+                                }
+                            }).subscribe();
                 }
             }
         } catch (Exception e) {
@@ -206,21 +209,23 @@ public class RedditIBaseParserService extends BaseParserService implements Parse
         return new MediaUrl(imageUrl, gifUrl, videoUrl, audioUrl, dbMediaType, encoding);
     }
 
-    private void updateMetadata(String contentId, String title, String permalink, MediaUrl mediaUrl) {
+    private Mono<Object> updateMetadata(String contentId, String title, String permalink, MediaUrl mediaUrl) {
         log.info("Updating metadata for content ID {}: title={} mediaType={} encoding={} permalink={}",
                 contentId, title, mediaUrl.getMediaType(), mediaUrl.getEncoding(), permalink);
         Mono<MetadataEntity> metadataEntityMono = metadataRepo.findByContentId(contentId);
-        metadataEntityMono
-                .flatMap(it -> {
+        return metadataEntityMono
+                .map(it -> {
                     it.setEncoding(mediaUrl.getEncoding());
                     it.setMediaType(mediaUrl.getMediaType());
                     it.setHasAudio(!ObjectUtils.isEmpty(mediaUrl.getAudioUrl()));
                     it.setTitle(title);
                     it.setCanonicalUrl(permalink);
                     it.setUpdatedDt(LocalDateTime.now());
-                    return metadataRepo.save(it);
-                }).subscribeOn(Schedulers.boundedElastic())
-                .subscribe();
+                    return metadataRepo
+                            .save(it)
+                            .doOnError(e -> log.error(e.getLocalizedMessage()))
+                            .onErrorStop();
+                });
     }
 
     private void updateInvalidUrl(String contentId, String permalink) {

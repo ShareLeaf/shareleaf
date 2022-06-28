@@ -13,6 +13,8 @@ import reactor.core.publisher.Mono;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,13 +98,21 @@ public class S3ServiceImpl implements S3Service {
                 }
             }
         }
-        // Create a mutable list
-        ArrayList<String> sortedFiles = new ArrayList<>(files
-                .stream()
-                .sorted()
-                .toList());
-        sortedFiles.add(0, indexFile);
-        return sortedFiles;
+        // Sort the file names so that the numerical suffixes also
+        // get sorted in order
+        files.sort(new Comparator<String>() {
+            public int compare(String o1, String o2) {
+                return extractInt(o1) - extractInt(o2);
+            }
+
+            int extractInt(String s) {
+                String num = s.replaceAll("\\D", "");
+                // return 0 if no digits found
+                return num.isEmpty() ? 0 : Integer.parseInt(num);
+            }
+        });
+        files.add(0, indexFile);
+        return files;
     }
 
     private Mono<Boolean> uploadTask(String hlsFile, String folder, String bucket) {
