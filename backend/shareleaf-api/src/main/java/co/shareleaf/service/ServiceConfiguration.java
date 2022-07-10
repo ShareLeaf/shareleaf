@@ -1,7 +1,9 @@
 package co.shareleaf.service;
 
 
+import co.shareleaf.instagram4j.IGClient;
 import co.shareleaf.props.AWSProps;
+import co.shareleaf.props.InstagramProps;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -22,6 +24,7 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class ServiceConfiguration {
     private final AWSProps awsProps;
+    private final InstagramProps instagramProps;
 
     @Bean
     public AmazonS3 amazonS3() {
@@ -35,4 +38,11 @@ public class ServiceConfiguration {
                 .withRegion(awsProps.getRegion())
                 .build();
     }
+
+//    @Bean
+//    public IGClient igClient() {
+//        IGClient.builder()
+//    }
+
+
 }

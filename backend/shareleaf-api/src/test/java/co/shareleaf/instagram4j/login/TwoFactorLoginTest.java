@@ -4,22 +4,33 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import co.shareleaf.ServiceTestConfiguration;
+import co.shareleaf.props.InstagramProps;
+import lombok.extern.slf4j.Slf4j;
 
 import co.shareleaf.instagram4j.IGClient;
 import co.shareleaf.instagram4j.IGClient.Builder.LoginHandler;
 import co.shareleaf.instagram4j.utils.IGChallengeUtils;
 
-import junitparams.FileParameters;
-import junitparams.JUnitParamsRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.annotations.Ignore;
+import org.testng.annotations.Test;
 
-@RunWith(JUnitParamsRunner.class)
-public class TwoFactorLoginTest {
+import static org.testng.AssertJUnit.assertNotNull;
+
+
+@Ignore
+@Slf4j
+@SpringBootTest(classes = ServiceTestConfiguration.class)
+public class TwoFactorLoginTest extends AbstractTestNGSpringContextTests {
+
+    @Autowired
+    private InstagramProps instagramProps;
+
     @Test
-    @FileParameters("src/examples/resources/login.csv")
-    public void testTwoFactor(String user, String pass) throws IOException {
+    public void testTwoFactor() throws IOException {
         Scanner scanner = new Scanner(System.in);
 
         // Callable that returns inputted code from System.in
@@ -35,11 +46,11 @@ public class TwoFactorLoginTest {
         };
 
         IGClient client = IGClient.builder()
-                .username(user)
-                .password(pass)
+                .username(instagramProps.getUsername())
+                .password(instagramProps.getPassword())
                 .onTwoFactor(twoFactorHandler)
                 .simulatedLogin();
 
-        Assert.assertNotNull(client.getSelfProfile());
+        assertNotNull(client.getSelfProfile());
     }
 }

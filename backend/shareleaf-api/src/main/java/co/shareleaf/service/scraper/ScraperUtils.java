@@ -2,6 +2,7 @@ package co.shareleaf.service.scraper;
 
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,10 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public record ScraperUtils(ErrorListener errorListener) {
+@RequiredArgsConstructor
+public class ScraperUtils {
+    private final ErrorListener errorListener;
+
     public WebClient getWebClient(Platform platform) {
         WebClient webClient = new WebClient();
         webClient.getOptions().setCssEnabled(false);

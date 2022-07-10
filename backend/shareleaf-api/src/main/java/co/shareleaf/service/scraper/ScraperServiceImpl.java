@@ -1,6 +1,6 @@
 package co.shareleaf.service.scraper;
 
-import co.shareleaf.service.parser.RedditIBaseParserService;
+import co.shareleaf.service.parser.RedditParser;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.net.URL;
 @Service
 @RequiredArgsConstructor
 public class ScraperServiceImpl implements ScraperService {
-    private final RedditIBaseParserService redditParser;
+    private final RedditParser redditParser;
     private final ScraperUtils scraperUtils;
 
     @Override

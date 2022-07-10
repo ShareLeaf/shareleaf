@@ -35,7 +35,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RedditIBaseParserService extends BaseParserService implements ParserService {
+public class RedditParser extends BaseParserService implements ParserService {
     private final ObjectMapper objectMapper;
     private final MetadataRepo metadataRepo;
     private final S3Service s3Service;

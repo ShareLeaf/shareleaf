@@ -42,8 +42,8 @@ configure(subprojects.findAll(it ->
 )) {
     group = 'co.shareleaf'
     version = '1.0.0'
-    sourceCompatibility = '16'
-    targetCompatibility = '16'
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
 
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'org.springframework.boot'
@@ -85,11 +85,11 @@ configure(subprojects.findAll(it ->
         testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
         // Test utilities
-        testImplementation 'org.slf4j:slf4j-log4j12:1.7.30'
+//        testImplementation 'org.slf4j:slf4j-log4j12:1.7.30'
         testImplementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
-        testImplementation 'log4j:log4j:1.2.17'
-        testImplementation 'junit:junit:4.12'
-        testImplementation 'pl.pragmatists:JUnitParams:1.1.1'
+//        testImplementation 'log4j:log4j:1.2.17'
+//        testImplementation 'junit:junit:4.12'
+//        testImplementation 'pl.pragmatists:JUnitParams:1.1.1'
         testImplementation 'org.testng:testng:7.4.0'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
     }
@@ -113,7 +113,8 @@ configure(subprojects.findAll(it ->
         systemProperties = [
                 'spring.profiles.active'       : System.getProperty('SPRING_PROFILES_ACTIVE'),
                 'spring.application.name'      : System.getProperty('SPRING_APPLICATION_NAME'),
-                'RR_SSH_KEY_B64'               : System.getProperty('RR_SSH_KEY_B64')
+                'SL_GH_TOKEN'                  : System.getProperty('SL_GH_TOKEN'),
+                'SL_GH_USERNAME'               : System.getProperty('SL_GH_USERNAME')
         ]
         reports.html.required = true
         reports.junitXml.required = false
@@ -123,7 +124,8 @@ configure(subprojects.findAll(it ->
         systemProperties = [
                 'spring.profiles.active'       : System.getProperty('SPRING_PROFILES_ACTIVE'),
                 'spring.application.name'      : System.getProperty('SPRING_APPLICATION_NAME'),
-                'RR_SSH_KEY_B64'               : System.getProperty('RR_SSH_KEY_B64')
+                'SL_GH_TOKEN'                  : System.getProperty('SL_GH_TOKEN'),
+                'SL_GH_USERNAME'               : System.getProperty('SL_GH_USERNAME')
         ]
     }
 
