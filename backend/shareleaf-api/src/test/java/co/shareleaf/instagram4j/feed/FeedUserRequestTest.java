@@ -1,0 +1,34 @@
+package co.shareleaf.instagram4j.feed;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import co.shareleaf.instagram4j.IGClient;
+import co.shareleaf.instagram4j.exceptions.IGLoginException;
+import co.shareleaf.instagram4j.exceptions.IGResponseException;
+import co.shareleaf.instagram4j.requests.feed.FeedUserRequest;
+import co.shareleaf.instagram4j.responses.feed.FeedUserResponse;
+
+import lombok.extern.slf4j.Slf4j;
+import serialize.SerializeTestUtil;
+
+@Slf4j
+public class FeedUserRequestTest {
+    @Test
+    // Run SerializeTestUtil.serializeLogin first to generate saved sessions //
+    // 2336729204844097508_18428658
+    public void testFeedRequest()
+            throws IGResponseException, IGLoginException, ClassNotFoundException,
+            FileNotFoundException, IOException {
+        IGClient client = SerializeTestUtil.getClientFromSerialize("igclient.ser", "cookie.ser");
+        FeedUserRequest req = new FeedUserRequest(client.getSelfProfile().getPk());
+        FeedUserResponse response = client.sendRequest(req).join();
+        response.getItems().forEach(item -> {
+            log.debug("{} : {}", item.getId(), item.getClass().getName());
+        });
+        Assert.assertEquals("ok", response.getStatus());
+    }
+}

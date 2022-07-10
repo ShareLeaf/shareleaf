@@ -34,6 +34,10 @@ public class ScraperServiceImpl implements ScraperService {
                         log.info("About to process URL for Reddit with content ID {}: {}", contentId, url);
                         redditParser.processSoup(page.getWebResponse().getContentAsString(), url, contentId, client);
                         break;
+                    case INSTAGRAM:
+                        log.info("About to process URL for Instagram with content ID {}: {}", contentId, url);
+                        redditParser.processSoup(page.getWebResponse().getContentAsString(), url, contentId, client);
+                        break;
                     default:
                         break;
                 }

@@ -229,6 +229,7 @@ public class RedditIBaseParserService extends BaseParserService implements Parse
                                 // remove it. The content ID should be added as an alias
                                 // to the existing metadata
                                 log.warn("Content already exists for {}: ", permalink);
+                                // TODO: add a table to map aliases
                                 uniquePermalinks.remove(permalink);
                             } else {
                                 newEntity.setEncoding(mediaUrl.getEncoding());
