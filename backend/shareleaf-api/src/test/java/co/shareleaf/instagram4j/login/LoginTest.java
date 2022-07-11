@@ -14,11 +14,13 @@ import co.shareleaf.instagram4j.serialize.SerializeTestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.testng.AssertJUnit.assertNotNull;
 
+@Ignore
 @Slf4j
 @SpringBootTest(classes = ServiceTestConfiguration.class)
 public class LoginTest extends AbstractTestNGSpringContextTests {

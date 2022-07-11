@@ -31,8 +31,12 @@ import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class IGUtils {
+    private static SerializableCookieJar serializableCookieJar;
     private static final String BASE64URL_CHARMAP =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -40,6 +44,11 @@ public class IGUtils {
     static {
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         MAPPER.setSerializationInclusion(Include.NON_NULL);
+    }
+
+    @Autowired
+    public void setSerializableCookieJar(SerializableCookieJar serializableCookieJar) {
+        IGUtils.serializableCookieJar = serializableCookieJar;
     }
 
     private IGUtils() {}
@@ -214,7 +223,7 @@ public class IGUtils {
     }
 
     public static OkHttpClient.Builder defaultHttpClientBuilder() {
-        return new OkHttpClient.Builder().cookieJar(new SerializableCookieJar());
+        return new OkHttpClient.Builder().cookieJar(serializableCookieJar);
     }
 
     public static String randomUuid() {

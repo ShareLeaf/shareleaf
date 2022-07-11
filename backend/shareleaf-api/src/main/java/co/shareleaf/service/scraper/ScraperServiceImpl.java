@@ -1,5 +1,6 @@
 package co.shareleaf.service.scraper;
 
+import co.shareleaf.service.parser.InstagramParser;
 import co.shareleaf.service.parser.RedditParser;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -19,10 +20,12 @@ import java.net.URL;
 @RequiredArgsConstructor
 public class ScraperServiceImpl implements ScraperService {
     private final RedditParser redditParser;
+    private final InstagramParser instagramParser;
     private final ScraperUtils scraperUtils;
 
     @Override
     public boolean getContent(String contentId, String url) {
+        instagramParser.processSoup(null, url, contentId, null); // TODO: remove after testing
         try { // TODO: check that the content can be processed before scraping
             WebClient client = scraperUtils.getWebClient(Platform.REDDIT);
             HtmlPage page = client.getPage(url);
@@ -36,7 +39,7 @@ public class ScraperServiceImpl implements ScraperService {
                         break;
                     case INSTAGRAM:
                         log.info("About to process URL for Instagram with content ID {}: {}", contentId, url);
-                        redditParser.processSoup(page.getWebResponse().getContentAsString(), url, contentId, client);
+                        instagramParser.processSoup(page.getWebResponse().getContentAsString(), url, contentId, client);
                         break;
                     default:
                         break;
@@ -59,6 +62,9 @@ public class ScraperServiceImpl implements ScraperService {
         if (parsedUrl != null) {
             if (parsedUrl.getHost().toLowerCase().contains("reddit.com")) {
                 return Platform.REDDIT;
+            }
+            else if (parsedUrl.getHost().toLowerCase().contains("instagram.com")) {
+                return Platform.INSTAGRAM;
             }
         }
         return Platform.INSTAGRAM;

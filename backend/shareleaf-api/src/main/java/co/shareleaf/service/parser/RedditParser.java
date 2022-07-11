@@ -272,7 +272,8 @@ public class RedditParser extends BaseParserService implements ParserService {
                     it.setCanonicalUrl(permalink);
                     it.setUpdatedDt(LocalDateTime.now());
                     return metadataRepo.save(it);
-                }).subscribeOn(Schedulers.boundedElastic())
+                })
+                .subscribeOn(Schedulers.boundedElastic())
                 .subscribe();
     }
 

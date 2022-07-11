@@ -14,6 +14,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.jackson.nullable.JsonNullableModule;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -39,13 +40,13 @@ import java.time.OffsetDateTime;
 })
 @RequiredArgsConstructor
 public class RootConfiguration {
-    private final FlywayMigration flywayMigration;
 
-    @PostConstruct
-    public void onApplicationStart() {
+    @Bean
+    @Qualifier("db-migration")
+    public boolean dbMigration(FlywayMigration flywayMigration) {
         flywayMigration.migrate(false)
-                .subscribeOn(Schedulers.boundedElastic())
-                .subscribe();
+                .block();
+        return true;
     }
 
     @Bean

@@ -5,6 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import java.util.Base64;
+
 /**
  * @author Bizuwork Melesse
  * created on 2/13/21
@@ -17,10 +19,14 @@ public class InstagramProps {
     private String pair;
 
     public String getUsername() {
-        return pair.split(":")[0];
+        return decode().split(":")[0];
     }
 
     public String getPassword() {
-        return pair.split(":")[1];
+        return decode().split(":")[1];
+    }
+
+    private String decode() {
+        return new String(Base64.getDecoder().decode(pair));
     }
 }
