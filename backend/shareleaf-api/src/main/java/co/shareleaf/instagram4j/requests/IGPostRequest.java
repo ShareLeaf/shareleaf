@@ -25,7 +25,6 @@ public abstract class IGPostRequest<T extends IGResponse> extends IGRequest<T> {
         Request.Builder req = new Request.Builder().url(this.formUrl(client));
         this.applyHeaders(client, req);
         req.post(this.getRequestBody(client));
-
         return req.build();
     }
 

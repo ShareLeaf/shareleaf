@@ -115,14 +115,13 @@ public class IGClient implements Serializable {
                         identifier).execute(this))
                 .thenApply((res) -> {
                     this.setLoggedInState(res);
-
                     return res;
                 });
     }
 
     public <T extends IGResponse> CompletableFuture<T> sendRequest(@NonNull IGRequest<T> req) {
         CompletableFuture<Pair<Response, String>> responseFuture = new CompletableFuture<>();
-        log.info("Sending request : {}", req.formUrl(this).toString());
+        log.info("Sending request : {} {}", req.formRequest(this).method(), req.formUrl(this).toString());
         this.httpClient.newCall(req.formRequest(this)).enqueue(new Callback() {
 
             @Override
@@ -132,7 +131,7 @@ public class IGClient implements Serializable {
 
             @Override
             public void onResponse(Call call, Response res) throws IOException {
-                log.info("Response for {} : {}", call.request().url().toString(), res.code());
+                log.info("Response for {} {} : {}", call.request().method(), call.request().url().toString(), res.code());
                 try (ResponseBody body = res.body()) {
                     responseFuture.complete(new Pair<>(res, body.string()));
                 }

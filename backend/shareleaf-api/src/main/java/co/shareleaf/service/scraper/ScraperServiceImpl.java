@@ -59,10 +59,10 @@ public class ScraperServiceImpl implements ScraperService {
             e.printStackTrace();
         }
         if (parsedUrl != null) {
-            if (parsedUrl.getHost().toLowerCase().contains("reddit.com")) {
+            if (parsedUrl.getHost().toLowerCase().contains("reddit")) {
                 return Platform.REDDIT;
             }
-            else if (parsedUrl.getHost().toLowerCase().contains("instagram.com")) {
+            else if (parsedUrl.getHost().toLowerCase().contains("instagram")) {
                 return Platform.INSTAGRAM;
             }
         }

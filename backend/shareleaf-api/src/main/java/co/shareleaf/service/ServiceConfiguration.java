@@ -102,7 +102,6 @@ public class ServiceConfiguration {
     }
 
     private boolean loadFromFile() throws IOException {
-        Map<String, CookieJarEntity> cookieJarEntityMap = new HashMap<>();
         File file = ResourceUtils.getFile("classpath:cookies/" + "instagram.json");
         String json = new String(Files.readAllBytes(file.toPath()));
         TypeReference<Map<String,List<JsonNode>>> typeRef = new TypeReference<>() {};
