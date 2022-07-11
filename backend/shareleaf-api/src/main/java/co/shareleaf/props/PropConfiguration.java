@@ -19,7 +19,8 @@ import org.springframework.context.annotation.Configuration;
         FlywayMigrationProps.class,
         SourceProps.class,
         SwaggerUIProps.class,
-        WebsiteProps.class
+        WebsiteProps.class,
+        InstagramProps.class
 })
 public class PropConfiguration {
 }

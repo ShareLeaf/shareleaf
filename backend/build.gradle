@@ -42,8 +42,8 @@ configure(subprojects.findAll(it ->
 )) {
     group = 'co.shareleaf'
     version = '1.0.0'
-    sourceCompatibility = '16'
-    targetCompatibility = '16'
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
 
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'org.springframework.boot'
@@ -54,6 +54,8 @@ configure(subprojects.findAll(it ->
     apply plugin: 'io.swagger.core.v3.swagger-gradle-plugin'
 
     dependencies {
+        implementation 'com.squareup.okhttp3:okhttp:4.7.2'
+        implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.7.2'
         implementation 'org.jsoup:jsoup:1.15.1'
         implementation 'net.sourceforge.htmlunit:htmlunit:2.62.0'
         implementation 'org.seleniumhq.selenium:selenium-java:4.2.2'
@@ -75,6 +77,9 @@ configure(subprojects.findAll(it ->
         annotationProcessor 'org.projectlombok:lombok:1.18.22'
         testCompileOnly 'org.projectlombok:lombok:1.18.22'
         testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+        // Test utilities
+        testImplementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
         testImplementation 'org.testng:testng:7.4.0'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
     }
@@ -98,7 +103,8 @@ configure(subprojects.findAll(it ->
         systemProperties = [
                 'spring.profiles.active'       : System.getProperty('SPRING_PROFILES_ACTIVE'),
                 'spring.application.name'      : System.getProperty('SPRING_APPLICATION_NAME'),
-                'RR_SSH_KEY_B64'               : System.getProperty('RR_SSH_KEY_B64')
+                'SL_GH_TOKEN'                  : System.getProperty('SL_GH_TOKEN'),
+                'SL_GH_USERNAME'               : System.getProperty('SL_GH_USERNAME')
         ]
         reports.html.required = true
         reports.junitXml.required = false
@@ -108,7 +114,8 @@ configure(subprojects.findAll(it ->
         systemProperties = [
                 'spring.profiles.active'       : System.getProperty('SPRING_PROFILES_ACTIVE'),
                 'spring.application.name'      : System.getProperty('SPRING_APPLICATION_NAME'),
-                'RR_SSH_KEY_B64'               : System.getProperty('RR_SSH_KEY_B64')
+                'SL_GH_TOKEN'                  : System.getProperty('SL_GH_TOKEN'),
+                'SL_GH_USERNAME'               : System.getProperty('SL_GH_USERNAME')
         ]
     }
 

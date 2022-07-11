@@ -12,7 +12,8 @@ public interface ParserService {
 
     /**
      * Keep track of unique content URLs that are being processed within the same request
-     * session.
+     * session. If link that is currently being processed gets removed from this
+     * map, then downstream processes will abort.
      */
     ConcurrentHashMap<String, Boolean> uniquePermalinks = new ConcurrentHashMap<>();
 

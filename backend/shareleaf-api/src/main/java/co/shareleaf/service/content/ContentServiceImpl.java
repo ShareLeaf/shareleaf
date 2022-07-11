@@ -2,12 +2,15 @@ package co.shareleaf.service.content;
 
 import co.shareleaf.data.postgres.entity.MetadataEntity;
 import co.shareleaf.data.postgres.repo.MetadataRepo;
+import co.shareleaf.instagram4j.IGClient;
 import co.shareleaf.model.*;
 import co.shareleaf.props.AWSProps;
 import co.shareleaf.props.WebsiteProps;
 import co.shareleaf.service.aws.S3Service;
 import co.shareleaf.service.parser.BaseParserService;
 import co.shareleaf.service.scraper.ScraperService;
+import co.shareleaf.service.scraper.ScraperUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,18 +30,24 @@ import java.util.Random;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class ContentServiceImpl extends BaseParserService implements ContentService {
-    private final MetadataRepo metadataRepo;
-    private final AWSProps awsProps;
     private final WebsiteProps websiteProps;
     private final ScraperService scraperService;
-    private final S3Service s3Service;
-    
+
+    public ContentServiceImpl(ObjectMapper objectMapper,
+                              MetadataRepo metadataRepo,
+                              S3Service s3Service,
+                              AWSProps awsProps,
+                              ScraperUtils scraperUtils,
+                              IGClient igClient,
+                              WebsiteProps websiteProps,
+                              ScraperService scraperService) {
+        super(objectMapper, metadataRepo, s3Service, awsProps, scraperUtils, igClient);
+        this.websiteProps = websiteProps;
+        this.scraperService = scraperService;
+    }
+
     public Mono<SLContentMetadata> generateContentId(SLContentUrl url) {
-        // TODO: delete after testing
-//        processUrl(url.getUrl()).map(it -> true);
-        // TODO: end delete
         if (isValidUrl(url)) {
             // If a record exist, return its content id. Otherwise,
             // create a new record and kick off the crawling
