@@ -21,19 +21,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.ResourceUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -47,6 +49,7 @@ import java.util.Map;
  * created on 2/13/21
  *
  */
+@Slf4j
 @Configuration
 @ComponentScan
 @RequiredArgsConstructor
@@ -83,6 +86,7 @@ public class ServiceConfiguration {
                     .password(instagramProps.getPassword())
                     .simulatedLogin();
             }
+            log.info("Instagram cookies have been loaded");
             return IGClient.builder().build();
         }
         throw new BeanCreationException("Failed to create igClient bean because DB migration has not happened yet");
@@ -102,54 +106,57 @@ public class ServiceConfiguration {
     }
 
     private boolean loadFromFile() throws IOException {
-        File file = ResourceUtils.getFile("classpath:cookies/" + "instagram.json");
-        String json = new String(Files.readAllBytes(file.toPath()));
-        TypeReference<Map<String,List<JsonNode>>> typeRef = new TypeReference<>() {};
-        Map<String,List<JsonNode>> cookieFile = mapper.readValue(json, typeRef);
         List<CookieJarEntity> allCookies = new ArrayList<>();
-        for (Map.Entry<String,List<JsonNode>> entry : cookieFile.entrySet()) {
-            String host = entry.getKey();
-            Map<String, CookieJarEntity> uniqueCookies = new HashMap<>();
-            for (JsonNode cookie : entry.getValue()) {
-                CookieJarEntity entity = new CookieJarEntity();
-                entity.setKey(host);
-                entity.setName(cookie.get("name").asText());
-                entity.setPath(cookie.get("path").asText());
-                entity.setDomain(cookie.get("domain").asText());
-                entity.setValue(cookie.get("value").asText());
-                entity.setUsername(instagramProps.getUsername());
-                entity.setHostOnly(cookie.get("hostOnly").asBoolean());
-                entity.setHttpOnly(cookie.get("httpOnly").asBoolean());
-                entity.setPersistent(cookie.get("persistent").asBoolean());
-                entity.setSecure(cookie.get("secure").asBoolean());
-                entity.setExpiresAt(cookie.get("expiresAt").asLong());
-                uniqueCookies.put(entity.getName(), entity);
+        InputStream resource = new ClassPathResource("cookies/instagram.json").getInputStream();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource)) ) {
+            String json = FileCopyUtils.copyToString(reader);
+            TypeReference<Map<String, List<JsonNode>>> typeRef = new TypeReference<>() {
+            };
+            Map<String, List<JsonNode>> cookieFile = mapper.readValue(json, typeRef);
+            for (Map.Entry<String, List<JsonNode>> entry : cookieFile.entrySet()) {
+                String host = entry.getKey();
+                Map<String, CookieJarEntity> uniqueCookies = new HashMap<>();
+                for (JsonNode cookie : entry.getValue()) {
+                    CookieJarEntity entity = new CookieJarEntity();
+                    entity.setKey(host);
+                    entity.setName(cookie.get("name").asText());
+                    entity.setPath(cookie.get("path").asText());
+                    entity.setDomain(cookie.get("domain").asText());
+                    entity.setValue(cookie.get("value").asText());
+                    entity.setUsername(instagramProps.getUsername());
+                    entity.setHostOnly(cookie.get("hostOnly").asBoolean());
+                    entity.setHttpOnly(cookie.get("httpOnly").asBoolean());
+                    entity.setPersistent(cookie.get("persistent").asBoolean());
+                    entity.setSecure(cookie.get("secure").asBoolean());
+                    entity.setExpiresAt(cookie.get("expiresAt").asLong());
+                    uniqueCookies.put(entity.getName(), entity);
+                }
+                allCookies.addAll(uniqueCookies.values());
             }
-            allCookies.addAll(uniqueCookies.values());
-        }
 
-        // Fetch any existing cookies from the database and update duplicates
-        List<CookieJarEntity> cookieJarEntities = cookieJarRepo
-                .findCookiesByUrls(instagramProps.getUsername(), urls)
-                .collectList()
-                .block();
-        Map<String, CookieJarEntity> existingEntityMap = new HashMap<>();
-        if (!ObjectUtils.isEmpty(cookieJarEntities)) {
-            for (CookieJarEntity cookieJarEntity : cookieJarEntities) {
-                existingEntityMap.put(cookieJarEntity.getName(), cookieJarEntity);
+            // Fetch any existing cookies from the database and update duplicates
+            List<CookieJarEntity> cookieJarEntities = cookieJarRepo
+                    .findCookiesByUrls(instagramProps.getUsername(), urls)
+                    .collectList()
+                    .block();
+            Map<String, CookieJarEntity> existingEntityMap = new HashMap<>();
+            if (!ObjectUtils.isEmpty(cookieJarEntities)) {
+                for (CookieJarEntity cookieJarEntity : cookieJarEntities) {
+                    existingEntityMap.put(cookieJarEntity.getName(), cookieJarEntity);
+                }
             }
-        }
-        List<CookieJarEntity> newCookies = new ArrayList<>();
-        for (CookieJarEntity newCookie : allCookies) {
-            if (!existingEntityMap.containsKey(newCookie.getName())) {
-                newCookies.add(newCookie);
+            List<CookieJarEntity> newCookies = new ArrayList<>();
+            for (CookieJarEntity newCookie : allCookies) {
+                if (!existingEntityMap.containsKey(newCookie.getName())) {
+                    newCookies.add(newCookie);
+                }
             }
+            // Only add cookies that are not already in the database
+            cookieJarRepo.saveAll(newCookies)
+                    .collectList()
+                    .block();
+            allCookies.addAll(newCookies);
         }
-        // Only add cookies that are not already in the database
-        cookieJarRepo.saveAll(newCookies)
-                .collectList()
-                .block();
-        allCookies.addAll(newCookies);
         return expiredCsrfToken(allCookies);
     }
 
