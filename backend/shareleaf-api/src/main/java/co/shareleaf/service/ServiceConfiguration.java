@@ -6,6 +6,7 @@ import co.shareleaf.data.postgres.entity.MetadataEntity;
 import co.shareleaf.data.postgres.repo.CookieJarRepo;
 import co.shareleaf.instagram4j.IGClient;
 import co.shareleaf.instagram4j.exceptions.IGLoginException;
+import co.shareleaf.instagram4j.utils.IGUtils;
 import co.shareleaf.instagram4j.utils.SerializableCookieJar;
 import co.shareleaf.props.AWSProps;
 import co.shareleaf.props.InstagramProps;
@@ -73,7 +74,8 @@ public class ServiceConfiguration {
     }
 
     @Bean
-    public IGClient igClient(@Qualifier("db-migration") Boolean dbMigrated) throws IOException {
+    public IGClient igClient(@Qualifier("db-migration") Boolean dbMigrated, SerializableCookieJar cookieJar) throws IOException {
+        IGUtils.serializableCookieJar = cookieJar;
         if (dbMigrated) {
             if (doLogin()) {
             return IGClient.builder()

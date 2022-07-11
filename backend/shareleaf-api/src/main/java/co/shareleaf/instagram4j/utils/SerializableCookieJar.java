@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import co.shareleaf.data.postgres.repo.CookieJarRepo;
 import co.shareleaf.props.InstagramProps;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
@@ -26,6 +28,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+@Slf4j
 @Service
 public class SerializableCookieJar implements CookieJar, Serializable {
     private CookieJarRepo cookieJarRepo;
@@ -42,8 +45,6 @@ public class SerializableCookieJar implements CookieJar, Serializable {
     }
 
     private static final long serialVersionUID = -837498359387593793l;
-
-    Map<String, List<SerializableCookie>> map = new HashMap<>();
 
     @NotNull
     @Override
@@ -74,18 +75,14 @@ public class SerializableCookieJar implements CookieJar, Serializable {
             }
             return builder.build();
         }).collect(Collectors.toList());
-
-//        return map.getOrDefault(url.host(), new ArrayList<SerializableCookie>()).stream()
-//                .map(c -> c.cookie)
-//                .collect(Collectors.toList());
     }
 
     @Override
-    public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+    public void saveFromResponse(HttpUrl url, @NotNull List<Cookie> cookies) {
         // Fetch the current cookies for the host and upsert values
         cookieJarRepo.findCookies(url.host(), instagramProps.getUsername())
                 .collectList()
-                .map(it -> {
+                .flatMap(it -> {
                     Map<String, CookieJarEntity> cookieEntities = new HashMap<>();
                     for (CookieJarEntity cookieJarEntity : it) {
                         cookieEntities.put(cookieJarEntity.getName(), cookieJarEntity);
@@ -94,27 +91,23 @@ public class SerializableCookieJar implements CookieJar, Serializable {
                         if (cookieEntities.containsKey(c.name())) {
                             CookieJarEntity existingCookie = cookieEntities.get(c.name());
                             mapCookieToEntity(url, existingCookie, c);
-                            existingCookie.setUpdatedDt(LocalDateTime.now());
+                            existingCookie.setUpdatedDt(LocalDateTime.now(ZoneId.of("UTC")));
                         } else {
                             CookieJarEntity jarEntity = new CookieJarEntity();
                             mapCookieToEntity(url, jarEntity, c);
                             cookieEntities.put(c.name(), jarEntity);
                         }
                     }
-                    return cookieJarRepo.saveAll(cookieEntities.values());
+                    log.info("Updating cookies for {}", url.host());
+                    return cookieJarRepo.saveAll(cookieEntities.values())
+                            .collectList();
                 })
                 .subscribeOn(Schedulers.boundedElastic())
                 .subscribe();
-
-
-//        List<SerializableCookie> list =
-//                cookies.stream().map(SerializableCookie::new).collect(Collectors.toList());
-//        if (map.putIfAbsent(url.host(), list) != null) {
-//            map.get(url.host()).addAll(list);
-//        }
     }
 
     private void mapCookieToEntity(HttpUrl url, CookieJarEntity jarEntity, Cookie c) {
+        jarEntity.setId(jarEntity.getId());
         jarEntity.setKey(url.host());
         jarEntity.setPath(c.path());
         jarEntity.setName(c.name());

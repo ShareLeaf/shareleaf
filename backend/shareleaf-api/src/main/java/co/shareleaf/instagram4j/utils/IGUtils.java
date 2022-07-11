@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import co.shareleaf.instagram4j.IGConstants;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
@@ -34,9 +35,8 @@ import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
 public class IGUtils {
-    private static SerializableCookieJar serializableCookieJar;
+    public static SerializableCookieJar serializableCookieJar;
     private static final String BASE64URL_CHARMAP =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -46,10 +46,10 @@ public class IGUtils {
         MAPPER.setSerializationInclusion(Include.NON_NULL);
     }
 
-    @Autowired
-    public void setSerializableCookieJar(SerializableCookieJar serializableCookieJar) {
-        IGUtils.serializableCookieJar = serializableCookieJar;
-    }
+//    @Autowired
+//    public void setSerializableCookieJar(SerializableCookieJar serializableCookieJar) {
+//        IGUtils.serializableCookieJar = serializableCookieJar;
+//    }
 
     private IGUtils() {}
 

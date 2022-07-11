@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class ScraperUtils {
     private final ErrorListener errorListener;
 
-    public WebClient getWebClient(Platform platform) {
+    public WebClient getWebClient() {
         WebClient webClient = new WebClient();
         webClient.getOptions().setCssEnabled(false);
         webClient.getOptions().setJavaScriptEnabled(false);

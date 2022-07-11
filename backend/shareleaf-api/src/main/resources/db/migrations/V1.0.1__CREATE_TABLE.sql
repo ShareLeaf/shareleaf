@@ -12,8 +12,7 @@ CREATE TABLE IF NOT EXISTS public.cookie_jar (
     c_secure boolean,
     c_expires_at bigint,
     updated_dt timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_dt timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(c_name)
+    created_dt timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 ALTER TABLE public.cookie_jar OWNER TO shareleaf;
 comment on table public.cookie_jar is 'Persists request cookies';

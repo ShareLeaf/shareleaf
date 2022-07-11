@@ -26,12 +26,7 @@ import co.shareleaf.instagram4j.utils.IGUtils;
 import co.shareleaf.instagram4j.utils.SerializableCookieJar;
 import co.shareleaf.instagram4j.utils.SerializeUtil;
 import kotlin.Pair;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Call;
@@ -41,8 +36,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-@Data
 @Slf4j
+@Getter
+@Setter
 public class IGClient implements Serializable {
     private static final long serialVersionUID = -893265874836l;
     private final String $username;
