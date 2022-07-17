@@ -81,18 +81,17 @@ public class ServiceConfiguration {
     @Bean
     public IGClient igClient(@Qualifier("db-migration") Boolean dbMigrated, SerializableCookieJar cookieJar) throws IOException {
         IGUtils.serializableCookieJar = cookieJar;
-//        return IGClient.builder().build();
-////        if (dbMigrated) {
-////            if (doLogin()) {
+        if (dbMigrated) {
+            if (doLogin()) {
             return IGClient.builder()
                     .username(instagramProps.getUsername())
                     .password(instagramProps.getPassword()).build();
 //                    .login();
-////            }
-//            log.info("Instagram cookies have been loaded");
-//            return IGClient.builder().build();
-//        }
-//        throw new BeanCreationException("Failed to create igClient bean because DB migration has not happened yet");
+            }
+            log.info("Instagram cookies have been loaded");
+            return IGClient.builder().build();
+        }
+        throw new BeanCreationException("Failed to create igClient bean because DB migration has not happened yet");
     }
 
     private boolean doLogin() throws IOException {
@@ -104,21 +103,19 @@ public class ServiceConfiguration {
                 .block();
 
         // If the session ID is set to an empty string or
-//        boolean emptySessionId = false;
-//
-//        if (!ObjectUtils.isEmpty(cookieJarEntities)) {
-//            for (CookieJarEntity c : cookieJarEntities) {
-//                String value = c.getValue().replace("\"", "").strip();
-//                if (c.getName().equalsIgnoreCase("sessionid") &&
-//                        ObjectUtils.isEmpty(value)) {
-//                    emptySessionId = true;
-//                }
-//            }
-//        }
-//        if (ObjectUtils.isEmpty(cookieJarEntities) || emptySessionId) {
-//            return loadFromFile();
-//        }
-        if (cookieJarEntities == null) return true;
+        boolean emptySessionId = false;
+        if (!ObjectUtils.isEmpty(cookieJarEntities)) {
+            for (CookieJarEntity c : cookieJarEntities) {
+                String value = c.getValue().replace("\"", "").strip();
+                if (c.getName().equalsIgnoreCase("sessionid") &&
+                        ObjectUtils.isEmpty(value)) {
+                    emptySessionId = true;
+                }
+            }
+        }
+        if (ObjectUtils.isEmpty(cookieJarEntities) || emptySessionId) {
+            return loadFromFile();
+        }
         return expiredCsrfToken(cookieJarEntities);
     }
 

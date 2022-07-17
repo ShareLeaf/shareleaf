@@ -17,6 +17,10 @@ import java.util.Base64;
 @ConfigurationProperties(prefix = "instagram")
 public class InstagramProps {
     private String pair;
+    private String sessionId;
+    private String androidUserAgent;
+    private String iosUserAgent;
+    private String webUserAgent;
 
     public String getUsername() {
         return decode().split(":")[0];
