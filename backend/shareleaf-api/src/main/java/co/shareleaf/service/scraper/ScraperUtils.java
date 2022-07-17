@@ -32,7 +32,7 @@ public class ScraperUtils {
         String sessionName = "sessionid";
         webClient.getCookieManager().addCookie(new Cookie("www.instagram.com", sessionName, instagramProps.getSessionId()));
         webClient.getCookieManager().addCookie(new Cookie("i.instagram.com", sessionName, instagramProps.getSessionId()));
-        webClient.addRequestHeader("user-agent", instagramProps.getIosUserAgent());
+        webClient.addRequestHeader("user-agent", instagramProps.getWebUserAgent());
         webClient.addRequestHeader("pragma", "no-cache");
         webClient.addRequestHeader("cache-control", "no-cache");
         return webClient;

@@ -3,6 +3,7 @@ package co.shareleaf.service.parser;
 import co.shareleaf.data.postgres.repo.MetadataRepo;
 import co.shareleaf.instagram4j.IGClient;
 import co.shareleaf.props.AWSProps;
+import co.shareleaf.props.InstagramProps;
 import co.shareleaf.service.aws.S3Service;
 import co.shareleaf.service.scraper.ScraperUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,14 +34,16 @@ import java.util.regex.Pattern;
 @Slf4j
 @Service
 public class InstagramParser extends BaseParserService implements ParserService {
-
+    private final InstagramProps instagramProps;
     public InstagramParser(ObjectMapper objectMapper,
                            MetadataRepo metadataRepo,
                            S3Service s3Service,
                            AWSProps awsProps,
                            ScraperUtils scraperUtils,
-                           IGClient igClient) {
+                           IGClient igClient,
+                           InstagramProps instagramProps) {
         super(objectMapper, metadataRepo, s3Service, awsProps, scraperUtils, igClient);
+        this.instagramProps = instagramProps;
     }
 
     @Override
@@ -80,7 +83,6 @@ public class InstagramParser extends BaseParserService implements ParserService 
                 updateInvalidUrl(contentId, url);
             }
         }
-
     }
 
     private MediaMetadata parseFromMediaResponse(String soup, WebClient client, String contentId, String url) {
@@ -96,6 +98,7 @@ public class InstagramParser extends BaseParserService implements ParserService 
             if (node != null) {
                 mediaId = node.get("media_id").asText().replace("\"", "").strip();
                 String mediaUrl = String.format("https://i.instagram.com/api/v1/media/%s/info/", mediaId);
+                client.addRequestHeader("user-agent", instagramProps.getAndroidUserAgent());
                 var response = client.getPage(mediaUrl).getWebResponse().getContentAsString();
                 var responseNode = objectMapper.readValue(response, JsonNode.class);
                 JsonNode items = responseNode.get("items").get(0);
