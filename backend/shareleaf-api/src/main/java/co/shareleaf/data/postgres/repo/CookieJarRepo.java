@@ -21,6 +21,15 @@ public interface CookieJarRepo extends ReactiveCrudRepository<CookieJarEntity, L
     @Query("select * from cookie_jar where c_key = :url and c_username = :username")
     Flux<CookieJarEntity> findCookies(String url, String username);
 
+    @Query("select * from cookie_jar where c_key = :url")
+    Flux<CookieJarEntity> findCookies(String url);
+
+    @Query("select * from cookie_jar order by updated_dt desc")
+    Flux<CookieJarEntity> findAll();
+
+    @Query("select * from cookie_jar where c_name = 'sessionid' order by updated_dt desc")
+    Flux<CookieJarEntity> findSessionId();
+
     @Query("select * from cookie_jar where c_username = :username and c_key in (:urls)")
     Flux<CookieJarEntity> findCookiesByUrls(String username, List<String> urls);
 }

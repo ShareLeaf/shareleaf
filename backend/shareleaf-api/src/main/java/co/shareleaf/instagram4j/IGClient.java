@@ -43,7 +43,7 @@ public class IGClient implements Serializable {
     private static final long serialVersionUID = -893265874836l;
     private final String $username;
     private final String $password;
-    private transient String encryptionId, encryptionKey, authorization;
+    private transient String encryptionId = "131", encryptionKey = "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUE5dVdOWjYrY2V3ODBrcXpCeEloWApHOEdFR2JlQmwxcVFhYnZwWHpCSjRRdjFlbTdwOHNaL3FjejFwS01xSlY1eExFSnRZOEl6L2lES2o0RXc5WWJJCnFCME80cWQwWXNiNXFIRTI1bys5Nko1K2dlQUFBQWhqWlU5K0NvZGZBR004aTZyTVRLYWJCaWpjbno1U1VHM0wKMkdLZ20rdThDMnNMcWpSV05NM1BPOE1aZE1TS1l3eWlyNFVTTHQreHNQQWlPaGhXSVQveHNNT0lQbnVONnljVApLdFhBVDAvWTlFQk05MG5WcG5jKytmbU1kRytUVzduMXF2QmN2VVRmTlJKNVhuRTlTREtrQUVkeEg5QU4wcjdRCmdLb0l4cnljRlZxdTdMcE0zNWdYRmZraDNYNnI4RDZQMU50RCtZTWpHNmlqWDJUMDM3eDhtMGcrS3FZTFNwZDMKQVFJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==", authorization;
     @Accessors(chain = true)
     private transient OkHttpClient httpClient;
     private transient String sessionId;
