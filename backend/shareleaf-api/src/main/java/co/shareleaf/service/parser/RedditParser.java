@@ -55,28 +55,28 @@ public class RedditParser extends BaseParserService implements ParserService {
             if (json != null) {
                 JsonNode jsonNode = objectMapper.readValue(json, JsonNode.class);
                 JsonNode postNode = jsonNode.get("posts").get("models").get(postId);
-                MediaUrl mediaUrl = parseUrls(postNode);
+                MediaMetadata mediaMetadata = parseUrls(postNode);
                 String title = postNode.get("title").asText();
                 String permalink = postNode.get("permalink").asText();
-                if (mediaUrl == null) {
+                if (mediaMetadata == null) {
                     updateInvalidUrl(contentId, permalink);
                 } else {
                     uniquePermalinks.put(permalink, true);
-                    updateMetadata(contentId, title, permalink, mediaUrl);
+                    updateMetadata(contentId, title, permalink, mediaMetadata);
                     List<Mono<Boolean>> tasks = new ArrayList<>();
-                    if (!ObjectUtils.isEmpty(mediaUrl.getAudioUrl())) {
-                        tasks.add(downloadContent(contentId, permalink, mediaUrl.getAudioUrl(), AUDIO));
+                    if (!ObjectUtils.isEmpty(mediaMetadata.getAudioUrl())) {
+                        tasks.add(downloadContent(contentId, permalink, mediaMetadata.getAudioUrl(), AUDIO));
                     }
-                    if (!ObjectUtils.isEmpty(mediaUrl.getImageUrl())) {
-                        tasks.add(downloadContent(contentId, permalink, mediaUrl.getImageUrl(), IMAGE));
+                    if (!ObjectUtils.isEmpty(mediaMetadata.getImageUrl())) {
+                        tasks.add(downloadContent(contentId, permalink, mediaMetadata.getImageUrl(), IMAGE));
                     }
-                    if (!ObjectUtils.isEmpty(mediaUrl.getVideoUrl())) {
-                        tasks.add(downloadContent(contentId, permalink, mediaUrl.getVideoUrl(), VIDEO));
+                    if (!ObjectUtils.isEmpty(mediaMetadata.getVideoUrl())) {
+                        tasks.add(downloadContent(contentId, permalink, mediaMetadata.getVideoUrl(), VIDEO));
                     }
-                    if (!ObjectUtils.isEmpty(mediaUrl.getGifUrl())) {
-                        tasks.add(downloadContent(contentId, permalink, mediaUrl.getGifUrl(), VIDEO));
+                    if (!ObjectUtils.isEmpty(mediaMetadata.getGifUrl())) {
+                        tasks.add(downloadContent(contentId, permalink, mediaMetadata.getGifUrl(), VIDEO));
                     }
-                    submitTasks(tasks, mediaUrl, contentId, permalink);
+                    submitTasks(tasks, mediaMetadata, contentId, permalink);
                 }
             }
         } catch (Exception e) {
@@ -85,7 +85,7 @@ public class RedditParser extends BaseParserService implements ParserService {
         }
     }
 
-    private MediaUrl parseUrls(JsonNode postNode) {
+    private MediaMetadata parseUrls(JsonNode postNode) {
         String parsedMediaType = getMediaType(postNode);
         JsonNode mediaNode = postNode.get("media");
         boolean isGif = false;
@@ -136,7 +136,7 @@ public class RedditParser extends BaseParserService implements ParserService {
                 audioUrl = "";
             }
         }
-        return new MediaUrl(imageUrl, gifUrl, videoUrl, audioUrl, dbMediaType, encoding);
+        return new MediaMetadata(imageUrl, gifUrl, videoUrl, audioUrl, dbMediaType, encoding, null);
     }
 
     private String getMediaType(JsonNode postNode) {

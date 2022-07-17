@@ -6,10 +6,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import co.shareleaf.data.postgres.entity.CookieJarEntity;
@@ -24,6 +21,7 @@ import okhttp3.HttpUrl;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -88,6 +86,12 @@ public class SerializableCookieJar implements CookieJar, Serializable {
                         cookieEntities.put(cookieJarEntity.getName(), cookieJarEntity);
                     }
                     for (Cookie c : cookies) {
+                        log.info("Cookie - {}: {} exp: {}", c.name(), c.value(), c.expiresAt());
+                        if (c.name().toLowerCase().equals("sessionid") && ObjectUtils.isEmpty(c.value())) {
+                            // do not update the session ID if it has been stripped from the response
+                            // header
+                            return Mono.just(new ArrayList<>());
+                        }
                         if (cookieEntities.containsKey(c.name())) {
                             CookieJarEntity existingCookie = cookieEntities.get(c.name());
                             mapCookieToEntity(url, existingCookie, c);

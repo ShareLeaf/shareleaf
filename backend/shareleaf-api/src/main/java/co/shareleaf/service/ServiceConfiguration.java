@@ -60,7 +60,9 @@ public class ServiceConfiguration {
     private final ObjectMapper mapper;
     private final  List<String> urls = List.of(
             "b.i.instagram.com",
-            "i.instagram.com"
+            "i.instagram.com",
+            "www.instagram.com",
+            "instagram.com"
     );
 
     @Bean
@@ -83,8 +85,8 @@ public class ServiceConfiguration {
             if (doLogin()) {
             return IGClient.builder()
                     .username(instagramProps.getUsername())
-                    .password(instagramProps.getPassword())
-                    .simulatedLogin();
+                    .password(instagramProps.getPassword()).build();
+//                    .login();
             }
             log.info("Instagram cookies have been loaded");
             return IGClient.builder().build();
@@ -99,7 +101,19 @@ public class ServiceConfiguration {
                 .findCookiesByUrls(instagramProps.getUsername(), urls)
                 .collectList()
                 .block();
-        if (ObjectUtils.isEmpty(cookieJarEntities)) {
+
+        // If the session ID is set to an empty string or
+        boolean emptySessionId = false;
+        if (!ObjectUtils.isEmpty(cookieJarEntities)) {
+            for (CookieJarEntity c : cookieJarEntities) {
+                String value = c.getValue().replace("\"", "").strip();
+                if (c.getName().equalsIgnoreCase("sessionid") &&
+                        ObjectUtils.isEmpty(value)) {
+                    emptySessionId = true;
+                }
+            }
+        }
+        if (ObjectUtils.isEmpty(cookieJarEntities) || emptySessionId) {
             return loadFromFile();
         }
         return expiredCsrfToken(cookieJarEntities);

@@ -1,7 +1,9 @@
 package co.shareleaf.service.scraper;
 
+import co.shareleaf.props.InstagramProps;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.util.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ScraperUtils {
     private final ErrorListener errorListener;
+    private final InstagramProps instagramProps;
 
     public WebClient getWebClient() {
         WebClient webClient = new WebClient();
@@ -24,11 +27,14 @@ public class ScraperUtils {
         webClient.getOptions().setPrintContentOnFailingStatusCode(false);
         webClient.setAjaxController(new NicelyResynchronizingAjaxController());
         webClient.getOptions().setTimeout(60000);
-        webClient.addRequestHeader("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36");
+        webClient.setJavaScriptErrorListener(errorListener.javaScriptErrorListener());
+
+        String sessionName = "sessionid";
+        webClient.getCookieManager().addCookie(new Cookie("www.instagram.com", sessionName, instagramProps.getSessionId()));
+        webClient.getCookieManager().addCookie(new Cookie("i.instagram.com", sessionName, instagramProps.getSessionId()));
+        webClient.addRequestHeader("user-agent", instagramProps.getWebUserAgent());
         webClient.addRequestHeader("pragma", "no-cache");
         webClient.addRequestHeader("cache-control", "no-cache");
-        webClient.addRequestHeader("sec-ch-ua-platform", "macOS");
-        webClient.setJavaScriptErrorListener(errorListener.javaScriptErrorListener());
         return webClient;
     }
 }

@@ -9,11 +9,12 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class MediaUrl {
+public class MediaMetadata {
     private String imageUrl;
     private String gifUrl;
     private String videoUrl;
     private String audioUrl;
     private String mediaType;
     private String encoding;
+    private String description;
 }

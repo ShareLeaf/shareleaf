@@ -187,9 +187,9 @@ public abstract class BaseParserService {
                 .subscribe();
     }
 
-    public void updateMetadata(String contentId, String title, String permalink, MediaUrl mediaUrl) {
+    public void updateMetadata(String contentId, String title, String permalink, MediaMetadata mediaMetadata) {
         log.info("Updating metadata for content ID {}: title={} mediaType={} encoding={} permalink={}",
-                contentId, title, mediaUrl.getMediaType(), mediaUrl.getEncoding(), permalink);
+                contentId, title, mediaMetadata.getMediaType(), mediaMetadata.getEncoding(), permalink);
         Mono<MetadataEntity> newEntityMono = metadataRepo.findByContentId(contentId)
                 .switchIfEmpty(Mono.defer(() -> Mono.just(new MetadataEntity())));
         Mono<MetadataEntity> duplicateEntityMono = metadataRepo.findByCanonicalUrl(permalink)
@@ -208,9 +208,9 @@ public abstract class BaseParserService {
                         // TODO: add a table to map aliases
                         ParserService.uniquePermalinks.remove(permalink);
                     } else {
-                        newEntity.setEncoding(mediaUrl.getEncoding());
-                        newEntity.setMediaType(mediaUrl.getMediaType());
-                        newEntity.setHasAudio(!ObjectUtils.isEmpty(mediaUrl.getAudioUrl()));
+                        newEntity.setEncoding(mediaMetadata.getEncoding());
+                        newEntity.setMediaType(mediaMetadata.getMediaType());
+                        newEntity.setHasAudio(!ObjectUtils.isEmpty(mediaMetadata.getAudioUrl()));
                         newEntity.setTitle(title);
                         newEntity.setCanonicalUrl(permalink);
                         newEntity.setUpdatedDt(LocalDateTime.now());
@@ -239,13 +239,13 @@ public abstract class BaseParserService {
                 .subscribe();
     }
 
-    public void submitTasks(List<Mono<Boolean>> tasks, MediaUrl mediaUrl, String contentId, String permalink) {
+    public void submitTasks(List<Mono<Boolean>> tasks, MediaMetadata mediaMetadata, String contentId, String permalink) {
         if (!tasks.isEmpty()) {
             // Run all tasks asynchronously
             Flux.merge(tasks).doOnComplete(() -> {
-                log.trace("Determining if should run hls {} {}", mediaUrl.getGifUrl(), mediaUrl.getVideoUrl());
-                if (!ObjectUtils.isEmpty(mediaUrl.getGifUrl()) ||
-                        !ObjectUtils.isEmpty(mediaUrl.getVideoUrl())) {
+                log.trace("Determining if should run hls {} {}", mediaMetadata.getGifUrl(), mediaMetadata.getVideoUrl());
+                if (!ObjectUtils.isEmpty(mediaMetadata.getGifUrl()) ||
+                        !ObjectUtils.isEmpty(mediaMetadata.getVideoUrl())) {
                     generateHlsManifest(contentId, permalink);
                     s3Service.uploadHlsData(awsProps.getBucket(), contentId, permalink);
                 } else {

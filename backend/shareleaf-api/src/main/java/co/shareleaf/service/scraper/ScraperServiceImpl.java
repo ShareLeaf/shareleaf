@@ -27,22 +27,22 @@ public class ScraperServiceImpl implements ScraperService {
     public boolean getContent(String contentId, String url) {
         try { // TODO: check that the content can be processed before scraping
             Platform platform = getPlatform(url);
-            switch (platform) {
-                case REDDIT:
-                    log.info("About to process URL for Reddit with content ID {}: {}", contentId, url);
-                    WebClient client = scraperUtils.getWebClient();
-                    HtmlPage page = client.getPage(url);
-                    int statusCode = page.getWebResponse().getStatusCode();
-                    if (statusCode >= 200 && statusCode < 400 ) {
-                        redditParser.processSoup(page.getWebResponse().getContentAsString(), url, contentId, client);
-                    }
-                    break;
-                case INSTAGRAM:
-                    log.info("About to process URL for Instagram with content ID {}: {}", contentId, url);
-                    instagramParser.processSoup(null, url, contentId, null);
-                    break;
-                default:
-                    break;
+            WebClient client = scraperUtils.getWebClient();
+            log.info("About to process URL for {} with content ID {}: {}", platform.name(), contentId, url);
+            HtmlPage page = client.getPage(url);
+            int statusCode = page.getWebResponse().getStatusCode();
+            if (statusCode >= 200 && statusCode < 400 ) {
+                String soup = page.getWebResponse().getContentAsString();
+                switch (platform) {
+                    case REDDIT:
+                        redditParser.processSoup(soup, url, contentId, client);
+                        break;
+                    case INSTAGRAM:
+                        instagramParser.processSoup(soup, url, contentId, client);
+                        break;
+                    default:
+                        break;
+                }
             }
             return true;
         } catch (Exception e) {
