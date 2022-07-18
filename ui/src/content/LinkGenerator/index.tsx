@@ -104,7 +104,7 @@ const LinkGenerator: FC<any> = () => {
                                 variant="h2"
                             >
                                 <Typed
-                                    strings={["Reddit", "Facebook", "Instagram", "TikTok"]}
+                                    strings={["Reddit", "Instagram"]}
                                     typeSpeed={100}
                                     backSpeed={100}
                                     loop

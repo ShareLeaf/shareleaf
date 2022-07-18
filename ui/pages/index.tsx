@@ -13,43 +13,24 @@ const OverviewWrapper = styled(Box)(
 `
 );
 
-interface OverViewProps {
-    title: string;
-    description: string;
-    siteImage: string;
+const metadata = {
+    title: "ShareLeaf",
+    description: "Share Content from Anywhere",
+    siteImage: "https://shareleaf.co/static/images/placeholders/covers/shareleaf.png"
 }
 
-// @ts-ignore
-export async function getServerSideProps({ req, res }) {
-    // Allow caching of the home page for 259200 seconds (3 days)
-    // and allow using the stale page for up to 86400 (1 day) until
-    // the cache is refreshed
-    res.setHeader(
-        'Cache-Control',
-        'public, s-maxage=259200, stale-while-revalidate=86400'
-    )
-
-    return {
-        props: {
-            title: "ShareLeaf",
-            description: "Share Content from Anywhere",
-            siteImage: "https://shareleaf.co/static/images/placeholders/covers/shareleaf.png"
-        }
-    }
-}
-
-function Overview(props: OverViewProps) {
+function Overview() {
     return (
         <>
             <Head>
-                <title>{props.title}</title>
-                <meta property="og:title" content={props.title} key="title"/>
-                <meta property="og:description" content={props.description} key="description"/>
-                <meta property="og:image" content={props.siteImage} key="image"/>
+                <title>{metadata.title}</title>
+                <meta property="og:title" content={metadata.title} key="title"/>
+                <meta property="og:description" content={metadata.description} key="description"/>
+                <meta property="og:image" content={metadata.siteImage} key="image"/>
             </Head>
         <OverviewWrapper>
             <Common
-                title={props.title}
+                title={metadata.title}
                 children={<LinkGenerator />}/>
         </OverviewWrapper>
         </>
