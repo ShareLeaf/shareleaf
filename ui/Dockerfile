@@ -8,7 +8,7 @@ RUN npm install --global pm2
 
 COPY ./package*.json ./
 
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 COPY ./ ./
 
