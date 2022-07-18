@@ -20,6 +20,7 @@ import ShareTwoToneIcon from '@mui/icons-material/ShareTwoTone';
 import {copyToClipBoard} from "@/content/utils/utils";
 import { headerConfig } from '@/api/headerConfig';
 import { ContentApi, SLContentMetadata } from '@/api/api';
+import Snackbar from '@mui/material/Snackbar';
 
 const OverviewWrapper = styled(Box)(
     ({ theme }) => `
@@ -64,7 +65,15 @@ const BoxWrapper = styled(Box)(
 `
 );
 export async function getServerSideProps(context) {
-    return {props: (await new ContentApi().getMetadata(context.query.id)).data};
+    let props = {}
+    try {
+        props = (await new ContentApi().getMetadata(context.query.id)).data;
+    } catch (e) {
+        console.log(e)
+    }
+    return {
+        props: props
+    };
 }
 
 const Media: FC<SLContentMetadata> = (props) => {
@@ -73,6 +82,7 @@ const Media: FC<SLContentMetadata> = (props) => {
     const [showInvalidUrlError, setShowInvalidUrlError] = useState<boolean>(false);
     const [showInProgress, setShowInProgress] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
+    const [shareOpen, setShareOpen] = useState<boolean>(false);
 
     const handleOpen = () => {
         if (metadata.media_type === "image") {
@@ -85,7 +95,16 @@ const Media: FC<SLContentMetadata> = (props) => {
              .then()
              .catch(e => console.log(e));
         await copyToClipBoard(props.shareable_link)
+        setShareOpen(true);
     }
+
+
+    const handleShareClose = (_event: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setShareOpen(false);
+    };
 
     useEffect(() => {
         setShowInProgress(false);
@@ -141,6 +160,21 @@ const Media: FC<SLContentMetadata> = (props) => {
                                                 {('Share')}
                                             </Button>
                                             </Tooltip>
+                                            <Snackbar
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'center',
+                                                }}
+                                                open={shareOpen}
+                                                autoHideDuration={6000}
+                                                onClose={handleShareClose}>
+                                                <Alert
+                                                    onClose={handleShareClose}
+                                                    severity="success"
+                                                    sx={{ width: '100%' }}>
+                                                    Link Copied!
+                                                </Alert>
+                                            </Snackbar>
                                         </Box>
                                     </CardActionsWrapper>
                                     {metadata.media_type=== "video" &&

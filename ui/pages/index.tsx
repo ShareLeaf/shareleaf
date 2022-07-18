@@ -20,6 +20,8 @@ const metadata = {
 }
 
 function Overview() {
+    // Check that the DOM has loaded before rendering the page so that
+    // we don't get a page without the CSS
     return typeof window === 'undefined' ? null :
      (
         <>
