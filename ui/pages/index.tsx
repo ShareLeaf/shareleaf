@@ -20,7 +20,8 @@ const metadata = {
 }
 
 function Overview() {
-    return (
+    return typeof window === 'undefined' ? null :
+     (
         <>
             <Head>
                 <title>{metadata.title}</title>
