@@ -2,10 +2,25 @@
   "theme_color": "#1975ff",
   "background_color": "#ffffff",
   "display": "standalone",
-  "start_url": ".",
+  "start_url": "/",
   "short_name": "ShareLeaf",
   "name": "ShareLeaf Content Sharing",
   "icons": [
+    {
+      "src": "/icon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
     {
       "src": "/icon-192x192.png",
       "sizes": "192x192",
