@@ -199,32 +199,32 @@ const LinkGenerator: FC<any> = () => {
                             </form>
                         </SearchBoxWrapper>
                     </Grid>
-                    <Grid
-                        justifyContent="center"
-                        alignItems="center"
-                        container
-                        sx={{
+                    {/*<Grid*/}
+                    {/*    justifyContent="center"*/}
+                    {/*    alignItems="center"*/}
+                    {/*    container*/}
+                    {/*    sx={{*/}
 
-                            ml: 'auto',
-                            marginTop: '32px'
-                        }}
-                    >
-                        <Button
-                            sx={{
-                                padding: 0,
-                                paddingLeft: '24px',
-                                paddingRight: '24px',
-                                paddingTop: '12px',
-                                paddingBottom: '12px'
-                            }}
-                            size="medium"
-                            variant="contained"
-                            color="success"
-                            onClick={() => window.open("/pwa", "_blank")}
-                        >
-                            {'Use ShareLeaf as an App'}
-                        </Button>
-                    </Grid>
+                    {/*        ml: 'auto',*/}
+                    {/*        marginTop: '32px'*/}
+                    {/*    }}*/}
+                    {/*>*/}
+                    {/*    <Button*/}
+                    {/*        sx={{*/}
+                    {/*            padding: 0,*/}
+                    {/*            paddingLeft: '24px',*/}
+                    {/*            paddingRight: '24px',*/}
+                    {/*            paddingTop: '12px',*/}
+                    {/*            paddingBottom: '12px'*/}
+                    {/*        }}*/}
+                    {/*        size="medium"*/}
+                    {/*        variant="contained"*/}
+                    {/*        color="success"*/}
+                    {/*        onClick={() => window.open("/pwa", "_blank")}*/}
+                    {/*    >*/}
+                    {/*        {'Use ShareLeaf as an App'}*/}
+                    {/*    </Button>*/}
+                    {/*</Grid>*/}
                     {generatedUrl &&  <Grid item xs={12}>
                         <Box sx={{mt: 3, ml: 2}}>
                             <Typography
