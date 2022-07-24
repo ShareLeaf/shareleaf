@@ -110,6 +110,7 @@ const Media: FC<SLContentMetadata> = (props) => {
         component = (
             <OverviewWrapper>
                 <Common
+                    showHighlights={true}
                     title={metadata.title}
                     children={
                         <Container maxWidth="md" sx={{ padding: 0, mb: 10, mt: 3}}>
@@ -129,7 +130,6 @@ const Media: FC<SLContentMetadata> = (props) => {
                                             display: { xs: 'block', md: 'flex' },
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            // float: 'right',
                                             width: '100%'
                                         }}
                                     >

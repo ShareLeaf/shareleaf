@@ -8,6 +8,7 @@ import Highlights from "@/content/Highlights";
 interface CommonProps {
     title: string,
     children: ReactNode;
+    showHighlights: boolean
 }
 
 const Common: FC<CommonProps> = (props) => {
@@ -31,7 +32,7 @@ const Common: FC<CommonProps> = (props) => {
                 </Box>
             </Container>
             {props.children}
-            <Highlights />
+            {props.showHighlights && <Highlights />}
             </Container>
             <Footer />
         </>
