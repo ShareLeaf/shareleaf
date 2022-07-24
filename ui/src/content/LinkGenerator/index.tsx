@@ -1,10 +1,10 @@
-import React, {ChangeEvent, FC, useState} from "react";
+import React, {ChangeEvent, FC, useEffect, useState} from "react";
 import {Box, Button, Container, Grid, IconButton, InputBase, styled, Typography} from "@mui/material";
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { RWebShare } from "react-web-share";
+import IosShareIcon from '@mui/icons-material/IosShare';
 import Typed from "react-typed";
 import { ContentApi } from "src/api";
 import { headerConfig } from "src/api/headerConfig";
-import { copyToClipBoard } from "../utils/utils";
 
 const SearchInputWrapper = styled(InputBase)(
     ({ theme }) => `
@@ -54,12 +54,27 @@ const LinkGenerator: FC<any> = () => {
 
     const submitSearch = async (event): Promise<void> => {
         event.preventDefault();
-        if (searchValue) {
-            new ContentApi(headerConfig()).generateContentId({url: searchValue}).then(response => {
+        await generateContentId(searchValue);
+    };
+
+    const generateContentId = async (rawUrl: string): Promise<void> => {
+        if (rawUrl && isValidUrl(rawUrl)) {
+            new ContentApi(headerConfig()).generateContentId({url: rawUrl}).then(response => {
                 setGeneratedUrl(response.data.shareable_link);
             }).catch(e => console.log(e))
         }
-    };
+    }
+
+    const isValidUrl = (rawUrl: string): boolean => {
+        let validUrl;
+
+        try {
+            validUrl = new URL(rawUrl);
+        } catch (_) {
+            return false;
+        }
+        return validUrl.protocol === "http:" || validUrl.protocol === "https:";
+    }
 
     const handleSearchChange = async (event: ChangeEvent<{ value: unknown }>) => {
         event.preventDefault();
@@ -71,6 +86,41 @@ const LinkGenerator: FC<any> = () => {
             setSearchValue('');
         }
     };
+
+    useEffect(() => {
+
+
+    })
+
+    useEffect(() => {
+        // Copy text from the clipboard at a set interval and attempt to generate a shareable link
+        const localStorageKey = "shared-leaves";
+        const clipboardInterval = setInterval(() => {
+            if (navigator.clipboard) {
+                navigator.clipboard.readText().then(text => {
+                    if (isValidUrl(text)) {
+                        const previousSharesStr: string = window.localStorage.getItem(localStorageKey);
+                        let previousShares: string[] = [];
+                        if (previousSharesStr) {
+                            previousShares = JSON.parse(previousSharesStr);
+                        }
+                        // Have we previously generated a link for this url?
+                        if (!previousShares.includes(text)) {
+                            previousShares.push(text);
+                            window.localStorage.setItem(localStorageKey, JSON.stringify(previousShares));
+                            setSearchValue(text);
+                            generateContentId(text)
+                                .then()
+                                .catch()
+                        }
+                    }
+                }).catch();
+            }
+        }, 1000);
+        return () => {
+            clearInterval(clipboardInterval);
+        };
+    }, []);
 
     return (
         <Container
@@ -179,8 +229,17 @@ const LinkGenerator: FC<any> = () => {
                                             pl: 2
                                         }}
                                     >
-                                        <IconButton sx={{ mx: 1 }} onClick={() => copyToClipBoard(generatedUrl)}>
-                                            <ContentCopyIcon fontSize="medium" />
+                                        <IconButton sx={{ mx: 1 }}>
+                                            <RWebShare
+                                                data={{
+                                                    text: "Check this out:" ,
+                                                    url: generatedUrl,
+                                                    title: "Share " + generatedUrl,
+                                                }}
+                                                sites={["whatsapp", "telegram", "facebook", "twitter", "reddit", "mail"]}
+                                            >
+                                                <IosShareIcon fontSize="medium" />
+                                            </RWebShare>
                                         </IconButton>
                                     </Box>
                                 </Box>

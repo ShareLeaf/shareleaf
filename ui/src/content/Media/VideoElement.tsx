@@ -46,7 +46,7 @@ const VideoElement: FC<VideoElementProps> = (props) => {
     };
 
     return (
-        <Box sx={{marginTop: '4.8rem', width: '100%'}}>
+        <Box sx={{width: '100%'}}>
             <VideoJS options={videoJsOptions} onReady={handlePlayerReady} audioSrc={props.audioSrc}/>
             <Box sx={{
                 pl: 1,

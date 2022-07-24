@@ -7589,6 +7589,11 @@
     "prop-types" "^15.6.0"
     "typed.js" "^2.0.6"
 
+"react-web-share@^1.1.6":
+  "integrity" "sha512-IttmjG4DlIPEWNnS3RBccaPo6zFs2DNYk+92YjW1iPp0L9h0hXCaellxIQx8xhLepLFoiVjOMM/MNbLSZUzzsw=="
+  "resolved" "https://registry.npmjs.org/react-web-share/-/react-web-share-1.1.6.tgz"
+  "version" "1.1.6"
+
 "react@17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
