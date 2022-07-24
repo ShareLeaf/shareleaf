@@ -33,6 +33,7 @@ function Overview() {
             </Head>
         <OverviewWrapper>
             <Common
+                showHighlights={true}
                 title={metadata.title}
                 children={<LinkGenerator />}/>
         </OverviewWrapper>

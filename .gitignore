@@ -31,3 +31,8 @@ node_modules
 */generated
 */openapi-ts
 .next
+
+# PWA
+**workbox-**.js
+**workbox-**.js.map
+**fallback-**.js
