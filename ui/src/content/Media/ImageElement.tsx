@@ -21,7 +21,7 @@ const ImageElement: FC<ImageElementProps> = (props) => {
                     src={props.imageSrc} />
     </Box>
             <Box sx={{ pl: 1, pr: 1}}>
-                <Typography variant="h4" sx={{
+                <Typography variant="subtitle2" sx={{
                     pt: 2,
                     pb: 2,
                     textAlign: 'left',

@@ -59,7 +59,7 @@ const VideoElement: FC<VideoElementProps> = (props) => {
                     textAlign: 'left',
                     color: '#000',
                 }}
-                variant="h4"
+                variant="subtitle2"
             >
                 {props.title}
             </Typography>

@@ -5,6 +5,7 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Typed from "react-typed";
 import { ContentApi } from "src/api";
 import { headerConfig } from "src/api/headerConfig";
+import {handleShareClick} from "@/content/utils/utils";
 
 const SearchInputWrapper = styled(InputBase)(
     ({ theme }) => `
@@ -51,6 +52,8 @@ const TypographyH1Socials = styled(Typography)(
 const LinkGenerator: FC<any> = () => {
     const [searchValue, setSearchValue] = useState<string>('');
     const [generatedUrl, setGeneratedUrl] = useState<string>('')
+    const [enablePwaButton, _setEnablePwaButton] = useState<boolean>(false);
+    const [enableAutoClipboard, _setEnableAutoClipboard] = useState<boolean>(false);
 
     const submitSearch = async (event): Promise<void> => {
         event.preventDefault();
@@ -93,33 +96,35 @@ const LinkGenerator: FC<any> = () => {
     })
 
     useEffect(() => {
-        // Copy text from the clipboard at a set interval and attempt to generate a shareable link
-        const localStorageKey = "shared-leaves";
-        const clipboardInterval = setInterval(() => {
-            if (navigator.clipboard) {
-                navigator.clipboard.readText().then(text => {
-                    if (isValidUrl(text)) {
-                        const previousSharesStr: string = window.localStorage.getItem(localStorageKey);
-                        let previousShares: string[] = [];
-                        if (previousSharesStr) {
-                            previousShares = JSON.parse(previousSharesStr);
+        if (enableAutoClipboard) {
+            // Copy text from the clipboard at a set interval and attempt to generate a shareable link
+            const localStorageKey = "shared-leaves";
+            const clipboardInterval = setInterval(() => {
+                if (typeof window !== 'undefined' && navigator.clipboard) {
+                    navigator.clipboard.readText().then(text => {
+                        if (isValidUrl(text)) {
+                            const previousSharesStr: string = window.localStorage.getItem(localStorageKey);
+                            let previousShares: string[] = [];
+                            if (previousSharesStr) {
+                                previousShares = JSON.parse(previousSharesStr);
+                            }
+                            // Have we previously generated a link for this url?
+                            if (!previousShares.includes(text)) {
+                                previousShares.push(text);
+                                window.localStorage.setItem(localStorageKey, JSON.stringify(previousShares));
+                                setSearchValue(text);
+                                generateContentId(text)
+                                    .then()
+                                    .catch()
+                            }
                         }
-                        // Have we previously generated a link for this url?
-                        if (!previousShares.includes(text)) {
-                            previousShares.push(text);
-                            window.localStorage.setItem(localStorageKey, JSON.stringify(previousShares));
-                            setSearchValue(text);
-                            generateContentId(text)
-                                .then()
-                                .catch()
-                        }
-                    }
-                }).catch();
-            }
-        }, 1000);
-        return () => {
-            clearInterval(clipboardInterval);
-        };
+                    }).catch();
+                }
+            }, 1000);
+            return () => {
+                clearInterval(clipboardInterval);
+            };
+        }
     }, []);
 
     return (
@@ -144,7 +149,7 @@ const LinkGenerator: FC<any> = () => {
                                 }}
                                 variant="h5"
                             >
-                                Instantly share videos, pictures, and reels from
+                                Instantly share reels and videos from
                             </TypographyH1Primary>
                             <TypographyH1Socials
                                 textAlign="center"
@@ -199,32 +204,34 @@ const LinkGenerator: FC<any> = () => {
                             </form>
                         </SearchBoxWrapper>
                     </Grid>
-                    <Grid
-                        justifyContent="center"
-                        alignItems="center"
-                        container
-                        sx={{
-
-                            ml: 'auto',
-                            marginTop: '32px'
-                        }}
-                    >
-                        <Button
+                    {enablePwaButton &&
+                        <Grid
+                            justifyContent="center"
+                            alignItems="center"
+                            container
                             sx={{
-                                padding: 0,
-                                paddingLeft: '24px',
-                                paddingRight: '24px',
-                                paddingTop: '12px',
-                                paddingBottom: '12px'
+
+                                ml: 'auto',
+                                marginTop: '32px'
                             }}
-                            size="medium"
-                            variant="contained"
-                            color="success"
-                            onClick={() => window.open("/pwa", "_blank")}
                         >
-                            {'Use ShareLeaf as an App'}
-                        </Button>
-                    </Grid>
+                            <Button
+                                sx={{
+                                    padding: 0,
+                                    paddingLeft: '24px',
+                                    paddingRight: '24px',
+                                    paddingTop: '12px',
+                                    paddingBottom: '12px'
+                                }}
+                                size="medium"
+                                variant="contained"
+                                color="success"
+                                onClick={() => window.open("/pwa", "_blank")}
+                            >
+                                {'Use ShareLeaf as an App'}
+                            </Button>
+                        </Grid>
+                    }
                     {generatedUrl &&  <Grid item xs={12}>
                         <Box sx={{mt: 3, ml: 2}}>
                             <Typography
@@ -255,14 +262,14 @@ const LinkGenerator: FC<any> = () => {
                                             pl: 2
                                         }}
                                     >
-                                        <IconButton sx={{ mx: 1 }}>
+                                        <IconButton sx={{ mx: 1 }} onClick={() => handleShareClick(generatedUrl)}>
                                             <RWebShare
                                                 data={{
-                                                    text: "Check this out:" ,
+                                                    text: "Check this out on ShareLeaf: " ,
                                                     url: generatedUrl,
                                                     title: "Share " + generatedUrl,
                                                 }}
-                                                sites={["whatsapp", "telegram", "facebook", "twitter", "reddit", "mail"]}
+                                                sites={["copy", "whatsapp", "telegram", "facebook", "twitter", "reddit", "mail"]}
                                             >
                                                 <IosShareIcon fontSize="medium" />
                                             </RWebShare>
