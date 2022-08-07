@@ -15,7 +15,7 @@ const OverviewWrapper = styled(Box)(
 
 const metadata = {
     title: "ShareLeaf",
-    description: "Share Content from Anywhere",
+    description: "View Instagram Reels Without an Account",
     siteImage: "https://shareleaf.co/static/images/placeholders/covers/shareleaf.png"
 }
 

@@ -107,11 +107,15 @@ const Media: FC<SLContentMetadata> = (props) => {
 
     let component = undefined;
     if (metadata) {
+        let _title = metadata.title;
+        if (_title) {
+            _title = metadata.title.split("\n")[0];
+        }
         component = (
             <OverviewWrapper>
                 <Common
                     showHighlights={true}
-                    title={metadata.title}
+                    title={_title}
                     children={
                         <Container maxWidth="md" sx={{ padding: 0, mb: 10, mt: 3}}>
                             <Grid
@@ -136,11 +140,11 @@ const Media: FC<SLContentMetadata> = (props) => {
                                             <IconButton sx={{ mx: 1 }} color="error">
                                                 <RWebShare
                                                     data={{
-                                                        text: props.title ,
-                                                        url: props.shareable_link,
-                                                        title: props.title,
+                                                        text: _title ,
+                                                        url: metadata.shareable_link,
+                                                        title: _title,
                                                     }}
-                                                    sites={["whatsapp", "telegram", "facebook", "twitter", "reddit", "mail"]}
+                                                    sites={["copy", "whatsapp", "telegram", "facebook", "twitter", "reddit", "mail"]}
                                                 >
                                                     <ShareTwoToneIcon fontSize="large" />
                                                 </RWebShare>
@@ -152,14 +156,14 @@ const Media: FC<SLContentMetadata> = (props) => {
                                             encoding={metadata.encoding}
                                             videoSrc={metadata.video_url}
                                             audioSrc={metadata.audio_url}
-                                            title={metadata.title}
+                                            title={_title}
                                         />
                                     }
                                     {metadata.media_type=== "image" &&
                                             <ImageElement
                                                 handleOpen={handleOpen}
                                                 imageSrc={metadata.image_url}
-                                                title={metadata.title}
+                                                title={_title}
                                             />
                                     }
                                     <Divider />

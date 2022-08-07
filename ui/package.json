@@ -1,10 +1,10 @@
 {
   "name": "shareleaf",
   "version": "3.0.0",
-  "title": "ShareLeaf Content Sharing",
-  "description": "Share content from any social media site by generating a unique URL on ShareLeaf",
+  "title": "ShareLeaf Videos and Reel Sharing",
+  "description": "Share and view reels and videos from Instagram and other social media sites",
   "author": {
-    "name": "B Melesse",
+    "name": "B M",
     "url": ""
   },
   "private": true,
@@ -88,7 +88,7 @@
     "yup": "0.32.11"
   },
   "scripts": {
-    "dev": "cp .env-local .env && next",
+    "dev": "cp .env-prod .env && next",
     "build": "NODE_ENV=production next build",
     "start": "next start",
     "export": "next export",
