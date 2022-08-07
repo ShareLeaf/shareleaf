@@ -5,6 +5,7 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Typed from "react-typed";
 import { ContentApi } from "src/api";
 import { headerConfig } from "src/api/headerConfig";
+import {handleShareClick} from "@/content/utils/utils";
 
 const SearchInputWrapper = styled(InputBase)(
     ({ theme }) => `
@@ -261,7 +262,7 @@ const LinkGenerator: FC<any> = () => {
                                             pl: 2
                                         }}
                                     >
-                                        <IconButton sx={{ mx: 1 }}>
+                                        <IconButton sx={{ mx: 1 }} onClick={() => handleShareClick(generatedUrl)}>
                                             <RWebShare
                                                 data={{
                                                     text: "Check this out on ShareLeaf: " ,

@@ -19,6 +19,7 @@ import Head from "next/head";
 import ShareTwoToneIcon from '@mui/icons-material/ShareTwoTone';
 import { ContentApi, SLContentMetadata } from '@/api/api';
 import {RWebShare} from "react-web-share";
+import {handleShareClick} from "@/content/utils/utils";
 
 const OverviewWrapper = styled(Box)(
     ({ theme }) => `
@@ -137,7 +138,7 @@ const Media: FC<SLContentMetadata> = (props) => {
                                             width: '100%'
                                         }}
                                     >
-                                            <IconButton sx={{ mx: 1 }} color="error">
+                                            <IconButton sx={{ mx: 1 }} color="error" onClick={() => handleShareClick(metadata.shareable_link)}>
                                                 <RWebShare
                                                     data={{
                                                         text: _title ,
