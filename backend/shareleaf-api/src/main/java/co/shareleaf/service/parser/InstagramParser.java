@@ -86,56 +86,64 @@ public class InstagramParser extends BaseParserService implements ParserService 
     }
 
     private MediaMetadata parseFromMediaResponse(String soup, WebClient client, String contentId, String url) {
-        String pattern = "\\{\"media_id\"\\s*:\"[0-9a-zA-Z_]+\"}";
-        Pattern r = Pattern.compile(pattern);
-        Matcher m = r.matcher(soup);
-        JsonNode node = null;
-        String mediaId = null;
-        try {
-            if (m.find()) {
-                node = objectMapper.readValue(m.group(0), JsonNode.class);
-            }
-            if (node != null) {
-                mediaId = node.get("media_id").asText().replace("\"", "").strip();
-                String mediaUrl = String.format("https://i.instagram.com/api/v1/media/%s/info/", mediaId);
-                client.addRequestHeader("user-agent", instagramProps.getAndroidUserAgent());
-                var response = client.getPage(mediaUrl).getWebResponse().getContentAsString();
-                var responseNode = objectMapper.readValue(response, JsonNode.class);
-                JsonNode items = responseNode.get("items").get(0);
-                String videoUrl = "", imageUrl = "", description = "";
-                var iter = items.fields();
-                String message = "Warning in InstagramParser.parseFromMediaResponse: Unable to parse {} contentId={}, url={}";
-                // TODO: post warnings to slack
-                while (iter.hasNext()) {
-                    var item = iter.next();
-                    if (item.getKey().toLowerCase().contains("image_version")) {
-                        try {
-                            imageUrl = item.getValue().get("candidates").get(0).get("url").asText();
-                        } catch (NullPointerException e) {
-                            log.warn(message, "imageUrl", contentId, url);
-                        }
-                    } else if (item.getKey().toLowerCase().contains("video_version")) {
-                        try {
-                            videoUrl = item.getValue().get(0).get("url").asText();
-                        } catch (NullPointerException e) {
-                            log.warn(message, "videoUrl", contentId, url);
-                        }
-                    } else if (item.getKey().equalsIgnoreCase("caption")) {
-                        try {
-                            description = item.getValue().get("text").asText();
-                        } catch (NullPointerException e) {
-                            log.warn(message, "description", contentId, url);
+        int indexOf = soup.indexOf("media_id");
+        int length = 100;
+        if (indexOf >= 0) {
+            // media_id doesn't seem to follow a fixed pattern so extract it as a substring
+            String substring = soup.substring(indexOf, indexOf + length);
+            String pattern = "[0-9]+";
+//            String pattern = "\\{\"media_id\"\\s*:\"[0-9a-zA-Z_]+\"}";
+            Pattern r = Pattern.compile(pattern);
+            Matcher m = r.matcher(substring);
+            JsonNode node = null;
+            String mediaId = null;
+            try {
+                if (m.find()) {
+                    node = objectMapper.readValue(m.group(0), JsonNode.class);
+                }
+                if (node != null) {
+                    mediaId = node.asText();
+                    String mediaUrl = String.format("https://i.instagram.com/api/v1/media/%s/info/", mediaId);
+                    client.addRequestHeader("user-agent", instagramProps.getAndroidUserAgent());
+                    var response = client.getPage(mediaUrl).getWebResponse().getContentAsString();
+                    var responseNode = objectMapper.readValue(response, JsonNode.class);
+                    JsonNode items = responseNode.get("items").get(0);
+                    String videoUrl = "", imageUrl = "", description = "";
+                    var iter = items.fields();
+                    String message = "Warning in InstagramParser.parseFromMediaResponse: Unable to parse {} contentId={}, url={}";
+                    // TODO: post warnings to slack
+                    while (iter.hasNext()) {
+                        var item = iter.next();
+                        if (item.getKey().toLowerCase().contains("image_version")) {
+                            try {
+                                imageUrl = item.getValue().get("candidates").get(0).get("url").asText();
+                            } catch (NullPointerException e) {
+                                log.warn(message, "imageUrl", contentId, url);
+                            }
+                        } else if (item.getKey().toLowerCase().contains("video_version")) {
+                            try {
+                                videoUrl = item.getValue().get(0).get("url").asText();
+                            } catch (NullPointerException e) {
+                                log.warn(message, "videoUrl", contentId, url);
+                            }
+                        } else if (item.getKey().equalsIgnoreCase("caption")) {
+                            try {
+                                description = item.getValue().get("text").asText();
+                            } catch (NullPointerException e) {
+                                log.warn(message, "description", contentId, url);
+                            }
                         }
                     }
+                    if (!ObjectUtils.isEmpty(videoUrl)) {
+                        return new MediaMetadata(imageUrl, "", videoUrl, null, VIDEO, "video/mp4", description);
+                    }
                 }
-                if (!ObjectUtils.isEmpty(videoUrl)) {
-                    return new MediaMetadata(imageUrl, "", videoUrl, null, VIDEO, "video/mp4", description);
-                }
+            } catch (Exception e) {
+                // TODO: post to slack
+                log.error("Error in InstagramParser.parseFromMediaResponse: {}", e.getLocalizedMessage());
             }
-        } catch (Exception e) {
-            // TODO: post to slack
-            log.error("Error in InstagramParser.parseFromMediaResponse: {}", e.getLocalizedMessage());
         }
+
         return null;
     }
 
@@ -170,7 +178,7 @@ public class InstagramParser extends BaseParserService implements ParserService 
 
 
     private JsonNode getMediaNode(Document doc, String soup, String contentId, String url) {
-        if (soup.contains("LoginAndSignupPage") || soup.contains("not-logged-in")) {
+        if (soup.contains("not-logged-in")) {
             // TODO: post to slack
             log.error("Error in InstagramParser.getMediaNode Login required");
         } else {
@@ -205,7 +213,7 @@ public class InstagramParser extends BaseParserService implements ParserService 
     }
 
     private boolean isValidSoup(String soup) {
-        if (soup.contains("LoginAndSignupPage") || soup.contains("not-logged-in")) {
+        if (soup.contains("not-logged-in")) {
             // TODO: post to slack
             log.error("Error in InstagramParser.getMediaNode: Login required");
             return false;
