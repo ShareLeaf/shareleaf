@@ -52,19 +52,19 @@ services:
     networks:
       - traefik_network
 
-    deploy:
-      placement:
-        constraints:
-          - node.role == manager
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.services.traefik.loadbalancer.server.port=8888"
-        - "traefik.http.routers.traefik.rule=Host(`traefik-ui.local`)"
-        - "traefik.http.routers.traefik.entrypoints=websecure"
-        - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
-        - "traefik.http.routers.traefik.service=api@internal"
-        - "traefik.http.routers.traefik.middlewares=traefik-auth"
-        - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$2/vzblDk$$dbLSbhZ3AriX/aN8hzPpW1"
+#    deploy:
+#      placement:
+#        constraints:
+#          - node.role == manager
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8888"
+      - "traefik.http.routers.traefik.rule=Host(`traefik-ui.local`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=traefik-auth"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$2/vzblDk$$dbLSbhZ3AriX/aN8hzPpW1"
 
 #    labels:
 #      - "traefik.enable=true"
