@@ -2,7 +2,7 @@ version: "3.3"
 services:
   shareleaf_ui:
     image: 537408061242.dkr.ecr.us-east-2.amazonaws.com/shareleaf:shareleaf-prod-ui-latest
-    container_name: shareleaf-ui
+    container_name: shareleaf_ui
     restart: always
     labels:
       - "traefik.enable=true"
@@ -13,8 +13,8 @@ services:
 #      - "traefik.frontend.entryPoints=http,https"
 
 
-      - "traefik.http.routers.shareleaf-ui.rule=Host(`shareleaf.co`, `www.shareleaf.co`)"
-      - "traefik.http.routers.shareleaf-ui.service=shareleaf-ui"
+      - "traefik.http.routers.shareleaf_ui.rule=Host(`shareleaf.co`, `www.shareleaf.co`)"
+      - "traefik.http.routers.shareleaf_ui.service=shareleaf_ui"
       - "traefik.http.services.heimdall.loadbalancer.server.port=3000"
 #    ports:
 #      - "3000:3000"
