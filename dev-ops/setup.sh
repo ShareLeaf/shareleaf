@@ -33,3 +33,8 @@ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip
 unzip awscliv2.zip
 sudo ./aws/install
 
+# Configure the CLI
+aws configure
+# Provide AWS Access Key ID
+# Provide AWS Secret Access Key
+
