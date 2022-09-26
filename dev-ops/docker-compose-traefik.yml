@@ -35,7 +35,8 @@ services:
       - --certificatesresolvers.tlsresolver.acme.storage=/tlsresolver/acme.json
       - --certificatesresolvers.tlsresolver.acme.httpchallenge.entrypoint=web
 
-#      - --certificatesresolvers.tlsresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+      - --api.dashboard=true
+
     environment:
       - "AWS_ACCESS_KEY_ID=AKIAX2IAEH45BPGE7RU6"
       - "AWS_SECRET_ACCESS_KEY=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"
@@ -43,7 +44,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
     volumes:
       - "./letsencrypt:/letsencrypt"
       - "./tlsresolver:/tlsresolver"
@@ -52,11 +52,25 @@ services:
     networks:
       - traefik_network
 
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik-dashboard.rule=Host(`traefik.shareleaf.co`)"
-      - "traefik.http.routers.traefik-dashboard.service=traefik-dashboard"
-      - "traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080"
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.traefik.loadbalancer.server.port=8888"
+        - "traefik.http.routers.traefik.rule=Host(`traefik-ui.local`)"
+        - "traefik.http.routers.traefik.entrypoints=websecure"
+        - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+        - "traefik.http.routers.traefik.service=api@internal"
+        - "traefik.http.routers.traefik.middlewares=traefik-auth"
+        - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$2/vzblDk$$dbLSbhZ3AriX/aN8hzPpW1"
+
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.traefik-dashboard.rule=Host(`traefik.shareleaf.co`)"
+#      - "traefik.http.routers.traefik-dashboard.service=traefik-dashboard"
+#      - "traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080"
 
 networks:
   traefik_network:
