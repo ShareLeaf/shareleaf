@@ -6,18 +6,9 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-#      - "traefik.frontend.rule=Host:shareleaf.co"
-#      - "traefik.port=3000"
-#      - "traefik.backend=shareleaf_ui"
-#      - "traefik.docker.network=traefik_network"
-#      - "traefik.frontend.entryPoints=http,https"
-
-
       - "traefik.http.routers.shareleaf_ui.rule=Host(`shareleaf.co`, `www.shareleaf.co`)"
       - "traefik.http.routers.shareleaf_ui.service=shareleaf_ui"
       - "traefik.http.services.shareleaf_ui.loadbalancer.server.port=3000"
-#    ports:
-#      - "3000:3000"
     networks:
       - traefik_network
 

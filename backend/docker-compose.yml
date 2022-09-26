@@ -2,7 +2,16 @@ version: "3.3"
 services:
   shareleaf_server:
     image: 537408061242.dkr.ecr.us-east-2.amazonaws.com/shareleaf:shareleaf-prod-server-latest
-    container_name: shareleaf-server
+    container_name: shareleaf_server
     restart: always
-    ports:
-      - "8080:8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.shareleaf_server.rule=Host(`api.shareleaf.co`)"
+      - "traefik.http.routers.shareleaf_server.service=shareleaf_server"
+      - "traefik.http.services.shareleaf_server.loadbalancer.server.port=8080"
+    networks:
+      - traefik_network
+
+networks:
+  traefik_network:
+    external: true
