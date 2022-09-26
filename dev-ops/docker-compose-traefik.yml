@@ -58,15 +58,11 @@ services:
       - traefik.http.routers.traefik.rule=Host(`dashboard.shareleaf.co`)
       - traefik.http.routers.to-https.entrypoints=http
       - traefik.http.routers.to-https.middlewares=to-https
-
-      - traefik.http.routers.traefik.rule=Host(`dashboard.shareleaf.co`)
-      - traefik.http.routers.traefik.entrypoints=http
       - traefik.http.routers.traefik.middlewares=auth
       - traefik.http.routers.traefik.service=api@internal
       - traefik.http.routers.traefik.tls=true
       - traefik.http.routers.traefik.tls.certresolver=letsencrypt
       - traefik.http.middlewares.to-https.redirectscheme.scheme=https
-
       - traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$2/vzblDk$$dbLSbhZ3AriX/aN8hzPpW1
 
 #      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
