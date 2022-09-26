@@ -23,7 +23,7 @@ services:
     environment:
       - "AWS_ACCESS_KEY_ID=AKIAX2IAEH45BPGE7RU6"
       - "AWS_SECRET_ACCESS_KEY=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"
-      - "AWS_HOSTED_ZONE_ID=Z05502002V0JPR5UDSCB6"
+      - "AWS_REGION=us-east-1"
     ports:
       - "80:80"
       - "443:443"
