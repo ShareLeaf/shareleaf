@@ -54,6 +54,7 @@ services:
       - traefik.enable=true
 #      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
       # Redirect all HTTP traffic to HTTPS
+      - traefik.http.routers.api.entryPoints=traefik
       - traefik.http.routers.traefik.rule=Host(`dashboard.shareleaf.co`)
 #      - traefik.http.routers.to-https.entrypoints=http
 #      - traefik.http.routers.to-https.middlewares=to-https
@@ -73,7 +74,7 @@ services:
 #      - "traefik.enable=true"
 #      - "traefik.http.routers.traefik-dashboard.rule=Host(`traefik.shareleaf.co`)"
 #      - "traefik.http.routers.traefik-dashboard.service=traefik-dashboard"
-#      - "traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080"
+#      - traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080
 
 networks:
   traefik_network:
