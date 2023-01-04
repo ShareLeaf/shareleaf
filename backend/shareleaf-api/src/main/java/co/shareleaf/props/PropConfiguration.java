@@ -20,7 +20,8 @@ import org.springframework.context.annotation.Configuration;
         SourceProps.class,
         SwaggerUIProps.class,
         WebsiteProps.class,
-        InstagramProps.class
+        InstagramProps.class,
+    ZenRowsProps.class
 })
 public class PropConfiguration {
 }
