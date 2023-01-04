@@ -11,18 +11,16 @@ import co.shareleaf.utils.migration.FlywayMigrationConfiguration;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.jackson.nullable.JsonNullableModule;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
-
-import javax.annotation.PostConstruct;
 import java.time.OffsetDateTime;
 
 /**
@@ -40,13 +38,11 @@ import java.time.OffsetDateTime;
 })
 @RequiredArgsConstructor
 public class RootConfiguration {
+    public static final ExecutorService executor = Executors.newCachedThreadPool();
 
-    @Bean
-    @Qualifier("db-migration")
-    public boolean dbMigration(FlywayMigration flywayMigration) {
-        flywayMigration.migrate(false)
-                .block();
-        return true;
+    @PostConstruct
+    public void dbMigration(FlywayMigration flywayMigration) {
+        flywayMigration.migrate(false);
     }
 
     @Bean

@@ -16,11 +16,10 @@ import org.springframework.context.annotation.Configuration;
         AWSProps.class,
         FlywayProps.class,
         PostgresDataSourceProps.class,
-        FlywayMigrationProps.class,
         SourceProps.class,
         SwaggerUIProps.class,
         WebsiteProps.class,
-        InstagramProps.class,
+    InstagramProps.class,
     ZenRowsProps.class
 })
 public class PropConfiguration {

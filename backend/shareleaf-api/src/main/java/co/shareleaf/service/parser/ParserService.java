@@ -26,7 +26,7 @@ public interface ParserService {
      * @param contentId
      * @param client
      */
-    VideoInfoDto processSoup(String soup, String url, String contentId, WebClient client);
+    void processSoup(String soup, String url, String contentId, WebClient client);
 
-    VideoInfoDto getMediaMetadata(String igUrl, String contentId);
+    void processUrlV2(String igUrl, String contentId);
 }

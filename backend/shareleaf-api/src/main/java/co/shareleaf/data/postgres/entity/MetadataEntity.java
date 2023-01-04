@@ -1,14 +1,13 @@
 package co.shareleaf.data.postgres.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.UUID;
 
 /**
  * @author Bizuwork Melesse
@@ -16,58 +15,58 @@ import java.util.UUID;
  */
 @Getter
 @Setter
-@Table("public.metadata")
+@Table(schema = "public", name = "metadata")
 public class MetadataEntity {
 
     @Id
-    @Column("id")
+    @Column(name = "id")
     private Long id;
 
-    @Column("content_id")
+    @Column(name = "content_id")
     private String contentId;
 
-    @Column("invalid_url")
+    @Column(name = "invalid_url")
     private Boolean invalidUrl = false;
 
-    @Column("processed")
+    @Column(name = "processed")
     private Boolean processed = false;
 
-    @Column("has_audio")
+    @Column(name = "has_audio")
     private Boolean hasAudio = false;
 
-    @Column("title")
+    @Column(name = "title")
     private String title = "";
 
-    @Column("media_type")
+    @Column(name = "media_type")
     private String mediaType;
 
-    @Column("encoding")
+    @Column(name = "encoding")
     private String encoding;
 
-    @Column("canonical_url")
+    @Column(name = "canonical_url")
     private String canonicalUrl;
 
-    @Column("category")
+    @Column(name = "category")
     private String category;
 
-    @Column("description")
+    @Column(name = "description")
     private String description;
 
-    @Column("like_count")
+    @Column(name = "like_count")
     private Long likeCount = 0L;
 
-    @Column("share_count")
+    @Column(name = "share_count")
     private Long shareCount = 0L;
 
-    @Column("view_count")
+    @Column(name = "view_count")
     private Long viewCount = 0L;
 
-    @Column("dislike_count")
+    @Column(name = "dislike_count")
     private Long dislikeCount = 0L;
 
-    @Column("created_dt")
+    @Column(name = "created_dt")
     private LocalDateTime createdDt = LocalDateTime.now(ZoneId.of("UTC"));
     
-    @Column("updated_dt")
+    @Column(name = "updated_dt")
     private LocalDateTime updatedDt = LocalDateTime.now(ZoneId.of("UTC"));
 }

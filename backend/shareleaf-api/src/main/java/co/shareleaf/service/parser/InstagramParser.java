@@ -3,13 +3,17 @@ package co.shareleaf.service.parser;
 
 import static co.shareleaf.service.parser.BaseParserService.VIDEO;
 
+import co.shareleaf.data.postgres.repo.MetadataRepo;
 import co.shareleaf.dto.VideoInfoDto;
 import co.shareleaf.instagram4j.IGClient;
 import co.shareleaf.instagram4j.actions.media.MediaAction;
 import co.shareleaf.instagram4j.models.media.timeline.TimelineVideoMedia;
 import co.shareleaf.instagram4j.responses.media.MediaInfoResponse;
+import co.shareleaf.props.AWSProps;
 import co.shareleaf.props.ZenRowsProps;
+import co.shareleaf.service.aws.S3Service;
 import co.shareleaf.service.scraper.Platform;
+import co.shareleaf.service.scraper.ScraperUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,15 +46,23 @@ import org.springframework.util.ObjectUtils;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor
-public class InstagramParser implements ParserService {
-    private final ObjectMapper objectMapper;
-    private final IGClient igClient;
+public class InstagramParser extends BaseParserService implements ParserService {
     private final ZenRowsProps zenRowsProps;
+
+    public InstagramParser(ObjectMapper objectMapper,
+        MetadataRepo metadataRepo,
+        S3Service s3Service,
+        AWSProps awsProps,
+        ScraperUtils scraperUtils,
+        ZenRowsProps zenRowsProps) {
+        super(objectMapper, metadataRepo, s3Service, awsProps, scraperUtils);
+        this.zenRowsProps = zenRowsProps;
+
+    }
 
 
     @Override
-    public VideoInfoDto processSoup(String soup, String url, String contentId, WebClient client) {
+    public void processSoup(String soup, String url, String contentId, WebClient client) {
         soup = soup.replace("\\", "");
         if (isValidSoup(soup)) {
             Document doc = Jsoup.parse(soup);
@@ -61,9 +73,11 @@ public class InstagramParser implements ParserService {
             } else {
                 mediaMetadata = parseFromMediaResponse(soup);
             }
-            return getDtoFromMediaMetadata(mediaMetadata, url, contentId);
+            VideoInfoDto dto = getDtoFromMediaMetadata(mediaMetadata, url, contentId);
+            if (dto != null) {
+                downloadContent(contentId, url, dto.getUrl(), VIDEO);
+            }
         }
-        return null;
     }
 
     private VideoInfoDto getDtoFromMediaMetadata(MediaMetadata mediaMetadata, String igUrl, String contentId) {
@@ -71,7 +85,6 @@ public class InstagramParser implements ParserService {
             if (!ObjectUtils.isEmpty(mediaMetadata.getVideoUrl())) {
                 VideoInfoDto dto = new VideoInfoDto();
                 dto.setUrl(mediaMetadata.getVideoUrl());
-                dto.setPlatform(Platform.INSTAGRAM);
                 dto.setCaption(mediaMetadata.getDescription());
                 dto.setImageUrl(mediaMetadata.getImageUrl());
                 dto.setPermalink(igUrl);
@@ -89,7 +102,7 @@ public class InstagramParser implements ParserService {
 
     @SneakyThrows
     @Override
-    public VideoInfoDto getMediaMetadata(String igUrl, String contentId) {
+    public void processUrlV2(String igUrl, String contentId) {
         log.info("About to process URL for Instagram with content ID {}: {}", contentId, igUrl);
         final CloseableHttpClient httpClient = HttpClients.createDefault();
         URI uri = new URIBuilder()
@@ -104,10 +117,12 @@ public class InstagramParser implements ParserService {
         HttpEntity httpEntity = httpClient.execute(httpGet).getEntity();
         JsonNode media = objectMapper.readValue(httpEntity.getContent(), JsonNode.class);
         if (media != null ) {
-            return getDtoFromMediaMetadata(parseFromMediaNode(media.get("shortcode_media")), igUrl, contentId);
-        }
-        return null;
+            VideoInfoDto dto = getDtoFromMediaMetadata(parseFromMediaNode(media.get("shortcode_media")), igUrl, contentId);
+            if (dto != null) {
+                downloadContent(contentId, igUrl, dto.getUrl(), VIDEO);
+            }
 
+        }
     }
 
     private MediaMetadata parseFromMediaResponse(String soup) {
@@ -127,7 +142,7 @@ public class InstagramParser implements ParserService {
                 }
                 if (node != null) {
                     mediaId = node.asText();
-                    MediaAction action = new MediaAction(igClient, mediaId);
+                    MediaAction action = new MediaAction(IGClient.builder().build(), mediaId);
                     MediaInfoResponse mediaInfoResponse = action.info().get();
                     String videoUrl = "", imageUrl = "", description = "";
                     if (!ObjectUtils.isEmpty(mediaInfoResponse.getItems())) {

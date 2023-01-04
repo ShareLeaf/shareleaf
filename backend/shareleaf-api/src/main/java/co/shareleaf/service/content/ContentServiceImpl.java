@@ -2,7 +2,6 @@ package co.shareleaf.service.content;
 
 import co.shareleaf.data.postgres.entity.MetadataEntity;
 import co.shareleaf.data.postgres.repo.MetadataRepo;
-import co.shareleaf.instagram4j.IGClient;
 import co.shareleaf.model.*;
 import co.shareleaf.props.AWSProps;
 import co.shareleaf.props.WebsiteProps;
@@ -11,13 +10,9 @@ import co.shareleaf.service.parser.BaseParserService;
 import co.shareleaf.service.scraper.ScraperService;
 import co.shareleaf.service.scraper.ScraperUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import reactor.core.Disposable;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -39,97 +34,90 @@ public class ContentServiceImpl extends BaseParserService implements ContentServ
                               S3Service s3Service,
                               AWSProps awsProps,
                               ScraperUtils scraperUtils,
-                              IGClient igClient,
                               WebsiteProps websiteProps,
                               ScraperService scraperService) {
-        super(objectMapper, metadataRepo, s3Service, awsProps, scraperUtils, igClient);
+        super(objectMapper, metadataRepo, s3Service, awsProps, scraperUtils);
         this.websiteProps = websiteProps;
         this.scraperService = scraperService;
     }
 
-    public Mono<SLContentMetadata> generateContentId(SLContentUrl url) {
+    public SLContentMetadata generateContentId(SLContentUrl url) {
         if (isValidUrl(url)) {
             // If a record exist, return its content id. Otherwise,
             // create a new record and kick off the crawling
             // process
-            return metadataRepo
-                    .findByCanonicalUrl(url.getUrl())
-                    .map(it -> new SLContentMetadata()
-                            .shareableLink(getShareableLink(it, websiteProps.getBaseUrl()))
-                            .contentId(it.getContentId()))
-                    .switchIfEmpty(Mono.defer(() -> processUrl(url.getUrl())));
+            MetadataEntity metadataEntity =  metadataRepo.findByCanonicalUrl(url.getUrl());
+            if (metadataEntity == null) {
+                return processUrl(url.getUrl());
+            } else {
+                return new SLContentMetadata()
+                    .shareableLink(getShareableLink(metadataEntity, websiteProps.getBaseUrl()))
+                    .contentId(metadataEntity.getContentId());
+            }
         }
-        return Mono.just(new SLContentMetadata().error(true));
+        return new SLContentMetadata().error(true);
     }
 
-    private Mono<SLContentMetadata> processUrl(String url) {
+    private SLContentMetadata processUrl(String url) {
         MetadataEntity record = new MetadataEntity();
         String contentId = generateUid();
         record.setContentId(contentId);
         record.setCanonicalUrl(url);
-        return metadataRepo
-                .save(record)
-                .doOnError(e -> log.error(e.getLocalizedMessage()))
-                .doOnSuccess(it -> Mono.fromCallable(() -> scraperService.getContent(contentId, url))
-                            .subscribeOn(Schedulers.boundedElastic())
-                            .subscribe())
-                .map(it -> new SLContentMetadata()
-                        .shareableLink(getShareableLink(it, websiteProps.getBaseUrl()))
-                        .contentId(contentId));
+        metadataRepo.save(record);
+        scraperService.getContent(contentId, url);
+        return new SLContentMetadata()
+            .shareableLink(getShareableLink(record, websiteProps.getBaseUrl()))
+            .contentId(contentId);
     }
 
     @Override
-    public Mono<SLContentMetadata> getMetadata(String uid) {
+    public SLContentMetadata getMetadata(String uid) {
         if (!ObjectUtils.isEmpty(uid)) {
             // Update view count when fetching the metadata for this uid in parallel
-            Mono<MetadataEntity> metadataEntityMono = metadataRepo.findByContentId(uid);
-            metadataEntityMono
-                    .flatMap(it -> {
-                        it.setViewCount(it.getViewCount()+1);
-                        return metadataRepo.save(it);
-                    }).subscribeOn(Schedulers.boundedElastic())
-                    .subscribe();
-            return metadataEntityMono
-                    .map(it ->
-                            new SLContentMetadata()
-                                    .contentId(it.getContentId())
-                                    .videoUrl(getContentUrl(it.getContentId(), VIDEO, awsProps.getCdn()))
-                                    .imageUrl(getContentUrl(it.getContentId(), IMAGE, awsProps.getCdn()))
-                                    .shareableLink(getShareableLink(it, websiteProps.getBaseUrl()))
-                                    .mediaType(it.getMediaType() != null ? SLMediaType.fromValue(it.getMediaType()) : null)
-                                    .invalidUrl(it.getInvalidUrl())
-                                    .processed(it.getProcessed())
-                                    .encoding(it.getEncoding())
-                                    .title(it.getTitle())
-                                    .description(it.getDescription())
-                                    .category(it.getCategory())
-                                    .shareCount(it.getShareCount())
-                                    .viewCount(it.getViewCount())
-                                    .likeCount(it.getLikeCount())
-                                    .dislikeCount(it.getDislikeCount())
-                                    .error(false)
-                                    .createdDt(it.getCreatedDt().toEpochSecond(ZoneOffset.UTC))
-                    ).switchIfEmpty(Mono.defer(() -> Mono.just(new SLContentMetadata().error(true))));
+            MetadataEntity metadataEntity = metadataRepo.findByContentId(uid);
+            if (metadataEntity != null) {
+                metadataEntity.setViewCount(metadataEntity.getViewCount() + 1);
+                metadataRepo.save(metadataEntity);
+                return new SLContentMetadata()
+                    .contentId(metadataEntity.getContentId())
+                    .videoUrl(getContentUrl(metadataEntity.getContentId(), VIDEO, awsProps.getCdn()))
+                    .imageUrl(getContentUrl(metadataEntity.getContentId(), IMAGE, awsProps.getCdn()))
+                    .shareableLink(getShareableLink(metadataEntity, websiteProps.getBaseUrl()))
+                    .mediaType(
+                        metadataEntity.getMediaType() != null ? SLMediaType.fromValue(metadataEntity.getMediaType())
+                            : null)
+                    .invalidUrl(metadataEntity.getInvalidUrl())
+                    .processed(metadataEntity.getProcessed())
+                    .encoding(metadataEntity.getEncoding())
+                    .title(metadataEntity.getTitle())
+                    .description(metadataEntity.getDescription())
+                    .category(metadataEntity.getCategory())
+                    .shareCount(metadataEntity.getShareCount())
+                    .viewCount(metadataEntity.getViewCount())
+                    .likeCount(metadataEntity.getLikeCount())
+                    .dislikeCount(metadataEntity.getDislikeCount())
+                    .error(false)
+                    .createdDt(metadataEntity.getCreatedDt().toEpochSecond(ZoneOffset.UTC));
+            }
         }
-        return Mono.just(new SLContentMetadata().error(true));
+        return new SLContentMetadata().error(true);
     }
 
 
-    public Mono<SLGenericResponse> incrementShareCount(SLContentId contentId) {
+    public SLGenericResponse incrementShareCount(SLContentId contentId) {
         if (!ObjectUtils.isEmpty(contentId) && !ObjectUtils.isEmpty(contentId.getUid())) {
-            return metadataRepo
-                    .findByContentId(contentId.getUid())
-                    .flatMap(it -> {
-                        it.setShareCount(it.getShareCount()+1);
-                        return metadataRepo.save(it)
-                                .map(res -> new SLGenericResponse().status("OK"));
-                    })
-                    .switchIfEmpty(Mono.defer(() ->
-                            Mono.just(new SLGenericResponse()
-                                    .status("Failed to update share count"))));
+            MetadataEntity metadataEntity = metadataRepo.findByContentId(contentId.getUid());
+            if (metadataEntity != null) {
+                metadataEntity.setShareCount(metadataEntity.getShareCount() + 1);
+                metadataRepo.save(metadataEntity);
+                return new SLGenericResponse().status("OK");
+            } else {
+                new SLGenericResponse()
+                    .status("Failed to update share count");
+            }
         }
-        return Mono.just(new SLGenericResponse()
-                .error("Content ID not provided"));
+        return new SLGenericResponse()
+            .error("Content ID not provided");
     }
 
     public String generateUid() {

@@ -6,6 +6,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
@@ -23,6 +24,7 @@ public class ScraperServiceImpl implements ScraperService {
     private final InstagramParser instagramParser;
     private final ScraperUtils scraperUtils;
 
+    @Async
     @Override
     public boolean getContent(String contentId, String url) {
         try { // TODO: check that the content can be processed before scraping
@@ -38,7 +40,7 @@ public class ScraperServiceImpl implements ScraperService {
                         redditParser.processSoup(soup, url, contentId, client);
                         break;
                     case INSTAGRAM:
-                        instagramParser.processSoup(soup, url, contentId, client);
+                        instagramParser.processUrlV2(url, contentId);
                         break;
                     default:
                         break;
