@@ -73,6 +73,9 @@ public class RedditParser extends BaseParserService implements ParserService {
                     if (!ObjectUtils.isEmpty(mediaMetadata.getGifUrl())) {
                         downloadContent(contentId, permalink, mediaMetadata.getGifUrl(), VIDEO);
                     }
+                    updateMetadata(contentId, title, url, mediaMetadata);
+                    generateHlsManifest(contentId);
+                    s3Service.uploadHlsData(awsProps.getBucket(), contentId, url);
                 }
             }
         } catch (Exception e) {

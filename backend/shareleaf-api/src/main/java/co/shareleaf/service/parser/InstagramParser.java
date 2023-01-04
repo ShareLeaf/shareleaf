@@ -117,11 +117,14 @@ public class InstagramParser extends BaseParserService implements ParserService 
         HttpEntity httpEntity = httpClient.execute(httpGet).getEntity();
         JsonNode media = objectMapper.readValue(httpEntity.getContent(), JsonNode.class);
         if (media != null ) {
-            VideoInfoDto dto = getDtoFromMediaMetadata(parseFromMediaNode(media.get("shortcode_media")), igUrl, contentId);
-            if (dto != null) {
+            MediaMetadata mediaMetadata = parseFromMediaNode(media.get("shortcode_media"));
+            VideoInfoDto dto = getDtoFromMediaMetadata(mediaMetadata, igUrl, contentId);
+            if (dto != null && mediaMetadata != null) {
                 downloadContent(contentId, igUrl, dto.getUrl(), VIDEO);
+                updateMetadata(contentId, dto.getCaption(), igUrl, mediaMetadata);
+                generateHlsManifest(contentId);
+                s3Service.uploadHlsData(awsProps.getBucket(), contentId, igUrl);
             }
-
         }
     }
 
