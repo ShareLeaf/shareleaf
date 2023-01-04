@@ -2,7 +2,6 @@ package co.shareleaf.service.aws;
 
 
 import co.shareleaf.props.AWSProps;
-import co.shareleaf.service.parser.ParserService;
 import co.shareleaf.utils.async.AsyncTask;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
@@ -47,37 +46,16 @@ public class S3ServiceImpl implements S3Service {
     public void uploadHlsData(String bucket, String contentId, String permalink) {
         String path = ".";
         File hlsFile = new File(path);
-        if (hlsFile.exists()) {
-            if (ParserService.uniquePermalinks.containsKey(permalink)) {
-                File f = new File(hlsFile.getParent());
-                String[] pathnames = f.list();
-                List<String> hlsFiles = getSortedHlsFiles(pathnames, contentId);
+        String[] pathnames = hlsFile.list();
+        List<String> hlsFiles = getSortedHlsFiles(pathnames, contentId);
 
-                String folder = contentId + "/";
-                log.info("Uploading HLS files to S3 for content ID {}", contentId);
-                for (String hls : hlsFiles) {
-                    AsyncTask.submit(() -> uploadTask(hls, folder, bucket),
-                        () -> cleanup(List.of(hls))
-                    );
-                }
-            }
-        } else {
-            log.warn("S3ServiceImpl.uploadHlsData HLS file {} does not exist. Aborting upload task",
-                path);
+        String folder = contentId + "/";
+        log.info("Uploading HLS files to S3 for content ID {}", contentId);
+        for (String hls : hlsFiles) {
+            AsyncTask.submit(() -> uploadTask(hls, folder, bucket),
+                () -> cleanup(List.of(hls))
+            );
         }
-    }
-
-    private List<String> getFilesToDelete(String[] pathnames, String contentId) {
-        List<String> files = new ArrayList<>();
-        if (pathnames != null) {
-            for (String p : pathnames) {
-                if (p.contains(contentId)) {
-                    // Add all files (HLS and MP4) for deletion
-                    files.add(p);
-                }
-            }
-        }
-        return files;
     }
 
     private List<String> getSortedHlsFiles(String[] pathnames, String contentId) {

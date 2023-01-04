@@ -9,6 +9,7 @@ import co.shareleaf.service.aws.S3Service;
 import co.shareleaf.service.parser.BaseParserService;
 import co.shareleaf.service.scraper.ScraperService;
 import co.shareleaf.service.scraper.ScraperUtils;
+import co.shareleaf.utils.async.AsyncTask;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -64,8 +65,8 @@ public class ContentServiceImpl extends BaseParserService implements ContentServ
         String contentId = generateUid();
         record.setContentId(contentId);
         record.setCanonicalUrl(url);
-        metadataRepo.save(record);
-        scraperService.getContent(contentId, url);
+        AsyncTask.submit(() -> metadataRepo.save(record), null);
+        AsyncTask.submit(() -> scraperService.getContent(contentId, url), null);
         return new SLContentMetadata()
             .shareableLink(getShareableLink(record, websiteProps.getBaseUrl()))
             .contentId(contentId);

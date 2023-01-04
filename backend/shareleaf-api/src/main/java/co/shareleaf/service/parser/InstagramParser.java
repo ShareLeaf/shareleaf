@@ -100,31 +100,35 @@ public class InstagramParser extends BaseParserService implements ParserService 
         return null;
     }
 
-    @SneakyThrows
+
     @Override
     public void processUrlV2(String igUrl, String contentId) {
         log.info("About to process URL for Instagram with content ID {}: {}", contentId, igUrl);
         final CloseableHttpClient httpClient = HttpClients.createDefault();
-        URI uri = new URIBuilder()
-            .setScheme("https").setHost(zenRowsProps.getHost()).setPath(zenRowsProps.getPath())
-            .setParameter("apikey", zenRowsProps.getApikey())
-            .setParameter("url", igUrl)
-            .setParameter("js_render", "true")
-            .setParameter("premium_proxy", "true")
-            .setParameter("autoparse", "true")
-            .build();
-        HttpGet httpGet = new HttpGet(uri);
-        HttpEntity httpEntity = httpClient.execute(httpGet).getEntity();
-        JsonNode media = objectMapper.readValue(httpEntity.getContent(), JsonNode.class);
-        if (media != null ) {
-            MediaMetadata mediaMetadata = parseFromMediaNode(media.get("shortcode_media"));
-            VideoInfoDto dto = getDtoFromMediaMetadata(mediaMetadata, igUrl, contentId);
-            if (dto != null && mediaMetadata != null) {
-                downloadContent(contentId, igUrl, dto.getUrl(), VIDEO);
-                updateMetadata(contentId, dto.getCaption(), igUrl, mediaMetadata);
-                generateHlsManifest(contentId);
-                s3Service.uploadHlsData(awsProps.getBucket(), contentId, igUrl);
+        try {
+            URI uri = new URIBuilder()
+                .setScheme("https").setHost(zenRowsProps.getHost()).setPath(zenRowsProps.getPath())
+                .setParameter("apikey", zenRowsProps.getApikey())
+                .setParameter("url", igUrl)
+                .setParameter("js_render", "true")
+                .setParameter("premium_proxy", "true")
+                .setParameter("autoparse", "true")
+                .build();
+            HttpGet httpGet = new HttpGet(uri);
+            HttpEntity httpEntity = httpClient.execute(httpGet).getEntity();
+            JsonNode media = objectMapper.readValue(httpEntity.getContent(), JsonNode.class);
+            if (media != null) {
+                MediaMetadata mediaMetadata = parseFromMediaNode(media.get("shortcode_media"));
+                VideoInfoDto dto = getDtoFromMediaMetadata(mediaMetadata, igUrl, contentId);
+                if (dto != null && mediaMetadata != null) {
+                    downloadContent(contentId, igUrl, dto.getUrl(), VIDEO);
+                    updateMetadata(contentId, dto.getCaption(), igUrl, mediaMetadata);
+                    generateHlsManifest(contentId);
+                    s3Service.uploadHlsData(awsProps.getBucket(), contentId, igUrl);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

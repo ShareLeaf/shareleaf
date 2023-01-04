@@ -24,13 +24,11 @@ public class ScraperServiceImpl implements ScraperService {
     private final InstagramParser instagramParser;
     private final ScraperUtils scraperUtils;
 
-    @Async
     @Override
     public boolean getContent(String contentId, String url) {
         try { // TODO: check that the content can be processed before scraping
             Platform platform = getPlatform(url);
             WebClient client = scraperUtils.getWebClient();
-            log.info("About to process URL for {} with content ID {}: {}", platform.name(), contentId, url);
             HtmlPage page = client.getPage(url);
             int statusCode = page.getWebResponse().getStatusCode();
             if (statusCode >= 200 && statusCode < 400 ) {

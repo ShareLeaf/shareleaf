@@ -12,16 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 public class AsyncTask {
 
   public static void submit(Runnable task, Runnable callback) {
-    try {
       CompletableFuture
           .runAsync(task, RootConfiguration.executor)
-          .get();
-      if (callback != null) {
-        callback.run();
-      }
-    } catch (InterruptedException | ExecutionException e) {
-      log.error(e.getLocalizedMessage());
-    }
+          .exceptionally(e -> { log.error(e.getLocalizedMessage()); return null;})
+          .thenRun(() -> {
+            if (callback != null) {
+              callback.run();
+            }
+          });
   }
-
 }
