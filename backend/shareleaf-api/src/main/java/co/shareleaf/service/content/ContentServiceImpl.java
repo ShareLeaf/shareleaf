@@ -41,6 +41,7 @@ public class ContentServiceImpl extends BaseParserService implements ContentServ
         this.scraperService = scraperService;
     }
 
+    @Override
     public SLContentMetadata generateContentId(SLContentUrl url) {
         if (isValidUrl(url)) {
             // If a record exist, return its content id. Otherwise,
@@ -104,6 +105,7 @@ public class ContentServiceImpl extends BaseParserService implements ContentServ
     }
 
 
+    @Override
     public SLGenericResponse incrementShareCount(SLContentId contentId) {
         if (!ObjectUtils.isEmpty(contentId) && !ObjectUtils.isEmpty(contentId.getUid())) {
             MetadataEntity metadataEntity = metadataRepo.findByContentId(contentId.getUid());

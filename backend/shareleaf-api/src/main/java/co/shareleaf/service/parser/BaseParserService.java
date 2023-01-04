@@ -127,49 +127,45 @@ public abstract class BaseParserService {
 
     public boolean downloadContent(String contentId, String permalink, String mediaUrl, String mediaType) {
         String contentType = S3Service.IMAGE_TYPE;
-        if (ParserService.uniquePermalinks.containsKey(permalink)) {
-            try {
-                log.info("Downloading content for content ID {}: permalink={} mediaUrl={} mediaType={}",
-                        contentId, permalink, mediaUrl, mediaType);
-                Response response = new OkHttpClient().newCall(
-                        new Request
-                                .Builder()
-                                .url(mediaUrl)
-                                .build()).execute();
-                String file = getS3FileName(IMAGE, contentId);
-                if (mediaType.equals(VIDEO)) {
-                    file = getS3FileName(VIDEO, contentId);
-                    contentType = S3Service.VIDEO_TYPE;
-                } else if (mediaType.equals(AUDIO)) {
-                    file = getS3FileName(AUDIO, contentId);
-                    contentType = S3Service.AUDIO_TYPE;
-                }
-                try (InputStream in = response.body().byteStream()) {
-                    // If the content is an image, upload it to S3 immediately
-                    log.trace("About to upload or process {} {}", file, contentType);
-                    if (contentType.equals(S3Service.IMAGE_TYPE)) {
-                        s3Service.uploadImage(awsProps.getBucket(), file, in, contentType);
-                    } else {
-                        // Save the file to disk for processing
-                        File output = new File(file);
-                        Files.copy(in, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    }
-                    updateProgress(contentId, true);
-                }
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                // An audio download may fail because it may not be available. But a video or
-                // image download should never fail
-                if (!contentType.equals(S3Service.AUDIO_TYPE)) {
-                    updateInvalidUrl(contentId, permalink);
-                }
-                updateProgress(contentId, false);
+        try {
+            log.info("Downloading content for content ID {}: permalink={} mediaUrl={} mediaType={}",
+                    contentId, permalink, mediaUrl, mediaType);
+            Response response = new OkHttpClient().newCall(
+                    new Request
+                            .Builder()
+                            .url(mediaUrl)
+                            .build()).execute();
+            String file = getS3FileName(IMAGE, contentId);
+            if (mediaType.equals(VIDEO)) {
+                file = getS3FileName(VIDEO, contentId);
+                contentType = S3Service.VIDEO_TYPE;
+            } else if (mediaType.equals(AUDIO)) {
+                file = getS3FileName(AUDIO, contentId);
+                contentType = S3Service.AUDIO_TYPE;
             }
-        } else {
-            log.warn("Cancelling content download for {}", permalink);
+            try (InputStream in = response.body().byteStream()) {
+                // If the content is an image, upload it to S3 immediately
+                log.trace("About to upload or process {} {}", file, contentType);
+                if (contentType.equals(S3Service.IMAGE_TYPE)) {
+                    s3Service.uploadImage(awsProps.getBucket(), file, in, contentType);
+                } else {
+                    // Save the file to disk for processing
+                    File output = new File(file);
+                    Files.copy(in, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                }
+                updateProgress(contentId, true);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            // An audio download may fail because it may not be available. But a video or
+            // image download should never fail
+            if (!contentType.equals(S3Service.AUDIO_TYPE)) {
+                updateInvalidUrl(contentId, permalink);
+            }
+            updateProgress(contentId, false);
         }
-       return false;
+       return true;
     }
 
     public void updateProgress(String contentId, boolean completed) {
