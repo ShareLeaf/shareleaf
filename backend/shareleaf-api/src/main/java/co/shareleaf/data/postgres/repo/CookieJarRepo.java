@@ -1,12 +1,10 @@
 package co.shareleaf.data.postgres.repo;
 
 import co.shareleaf.data.postgres.entity.CookieJarEntity;
-import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -16,20 +14,20 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public interface CookieJarRepo extends ReactiveCrudRepository<CookieJarEntity, Long> {
+public interface CookieJarRepo extends JpaRepository<CookieJarEntity, Long> {
 
-    @Query("select * from cookie_jar where c_key = :url and c_username = :username")
-    Flux<CookieJarEntity> findCookies(String url, String username);
+    @Query(value = "select * from cookie_jar where c_key = ?1 and c_username = ?2", nativeQuery = true)
+    List<CookieJarEntity> findCookies(String url, String username);
 
-    @Query("select * from cookie_jar where c_key = :url")
-    Flux<CookieJarEntity> findCookies(String url);
+    @Query(value = "select * from cookie_jar where c_key = ?1", nativeQuery = true)
+    List<CookieJarEntity> findCookies(String url);
 
-    @Query("select * from cookie_jar order by updated_dt desc")
-    Flux<CookieJarEntity> findAll();
+    @Query(value = "select * from cookie_jar order by updated_dt desc", nativeQuery = true)
+    List<CookieJarEntity> findAll();
 
-    @Query("select * from cookie_jar where c_name = 'sessionid' order by updated_dt desc")
-    Flux<CookieJarEntity> findSessionId();
+    @Query(value = "select * from cookie_jar where c_name = 'sessionid' order by updated_dt desc", nativeQuery = true)
+    List<CookieJarEntity> findSessionId();
 
-    @Query("select * from cookie_jar where c_username = :username and c_key in (:urls)")
-    Flux<CookieJarEntity> findCookiesByUrls(String username, List<String> urls);
+    @Query(value = "select * from cookie_jar where c_username = ?1 and c_key in (?2)", nativeQuery = true)
+    List<CookieJarEntity> findCookiesByUrls(String username, List<String> urls);
 }

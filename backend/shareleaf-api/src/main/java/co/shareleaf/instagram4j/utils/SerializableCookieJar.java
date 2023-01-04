@@ -13,7 +13,6 @@ import co.shareleaf.data.postgres.entity.CookieJarEntity;
 import co.shareleaf.data.postgres.repo.CookieJarRepo;
 import co.shareleaf.props.InstagramProps;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
@@ -22,9 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 @Slf4j
 @Service
@@ -48,9 +44,7 @@ public class SerializableCookieJar implements CookieJar, Serializable {
     @Override
     public List<Cookie> loadForRequest(HttpUrl url) {
         List<CookieJarEntity> cookieJarEntities = cookieJarRepo
-                .findCookies(url.host(), instagramProps.getUsername())
-                .collectList()
-                .block();
+                .findCookies(url.host(), instagramProps.getUsername());
         if (cookieJarEntities == null) return new ArrayList<>();
         return cookieJarEntities.stream().map(it -> {
             Cookie.Builder builder = new Cookie.Builder();
@@ -78,36 +72,32 @@ public class SerializableCookieJar implements CookieJar, Serializable {
     @Override
     public void saveFromResponse(HttpUrl url, @NotNull List<Cookie> cookies) {
         // Fetch the current cookies for the host and upsert values
-        cookieJarRepo.findCookies(url.host(), instagramProps.getUsername())
-                .collectList()
-                .flatMap(it -> {
-                    Map<String, CookieJarEntity> cookieEntities = new HashMap<>();
-                    for (CookieJarEntity cookieJarEntity : it) {
-                        cookieEntities.put(cookieJarEntity.getName(), cookieJarEntity);
-                    }
-                    for (Cookie c : cookies) {
-                        log.info("Cookie - {}: {} exp: {}", c.name(), c.value(), c.expiresAt());
-                        if (c.name().toLowerCase().equals("sessionid") && ObjectUtils.isEmpty(c.value())) {
-                            // do not update the session ID if it has been stripped from the response
-                            // header
-                            return Mono.just(new ArrayList<>());
-                        }
-                        if (cookieEntities.containsKey(c.name())) {
-                            CookieJarEntity existingCookie = cookieEntities.get(c.name());
-                            mapCookieToEntity(url, existingCookie, c);
-                            existingCookie.setUpdatedDt(LocalDateTime.now(ZoneId.of("UTC")));
-                        } else {
-                            CookieJarEntity jarEntity = new CookieJarEntity();
-                            mapCookieToEntity(url, jarEntity, c);
-                            cookieEntities.put(c.name(), jarEntity);
-                        }
-                    }
-                    log.info("Updating cookies for {}", url.host());
-                    return cookieJarRepo.saveAll(cookieEntities.values())
-                            .collectList();
-                })
-                .subscribeOn(Schedulers.boundedElastic())
-                .subscribe();
+        List<CookieJarEntity> cookieJarEntities = cookieJarRepo.findCookies(url.host(), instagramProps.getUsername());
+        Map<String, CookieJarEntity> cookieEntities = new HashMap<>();
+        for (CookieJarEntity cookieJarEntity : cookieJarEntities) {
+            cookieEntities.put(cookieJarEntity.getName(), cookieJarEntity);
+            for (Cookie c : cookies) {
+                log.info("Cookie - {}: {} exp: {}", c.name(), c.value(), c.expiresAt());
+                if (c.name().equalsIgnoreCase("sessionid") && ObjectUtils.isEmpty(c.value())) {
+                    // do not update the session ID if it has been stripped from the response
+                    // header
+                    continue;
+                }
+                if (cookieEntities.containsKey(c.name())) {
+                    CookieJarEntity existingCookie = cookieEntities.get(c.name());
+                    mapCookieToEntity(url, existingCookie, c);
+                    existingCookie.setUpdatedDt(LocalDateTime.now(ZoneId.of("UTC")));
+                } else {
+                    CookieJarEntity jarEntity = new CookieJarEntity();
+                    mapCookieToEntity(url, jarEntity, c);
+                    cookieEntities.put(c.name(), jarEntity);
+                }
+            }
+        }
+        if (!cookieEntities.isEmpty()) {
+            log.info("Updating cookies for {}", url.host());
+            cookieJarRepo.saveAll(cookieEntities.values());
+        }
     }
 
     private void mapCookieToEntity(HttpUrl url, CookieJarEntity jarEntity, Cookie c) {

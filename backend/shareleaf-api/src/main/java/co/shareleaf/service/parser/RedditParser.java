@@ -1,7 +1,7 @@
 package co.shareleaf.service.parser;
 
 import co.shareleaf.data.postgres.repo.MetadataRepo;
-import co.shareleaf.instagram4j.IGClient;
+import co.shareleaf.dto.VideoInfoDto;
 import co.shareleaf.props.AWSProps;
 import co.shareleaf.service.aws.S3Service;
 import co.shareleaf.service.scraper.ScraperUtils;
@@ -14,7 +14,6 @@ import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +30,8 @@ public class RedditParser extends BaseParserService implements ParserService {
                         MetadataRepo metadataRepo,
                         S3Service s3Service,
                         AWSProps awsProps,
-                        ScraperUtils scraperUtils,
-                        IGClient igClient) {
-        super(objectMapper, metadataRepo, s3Service, awsProps, scraperUtils, igClient);
+                        ScraperUtils scraperUtils) {
+        super(objectMapper, metadataRepo, s3Service, awsProps, scraperUtils);
     }
 
     @Override
@@ -63,20 +61,21 @@ public class RedditParser extends BaseParserService implements ParserService {
                 } else {
                     uniquePermalinks.put(permalink, true);
                     updateMetadata(contentId, title, permalink, mediaMetadata);
-                    List<Mono<Boolean>> tasks = new ArrayList<>();
                     if (!ObjectUtils.isEmpty(mediaMetadata.getAudioUrl())) {
-                        tasks.add(downloadContent(contentId, permalink, mediaMetadata.getAudioUrl(), AUDIO));
+                        downloadContent(contentId, permalink, mediaMetadata.getAudioUrl(), AUDIO);
                     }
                     if (!ObjectUtils.isEmpty(mediaMetadata.getImageUrl())) {
-                        tasks.add(downloadContent(contentId, permalink, mediaMetadata.getImageUrl(), IMAGE));
+                        downloadContent(contentId, permalink, mediaMetadata.getImageUrl(), IMAGE);
                     }
                     if (!ObjectUtils.isEmpty(mediaMetadata.getVideoUrl())) {
-                        tasks.add(downloadContent(contentId, permalink, mediaMetadata.getVideoUrl(), VIDEO));
+                        downloadContent(contentId, permalink, mediaMetadata.getVideoUrl(), VIDEO);
                     }
                     if (!ObjectUtils.isEmpty(mediaMetadata.getGifUrl())) {
-                        tasks.add(downloadContent(contentId, permalink, mediaMetadata.getGifUrl(), VIDEO));
+                        downloadContent(contentId, permalink, mediaMetadata.getGifUrl(), VIDEO);
                     }
-                    submitTasks(tasks, mediaMetadata, contentId, permalink);
+                    updateMetadata(contentId, title, url, mediaMetadata);
+                    generateHlsManifest(contentId);
+                    s3Service.uploadHlsData(awsProps.getBucket(), contentId, url);
                 }
             }
         } catch (Exception e) {
@@ -84,6 +83,12 @@ public class RedditParser extends BaseParserService implements ParserService {
             log.error(e.getLocalizedMessage());
         }
     }
+
+    @Override
+    public void processUrlV2(String igUrl, String contentId) {
+        log.info("NOT IMPLEMENTED");
+    }
+
 
     private MediaMetadata parseUrls(JsonNode postNode) {
         String parsedMediaType = getMediaType(postNode);

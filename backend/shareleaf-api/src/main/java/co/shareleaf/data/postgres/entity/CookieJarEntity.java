@@ -1,10 +1,13 @@
 package co.shareleaf.data.postgres.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,49 +18,51 @@ import java.time.ZoneId;
  */
 @Getter
 @Setter
-@Table("public.cookie_jar")
+@Entity
+@Table(schema = "public", name = "cookie_jar")
 public class CookieJarEntity {
 
     @Id
-    @Column("id")
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column("c_key")
+    @Column(name = "c_key")
     private String key;
 
-    @Column("c_path")
+    @Column(name = "c_path")
     private String path;
 
-    @Column("c_domain")
+    @Column(name = "c_domain")
     private String domain;
 
-    @Column("c_name")
+    @Column(name = "c_name")
     private String name;
 
-    @Column("c_value")
+    @Column(name = "c_value")
     private String value;
 
-    @Column("c_username")
+    @Column(name = "c_username")
     private String username;
 
-    @Column("c_expires_at")
+    @Column(name = "c_expires_at")
     private Long expiresAt;
 
-    @Column("c_host_only")
+    @Column(name = "c_host_only")
     private Boolean hostOnly;
 
-    @Column("c_http_only")
+    @Column(name = "c_http_only")
     private Boolean httpOnly;
 
-    @Column("c_persistent")
+    @Column(name = "c_persistent")
     private Boolean persistent;
 
-    @Column("c_secure")
+    @Column(name = "c_secure")
     private Boolean secure;
 
-    @Column("created_dt")
+    @Column(name = "created_dt")
     private LocalDateTime createdDt = LocalDateTime.now(ZoneId.of("UTC"));
     
-    @Column("updated_dt")
+    @Column(name = "updated_dt")
     private LocalDateTime updatedDt = LocalDateTime.now(ZoneId.of("UTC"));
 }

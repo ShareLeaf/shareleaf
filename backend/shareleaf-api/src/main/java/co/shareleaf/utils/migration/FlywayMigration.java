@@ -1,6 +1,5 @@
 package co.shareleaf.utils.migration;
 
-import co.shareleaf.props.FlywayMigrationProps;
 import co.shareleaf.props.FlywayProps;
 import co.shareleaf.props.PostgresDataSourceProps;
 import co.shareleaf.props.SourceProps;
@@ -10,7 +9,6 @@ import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +26,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class FlywayMigration {
-    private final FlywayMigrationProps dataSourceProps;
+    private final PostgresDataSourceProps dataSourceProps;
     private final SourceProps sourceProps;
     private final FlywayProps flywayProps;
     private final List<String> devProfiles = Arrays.asList("dev", "test");
@@ -40,14 +38,14 @@ public class FlywayMigration {
      *
      * @param dropSchema
      */
-    public Mono<Boolean> migrate(boolean dropSchema) {
+    public void migrate(boolean dropSchema) {
         FluentConfiguration flyway = Flyway.configure()
-                .schemas(flywayProps.getSchemas().split(","))
-                .validateOnMigrate(true)
-                .baselineOnMigrate(true)
-                .dataSource(dataSourceProps.getUrl(),
-                        dataSourceProps.getUsername(),
-                        dataSourceProps.getPassword());
+            .schemas(flywayProps.getSchemas().split(","))
+            .validateOnMigrate(true)
+            .baselineOnMigrate(true)
+            .dataSource(dataSourceProps.getUrl(),
+                dataSourceProps.getUsername(),
+                dataSourceProps.getPassword());
         log.info("Performing schema migration");
         if (dropSchema) {
             if (!devProfiles.contains(sourceProps.getProfile())) {
@@ -66,12 +64,11 @@ public class FlywayMigration {
                 flyway.load().clean();
             } else {
                 throw new IllegalArgumentException("Dropping schema is not allowed outside of integration tests. " +
-                        "If this is an integration test, please make sure that the test class name has the suffix " +
-                        "'IntegrationTest'");
+                    "If this is an integration test, please make sure that the test class name has the suffix " +
+                    "'IntegrationTest'");
             }
         }
         flyway.locations(flywayProps.getLocations()).load().migrate();
-        return Mono.just(true);
     }
 }
 

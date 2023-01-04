@@ -1,22 +1,21 @@
 package co.shareleaf.props;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 /**
  * @author Bizuwork Melesse
- * created on 2/13/21
- *
+ * created on 01/03/2023
  */
 @Primary
-@Data
+@Getter @Setter
 @Configuration
-@ConfigurationProperties("spring.datasource.flyway")
-public class FlywayMigrationProps {
-    private String driverClassName;
-    private String url;
-    private String username;
-    private String password;
+@ConfigurationProperties(prefix = "zen-rows")
+public class ZenRowsProps {
+    private String host;
+    private String path;
+    private String apikey;
 }

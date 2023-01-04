@@ -2,15 +2,13 @@ package co.shareleaf.service.aws;
 
 
 import co.shareleaf.props.AWSProps;
-import co.shareleaf.service.parser.ParserService;
+import co.shareleaf.utils.async.AsyncTask;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -46,41 +44,18 @@ public class S3ServiceImpl implements S3Service {
 
     @Override
     public void uploadHlsData(String bucket, String contentId, String permalink) {
-        if (ParserService.uniquePermalinks.containsKey(permalink)) {
-            File f = new File(".");
-            String[] pathnames = f.list();
-            List<String> hlsFiles = getSortedHlsFiles(pathnames, contentId);
-            List<String> toDelete = getFilesToDelete(pathnames, contentId);
+        String path = ".";
+        File hlsFile = new File(path);
+        String[] pathnames = hlsFile.list();
+        List<String> hlsFiles = getSortedHlsFiles(pathnames, contentId);
 
-            String folder = contentId + "/";
-            log.info("Uploading HLS files to S3 for content ID {}", contentId);
-            List<Mono<Boolean>> uploadTasks = new ArrayList<>();
-            for (String hlsFile : hlsFiles) {
-                uploadTasks.add(uploadTask(hlsFile, folder, bucket));
-            }
-            if (!uploadTasks.isEmpty()) {
-                Flux.merge(uploadTasks)
-                        .doOnError(e -> log.error(e.getLocalizedMessage()))
-                        .doOnComplete(() -> {
-                            log.info("Done with uploading HLS files to S3 for content ID {}", contentId);
-                            ParserService.uniquePermalinks.remove(permalink);
-                            cleanup(toDelete);
-                        }).subscribe();
-            }
+        String folder = contentId + "/";
+        log.info("Uploading HLS files to S3 for content ID {}", contentId);
+        for (String hls : hlsFiles) {
+            AsyncTask.submit(() -> uploadTask(hls, folder, bucket),
+                () -> cleanup(List.of(hls))
+            );
         }
-    }
-
-    private List<String> getFilesToDelete(String[] pathnames, String contentId) {
-        List<String> files = new ArrayList<>();
-        if (pathnames != null) {
-            for (String p : pathnames) {
-                if (p.contains(contentId)) {
-                    // Add all files (HLS and MP4) for deletion
-                    files.add(p);
-                }
-            }
-        }
-        return files;
     }
 
     private List<String> getSortedHlsFiles(String[] pathnames, String contentId) {
@@ -117,21 +92,23 @@ public class S3ServiceImpl implements S3Service {
         return files;
     }
 
-    private Mono<Boolean> uploadTask(String hlsFile, String folder, String bucket) {
+    private Void uploadTask(String hlsFile, String folder, String bucket) {
         File file = new File(hlsFile);
-        try (InputStream in = new FileInputStream(file)) {
-            ObjectMetadata meta = new ObjectMetadata();
-            meta.setContentLength(in.available());
-            meta.setContentType("application/octet-stream");
-            String key = folder + hlsFile;
-            log.info("Uploading HLS file to S3: {}", key);
-            s3Client.putObject(new PutObjectRequest(
+        if (file.exists()) {
+            try (InputStream in = new FileInputStream(file)) {
+                ObjectMetadata meta = new ObjectMetadata();
+                meta.setContentLength(in.available());
+                meta.setContentType("application/octet-stream");
+                String key = folder + file.getName();
+                log.info("Uploading HLS file to S3: {}", key);
+                s3Client.putObject(new PutObjectRequest(
                     bucket, key, in, meta)
                     .withCannedAcl(CannedAccessControlList.Private));
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return Mono.just(true);
+        return null;
     }
 
     private void cleanup(List<String> toDelete) {

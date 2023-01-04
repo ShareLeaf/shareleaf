@@ -54,21 +54,17 @@ configure(subprojects.findAll(it ->
     apply plugin: 'io.swagger.core.v3.swagger-gradle-plugin'
 
     dependencies {
+        implementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.1.1'
         implementation 'com.squareup.okhttp3:okhttp:4.7.2'
         implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.7.2'
         implementation 'org.jsoup:jsoup:1.15.1'
         implementation 'net.sourceforge.htmlunit:htmlunit:2.62.0'
         implementation 'org.seleniumhq.selenium:selenium-java:4.2.2'
-        implementation 'org.springframework.boot:spring-boot-starter-undertow:2.7.0'
-        implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
-        implementation 'org.springframework.boot:spring-boot-starter-webflux'
-        testImplementation 'io.projectreactor:reactor-test'
         implementation 'javax.validation:validation-api:2.0.1.Final'
         implementation 'org.openapitools:jackson-databind-nullable:0.2.1'
         implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
         implementation 'io.springfox:springfox-swagger2:3.0.0'
         implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0'
-        implementation 'io.r2dbc:r2dbc-postgresql:0.8.12.RELEASE'
         implementation 'org.postgresql:postgresql:42.2.23'
         implementation platform("com.amazonaws:aws-java-sdk-bom:${awsSDKVersion}")
         implementation 'javax.servlet:javax.servlet-api:4.0.1'
@@ -177,11 +173,13 @@ task openApiBuilder() {
                 apiPackage = project.apiPackageName
                 modelPackage = project.modelPackageName
                 configOptions = [
+                        dateLibrary            : "java8",
                         interfaceOnly          : "true",
                         invoker                : "false",
                         generateSupportingFiles: "false",
                         serializableModel      : "true",
                         swaggerAnnotations     : "false",
+                        java8                  : "false",
                         gradleBuildFile        : "false",
                         useTags                : "true"
                 ]

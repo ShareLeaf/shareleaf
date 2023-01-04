@@ -35,7 +35,7 @@
           "200": {
             "description": "Generate id response",
             "content": {
-              "text/event-stream": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SLContentMetadata"
                 }
@@ -66,7 +66,7 @@
           "200": {
             "description": "Metadata response",
             "content": {
-              "text/event-stream": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SLContentMetadata"
                 }
@@ -99,7 +99,7 @@
           "200": {
             "description": "Generic response",
             "content": {
-              "text/event-stream": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SLGenericResponse"
                 }
@@ -156,25 +156,6 @@
       },
       "SLContentMetadata": {
         "type": "object",
-        "required": [
-          "content_id",
-          "video_url",
-          "image_url",
-          "invalid_url",
-          "shareable_link",
-          "media_type",
-          "processed",
-          "encoding",
-          "title",
-          "description",
-          "category",
-          "view_count",
-          "like_count",
-          "share_count",
-          "dislike_count",
-          "created_dt",
-          "error"
-        ],
         "properties": {
           "content_id": {
             "type": "string"
@@ -249,6 +230,27 @@
           "GIF",
           "AUDIO"
         ]
+      },
+      "SLExceptionResponse": {
+        "type": "object",
+        "properties": {
+          "exception_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          }
+        }
       }
     }
   }

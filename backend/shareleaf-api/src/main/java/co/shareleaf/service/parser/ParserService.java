@@ -1,5 +1,6 @@
 package co.shareleaf.service.parser;
 
+import co.shareleaf.dto.VideoInfoDto;
 import com.gargoylesoftware.htmlunit.WebClient;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,4 +27,6 @@ public interface ParserService {
      * @param client
      */
     void processSoup(String soup, String url, String contentId, WebClient client);
+
+    void processUrlV2(String igUrl, String contentId);
 }

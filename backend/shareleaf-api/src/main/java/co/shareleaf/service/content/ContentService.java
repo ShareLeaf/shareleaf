@@ -4,7 +4,6 @@ import co.shareleaf.model.SLContentId;
 import co.shareleaf.model.SLContentMetadata;
 import co.shareleaf.model.SLContentUrl;
 import co.shareleaf.model.SLGenericResponse;
-import reactor.core.publisher.Mono;
 
 /**
  * @author Bizuwork Melesse
@@ -17,18 +16,18 @@ public interface ContentService {
      * @param url
      * @return
      */
-    Mono<SLContentMetadata> generateContentId(SLContentUrl url);
+    SLContentMetadata generateContentId(SLContentUrl url);
 
     /**
      * Fetch full content metadata
      * @param uid content id
      * @return
      */
-    Mono<SLContentMetadata> getMetadata(String uid);
+    SLContentMetadata getMetadata(String uid);
 
     /**
      * Increment the share count of a content
      * @return
      */
-    Mono<SLGenericResponse> incrementShareCount(SLContentId contentId);
+    SLGenericResponse incrementShareCount(SLContentId contentId);
 }
