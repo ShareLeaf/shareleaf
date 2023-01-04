@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Primary;
 @Primary
 @Data
 @Configuration
-@ConfigurationProperties("spring.datasource.reactive")
+@ConfigurationProperties("spring.datasource")
 public class PostgresDataSourceProps {
     private String driverClassName;
     private String url;

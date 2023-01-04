@@ -1,10 +1,13 @@
 package co.shareleaf.data.postgres.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,11 +18,13 @@ import java.time.ZoneId;
  */
 @Getter
 @Setter
+@Entity
 @Table(schema = "public", name = "cookie_jar")
 public class CookieJarEntity {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "c_key")

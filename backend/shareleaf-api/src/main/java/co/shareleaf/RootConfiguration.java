@@ -4,6 +4,7 @@ import co.shareleaf.controller.ControllerConfiguration;
 import co.shareleaf.data.DataConfiguration;
 import co.shareleaf.props.PropConfiguration;
 import co.shareleaf.service.ServiceConfiguration;
+import co.shareleaf.utils.exception.ExceptionConfiguration;
 import co.shareleaf.utils.mapper.OffsetDateTimeDeserializer;
 import co.shareleaf.utils.mapper.OffsetDateTimeSerializer;
 import co.shareleaf.utils.migration.FlywayMigration;
@@ -34,14 +35,16 @@ import java.time.OffsetDateTime;
         DataConfiguration.class,
         PropConfiguration.class,
         ServiceConfiguration.class,
-        FlywayMigrationConfiguration.class
+        FlywayMigrationConfiguration.class,
+    ExceptionConfiguration.class
 })
 @RequiredArgsConstructor
 public class RootConfiguration {
     public static final ExecutorService executor = Executors.newCachedThreadPool();
+    private final FlywayMigration flywayMigration;
 
     @PostConstruct
-    public void dbMigration(FlywayMigration flywayMigration) {
+    public void dbMigration() {
         flywayMigration.migrate(false);
     }
 
